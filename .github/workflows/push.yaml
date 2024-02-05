@@ -16,6 +16,6 @@ on:
 jobs:
   call-ci-workflow:
     name: Run build & test for dai-deploy plugin
-    uses: ./.github/workflows/ci.yaml
+    uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: plugins/dai-deploy
