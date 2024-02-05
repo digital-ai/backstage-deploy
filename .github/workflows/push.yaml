@@ -6,14 +6,12 @@ name: Push to main on dai-deploy plugin
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  paths:
-    - 'plugins/dai-deploy/**'  
-  paths-ignore:
-    # Ignore changes to READMEs and other Markdown.
-    - '**/README*'
-    - '**/*.md'  
+    paths:
+      - 'plugins/dai-deploy/**'  
+    paths-ignore:
+      # Ignore changes to READMEs and other Markdown.
+      - '**/README*'
+      - '**/*.md'  
 
 jobs:
   call-ci-workflow:
