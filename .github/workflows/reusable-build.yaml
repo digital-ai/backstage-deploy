@@ -22,7 +22,7 @@ jobs:
       run: yarn install
     - name: Build
       working-directory: ${{ inputs.plugin-path }}
-      run: yarn build
+      run: yarn tsc build
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
