@@ -22,6 +22,6 @@ describe('ExampleComponent', () => {
 
   it('should render', async () => {
     await renderInTestApp(<ExampleComponent />);
-    expect(screen.getByText('Welcome to dai-deploy!')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to Digital.ai Deploy!')).toBeInTheDocument();
   });
 });
