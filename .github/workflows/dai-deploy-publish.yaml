@@ -1,0 +1,11 @@
+name: Push to main on dai-deploy plugin
+
+on: workflow_dispatch
+
+jobs:
+  call-ci-workflow:
+    name: Run build & test for dai-deploy plugin
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy
+      

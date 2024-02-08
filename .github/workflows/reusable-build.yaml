@@ -6,6 +6,9 @@ on:
       plugin-path:
         required: true
         type: string
+      publish:
+        required: false
+        type: boolean  
 
 jobs:
   build_job:
@@ -17,6 +20,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
+        registry-url: 'https://npm.pkg.github.com'
     - name: Install dependencies
       working-directory: ${{ inputs.plugin-path }}
       run: yarn install
@@ -29,3 +33,9 @@ jobs:
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
+    - name: Publish to registry
+      if: ${{ inputs.publish }}
+      working-directory: ${{ inputs.plugin-path }}
+      run: yarn publish
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
