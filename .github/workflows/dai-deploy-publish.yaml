@@ -1,4 +1,4 @@
-name: Push to main on dai-deploy plugin
+name: Publish dai-deploy plugin
 
 on: workflow_dispatch
 
@@ -8,4 +8,4 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy
-      
+      publish: true
