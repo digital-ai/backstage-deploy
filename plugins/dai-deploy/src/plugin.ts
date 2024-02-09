@@ -1,8 +1,17 @@
-import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
+import { createApiFactory, createPlugin, createRoutableExtension, discoveryApiRef } from '@backstage/core-plugin-api';
 import { daiDeployEntityDeploymentsContentRouteRef } from './routes';
+import { daiDeployApiRef, DaiDeployApiClient } from './api';
 
 export const daiDeployPlugin = createPlugin({
   id: 'dai-deploy',
+  apis: [
+    createApiFactory({
+      api: daiDeployApiRef,
+      deps: { discoveryApi: discoveryApiRef },
+      factory: ({ discoveryApi }) =>
+        new DaiDeployApiClient({ discoveryApi }),
+    }),
+  ],
 });
 
 export const DaiDeployEntityDeploymentsContent = daiDeployPlugin.provide(
