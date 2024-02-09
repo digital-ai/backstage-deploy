@@ -11,7 +11,8 @@ describe('ExampleComponent', () => {
         'State', 
         'Scheduled Date', 
         'Start Date', 
-        'End Date'
+        'End Date',
+        'View'
     ];
 
   it('should render content', async () => {

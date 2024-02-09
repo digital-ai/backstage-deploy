@@ -89,7 +89,8 @@ const columns: TableColumn[] = [
         columns={columns}
         options={{
             paging: true,
-            pageSize: 5
+            pageSize: 5,
+            search: false
         }}
         data={items}
     />);
