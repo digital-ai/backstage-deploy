@@ -1,5 +1,5 @@
 import { createRouteRef } from '@backstage/core-plugin-api';
 
-export const rootRouteRef = createRouteRef({
-  id: 'dai-deploy',
+export const daiDeployEntityDeploymentsContentRouteRef = createRouteRef({
+  id: 'dai-deploy-entity-deployments-content',
 });

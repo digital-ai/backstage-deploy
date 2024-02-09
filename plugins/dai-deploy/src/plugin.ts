@@ -1,19 +1,15 @@
 import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
-
-import { rootRouteRef } from './routes';
+import { daiDeployEntityDeploymentsContentRouteRef } from './routes';
 
 export const daiDeployPlugin = createPlugin({
   id: 'dai-deploy',
-  routes: {
-    root: rootRouteRef,
-  },
 });
 
-export const DaiDeployPage = daiDeployPlugin.provide(
+export const DaiDeployEntityDeploymentsContent = daiDeployPlugin.provide(
   createRoutableExtension({
-    name: 'DaiDeployPage',
+    name: 'DaiDeployEntityDeploymentsContent',
     component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
-    mountPoint: rootRouteRef,
+      import('./components/EntityDeployments').then(m => m.EntityDeployments),
+    mountPoint: daiDeployEntityDeploymentsContentRouteRef,
   }),
 );
