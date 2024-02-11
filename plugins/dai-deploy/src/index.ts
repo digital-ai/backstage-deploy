@@ -1,1 +1,1 @@
-export { daiDeployPlugin, DaiDeployPage } from './plugin';
+export { daiDeployPlugin, DaiDeployEntityDeploymentsContent } from './plugin';
