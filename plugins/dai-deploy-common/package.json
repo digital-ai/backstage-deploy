@@ -1,5 +1,5 @@
 {
-  "name": "@internal/plugin-dai-deploy-common",
+  "name": "@digital-ai/plugin-dai-deploy-common",
   "description": "Common functionalities for the dai-deploy plugin",
   "version": "0.1.0",
   "main": "src/index.ts",
