@@ -9,8 +9,8 @@ export const getCredentials = (config: Config) => {
         const password = config.getString('daiDeploy.password');
 
         return btoa(`${username}:${password}`);
-    } catch (error) {
-        throw new Error(`${error.message} - Set username and password`);
+    } catch (error: unknown) {
+        throw new Error(`Error: ${(error as Error).message}`);
     }
 }
 
@@ -18,11 +18,11 @@ export const getDeployApiHost = (config: Config): string => {
     try {
         const validHost = config.getString('daiDeploy.host');
         return `${validHost}`;
-    } catch (error) {
-        throw new Error(`${error.message} - Set deploy host`);
+    } catch (error: unknown) {
+        throw new Error(`Error: ${(error as Error).message}`);
     }
 }
 
-export const getValue = (queryString?: string): string => {
-    return (queryString || queryString == 'undefined') ? queryString : '';
+export const getEncodedQueryVal = (queryString?: string): string => {
+    return encodeURIComponent((queryString || queryString == 'undefined') ? queryString : '');
 }

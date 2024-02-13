@@ -1,10 +1,10 @@
 import {Logger} from "winston";
 import {Config} from "@backstage/config";
 import {DEPLOYED_APPLICATION_API_PATH, getCredentials, getDeployApiHost} from "./apiConfig";
-import {ApplicationStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
+import {DeployedApplicationStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
 
 /** @public */
-export class ApplicationStatusApi {
+export class DeployedApplicationStatusApi {
     private readonly logger: Logger;
     private readonly config: Config;
 
@@ -20,20 +20,20 @@ export class ApplicationStatusApi {
         config: Config,
         logger: Logger,
     ) {
-        return new ApplicationStatusApi(
+        return new DeployedApplicationStatusApi(
             logger,
             config,
         );
     }
 
-    async getApplicationDeploymentInfo(appName?: string): Promise<ApplicationStatusTypes[]> {
-        const base64Credentials = getCredentials(this.config);
+    async getApplicationDeploymentInfo(appName?: string): Promise<DeployedApplicationStatusTypes[]> {
+        const authCredentials = getCredentials(this.config);
         const apiUrl = getDeployApiHost(this.config);
 
         const response = await fetch(`${apiUrl}${DEPLOYED_APPLICATION_API_PATH}?deployedAppName=${appName}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Basic ${base64Credentials}`,
+                'Authorization': `Basic ${authCredentials}`,
                 'Content-Type': 'application/json',
             }
         });

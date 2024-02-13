@@ -6,7 +6,7 @@
  */
 
 /** @public */
-export type ApplicationStatusTypes = {
+export type DeployedApplicationStatusTypes = {
     applicationName: string;
     applicationUid: string;
     applicationPath: string;

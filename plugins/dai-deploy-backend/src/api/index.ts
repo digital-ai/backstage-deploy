@@ -1,2 +1,2 @@
-export * from './ApplicationStatusApi'
+export * from './DeployedApplicationStatusApi'
 export * from './CurrentDeploymentStatusApi'

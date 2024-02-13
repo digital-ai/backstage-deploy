@@ -5,10 +5,8 @@ import {
     getCredentials,
     getDeployApiHost
 } from "./apiConfig";
+import {CurrentDeploymentStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
 
-import {DeploymentStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
-
-/** @public */
 export class CurrentDeploymentStatusApi {
     private readonly logger: Logger;
     private readonly config: Config;
@@ -32,25 +30,27 @@ export class CurrentDeploymentStatusApi {
     }
 
     async getCurrentDeploymentStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskSet: string): Promise<DeploymentStatusTypes[]> {
-        const base64Credentials = getCredentials(this.config);
+                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatusTypes[]> {
+        this.logger?.debug(
+            `Calling Current deployment status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
+        );
+        const authCredentials = getCredentials(this.config);
         const apiUrl = getDeployApiHost(this.config);
 
         const requestBody = [{
             "type"  : "udm.Application",
             "id"    : appName
         }];
-        const response = await fetch(`${apiUrl}${CURRENT_DEPLOYMENT_STATUS_API_PATH}
-        ?begin=${beginDate}&end=${endDate}&order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskSet=${taskSet}`, {
+        const response = await fetch(`${apiUrl}${CURRENT_DEPLOYMENT_STATUS_API_PATH}?begin=${beginDate}&end=${endDate}
+        &order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskSet=${taskSet}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${base64Credentials}`,
+                'Authorization': `Basic ${authCredentials}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             body: JSON.stringify(requestBody)
         });
-        this.logger?.info(`deployment status api url ${apiUrl}`);
         if (!response.ok) {
             if (response.status === 404) {
                 return  await response.json();

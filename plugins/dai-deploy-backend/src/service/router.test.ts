@@ -3,12 +3,21 @@ import express from 'express';
 import request from 'supertest';
 
 import { createRouter } from './router';
+import {ConfigReader} from "@backstage/config";
 
 describe('createRouter', () => {
   let app: express.Express;
 
   beforeAll(async () => {
+    const config = new ConfigReader({
+      'dai-deploy': {
+        host: '',
+        username: '',
+        password: ''
+      },
+    });
     const router = await createRouter({
+      config,
       logger: getVoidLogger(),
     });
     app = express().use(router);
