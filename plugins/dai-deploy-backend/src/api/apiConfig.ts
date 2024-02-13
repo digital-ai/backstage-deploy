@@ -1,6 +1,7 @@
 import {Config} from "@backstage/config";
 
 export const DEPLOYED_APPLICATION_API_PATH = '/deployit/application-status/deployed-applications';
+export const CURRENT_DEPLOYMENT_STATUS_API_PATH = '/deployit/taskmonitor/deployment';
 
 export const getCredentials = (config: Config) => {
     try {
@@ -20,4 +21,8 @@ export const getDeployApiHost = (config: Config): string => {
     } catch (error) {
         throw new Error(`${error.message} - Set deploy host`);
     }
+}
+
+export const getValue = (queryString?: string): string => {
+    return (queryString || queryString == 'undefined') ? queryString : '';
 }

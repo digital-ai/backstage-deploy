@@ -1,7 +1,7 @@
 import {Logger} from "winston";
 import {Config} from "@backstage/config";
 import {DEPLOYED_APPLICATION_API_PATH, getCredentials, getDeployApiHost} from "./apiConfig";
-import {deploymentProps} from "@digital-ai/plugin-dai-deploy-common";
+import {ApplicationStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
 
 /** @public */
 export class ApplicationStatusApi {
@@ -26,7 +26,7 @@ export class ApplicationStatusApi {
         );
     }
 
-    async getApplicationDeploymentInfo(appName?: string): Promise<deploymentProps[]> {
+    async getApplicationDeploymentInfo(appName?: string): Promise<ApplicationStatusTypes[]> {
         const base64Credentials = getCredentials(this.config);
         const apiUrl = getDeployApiHost(this.config);
 
