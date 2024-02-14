@@ -1,6 +1,7 @@
 import { DiscoveryApi } from "@backstage/core-plugin-api";
 import { DaiDeployApi } from "./DaiDeployApi";
 import { ResponseError } from '@backstage/errors';
+import { CurrentDeploymentStatusTypes } from '@digital-ai/plugin-dai-deploy-common';
 
 export class DaiDeployApiClient implements DaiDeployApi {
 
@@ -12,10 +13,12 @@ export class DaiDeployApiClient implements DaiDeployApi {
         this.discoveryApi = options.discoveryApi;
     }
 
-    async getDeployments(ciId: string): Promise<any> {
-        const urlSegment = `deployments/${encodeURIComponent(ciId)}`;
-        const items = await this.get<any[]>(urlSegment);
-        return { items };
+    async getDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatusTypes[]}> {
+        const queryString = new URLSearchParams();
+        queryString.append('appName', ciId);
+        const urlSegment = `deployment-status?${queryString}`;
+        const items = await this.get<CurrentDeploymentStatusTypes[]>(urlSegment);
+        return {items};
     }
 
     private async get<T>(path: string): Promise<T> {

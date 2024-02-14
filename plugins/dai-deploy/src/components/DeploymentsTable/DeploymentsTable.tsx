@@ -1,6 +1,8 @@
 import React from 'react';
 import LaunchIcon from '@material-ui/icons/Launch';
-import { LinkButton, Table, TableColumn } from '@backstage/core-components';
+import { LinkButton, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
+import { useEntity } from '@backstage/plugin-catalog-react';
+import { useDeployments } from '../../hooks';
 
 const columns: TableColumn[] = [
     {
@@ -15,12 +17,12 @@ const columns: TableColumn[] = [
     },
     {
       title: 'Type',
-      field: 'type',
+      field: 'metadata.taskType',
       width: 'auto',
     },
     {
       title: 'User',
-      field: 'user',
+      field: 'owner',
       width: 'auto',
     },
     {
@@ -42,7 +44,7 @@ const columns: TableColumn[] = [
     },
     {
       title: 'End Date',
-      field: 'endDate',
+      field: 'completionDate',
       width: 'auto',
       type: 'datetime',
     },
@@ -59,39 +61,22 @@ const columns: TableColumn[] = [
   ];
   
   export const DeploymentsTable = () => {
+    const { entity } = useEntity();
+    const { loading, error, items } = useDeployments(entity)
 
-    const items = [
-        {
-            "package": "app/1.0",
-            "environment": "Environments/test/localhost",
-            "type": "INITIAL",
-            "user": "admin",
-            "state": "Done",
-            "scheduledDate": "",
-            "startDate": "2024-02-01T08:43:44.480+0000",
-            "endDate": "2024-02-01T08:46:16.915+0000",
-            "taskId": "fe62430f-6ce6-41fc-a5e0-191ad48fa8c1"
-        },
-        {
-          "package": "D-32171/2.0",
-          "environment": "Environments/localhost-env",
-          "type": "UPDATE",
-          "user": "admin",
-          "state": "Done",
-          "scheduledDate": "",
-          "startDate": "2024-01-31T06:43:44.480+0000",
-          "endDate": "2024-01-31T08:46:16.915+0000",
-          "taskId": "1b1cfecb-3e81-499d-b415-dbd11dfe248c"
-      }
-    ]
+    if (error) {
+      return <ResponseErrorPanel error={error} />;
+    }
+   
     return (<Table 
         title="Deployment Status"
+        isLoading={loading}
         columns={columns}
         options={{
             paging: true,
             pageSize: 5,
             search: false
         }}
-        data={items}
+        data={items ?? []}
     />);
   }
