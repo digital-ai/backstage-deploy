@@ -4,13 +4,19 @@ import request from 'supertest';
 
 import { createRouter } from './router';
 import {ConfigReader} from "@backstage/config";
+import {CurrentDeploymentStatusApi} from "../api";
 
 describe('createRouter', () => {
+  let currentDeploymentStatusApi: jest.Mocked<CurrentDeploymentStatusApi>;
   let app: express.Express;
 
   beforeAll(async () => {
+    currentDeploymentStatusApi = {
+      getCurrentDeploymentStatus: jest.fn()
+    } as any;
+
     const config = new ConfigReader({
-      'dai-deploy': {
+      daiDeploy: {
         host: '',
         username: '',
         password: ''
@@ -30,6 +36,15 @@ describe('createRouter', () => {
   describe('GET /health', () => {
     it('returns ok', async () => {
       const response = await request(app).get('/health');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ status: 'ok' });
+    });
+  });
+
+  describe('POST /deployment-status', () => {
+    it('returns ok', async () => {
+      const response = await request(app).post('/health');
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ status: 'ok' });
