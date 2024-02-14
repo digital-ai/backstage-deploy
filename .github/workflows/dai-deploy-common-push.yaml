@@ -2,7 +2,7 @@ name: Push to main on dai-deploy-common plugin
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "S-106199" ]
     paths-ignore:
       # Ignore changes to READMEs and other Markdown.
       - 'plugins/dai-deploy-common/**/README*'
