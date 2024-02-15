@@ -1,3 +1,3 @@
-export * from './deployedApplicationStatusTypes';
-export * from './currentDeploymentStatusTypes';
+export * from './deployedApplicationStatus';
+export * from './currentDeploymentStatus';
 export * from './constants';

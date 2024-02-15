@@ -6,7 +6,7 @@
  */
 
 /** @public */
-export type CurrentDeploymentStatusTypes = {
+export type CurrentDeploymentStatus = {
     id: string;
     failures: number;
     owner: string;

@@ -32,7 +32,7 @@ export async function createRouter(
     res.status(200).json(status);
   });
 
-  router.post('/deployment-status', async (req, res) => {
+  router.get('/deployment-status', async (req, res) => {
     const appName = getEncodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());

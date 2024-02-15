@@ -9,8 +9,9 @@ describe('createRouter', () => {
   let app: express.Express;
 
   beforeAll(async () => {
+
     const config = new ConfigReader({
-      'dai-deploy': {
+      daiDeploy: {
         host: '',
         username: '',
         password: ''
@@ -28,6 +29,15 @@ describe('createRouter', () => {
   });
 
   describe('GET /health', () => {
+    it('returns ok', async () => {
+      const response = await request(app).get('/health');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ status: 'ok' });
+    });
+  });
+
+  describe('GET /deployment-status', () => {
     it('returns ok', async () => {
       const response = await request(app).get('/health');
 

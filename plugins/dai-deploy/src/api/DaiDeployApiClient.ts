@@ -1,7 +1,7 @@
 import { DiscoveryApi } from "@backstage/core-plugin-api";
 import { DaiDeployApi } from "./DaiDeployApi";
 import { ResponseError } from '@backstage/errors';
-import { CurrentDeploymentStatusTypes } from '@digital-ai/plugin-dai-deploy-common';
+import { CurrentDeploymentStatus } from '@digital-ai/plugin-dai-deploy-common';
 import moment from "moment";
 import { beginDateFormat, endDateFormat } from './utils';
 
@@ -15,7 +15,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
         this.discoveryApi = options.discoveryApi;
     }
 
-    async getDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatusTypes[]}> {
+    async getDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatus[]}> {
         const queryString = new URLSearchParams();
         const now = new Date();
         queryString.append('appName', ciId);
@@ -27,8 +27,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
         queryString.append('taskSet', 'ALL');
         
         const urlSegment = `deployment-status?${queryString}`;
-        
-        const items = await this.post<CurrentDeploymentStatusTypes[]>(urlSegment);
+        const items = await this.post<CurrentDeploymentStatus[]>(urlSegment);
         return {items};
     }
 
