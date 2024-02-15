@@ -5,7 +5,7 @@ import {
     getCredentials,
     getDeployApiHost
 } from "./apiConfig";
-import {CurrentDeploymentStatusTypes} from "@digital-ai/plugin-dai-deploy-common";
+import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
 
 export class CurrentDeploymentStatusApi {
     private readonly logger: Logger;
@@ -30,7 +30,7 @@ export class CurrentDeploymentStatusApi {
     }
 
     async getCurrentDeploymentStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatusTypes[]> {
+                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatus[]> {
         this.logger?.debug(
             `Calling Current deployment status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
         );

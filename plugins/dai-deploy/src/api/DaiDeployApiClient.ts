@@ -27,30 +27,16 @@ export class DaiDeployApiClient implements DaiDeployApi {
         queryString.append('taskSet', 'ALL');
         
         const urlSegment = `deployment-status?${queryString}`;
-        const items = await this.post<CurrentDeploymentStatus[]>(urlSegment);
+        const items = await this.get<CurrentDeploymentStatus[]>(urlSegment);
         return {items};
     }
 
-    // private async get<T>(path: string): Promise<T> {
-    //     const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
-    //     const url = new URL(path, baseUrl);
-    
-    //     const response = await fetch(url.toString(), {
-    //     });
-    
-    //     if (!response.ok) {
-    //       throw await ResponseError.fromResponse(response);
-    //     }
-    
-    //     return response.json() as Promise<T>;
-    // }
-
-    private async post<T>(path: string): Promise<T> {
+    private async get<T>(path: string): Promise<T> {
         const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
         const url = new URL(path, baseUrl);
     
         const response = await fetch(url.toString(), {
-            method: "POST",
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
