@@ -2,6 +2,8 @@ import { DiscoveryApi } from "@backstage/core-plugin-api";
 import { DaiDeployApi } from "./DaiDeployApi";
 import { ResponseError } from '@backstage/errors';
 import { CurrentDeploymentStatusTypes } from '@digital-ai/plugin-dai-deploy-common';
+import moment from "moment";
+import { beginDateFormat, endDateFormat } from './utils';
 
 export class DaiDeployApiClient implements DaiDeployApi {
 
@@ -15,17 +17,45 @@ export class DaiDeployApiClient implements DaiDeployApi {
 
     async getDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatusTypes[]}> {
         const queryString = new URLSearchParams();
+        const now = new Date();
         queryString.append('appName', ciId);
+        queryString.append('beginDate', moment(now).subtract(7, 'days').format(beginDateFormat));
+        queryString.append('endDate', moment(now).format(endDateFormat));
+        queryString.append('order', 'end:desc');
+        queryString.append('pageNumber', '1');
+        queryString.append('resultsPerPage', '10');
+        queryString.append('taskSet', 'ALL');
+        
         const urlSegment = `deployment-status?${queryString}`;
-        const items = await this.get<CurrentDeploymentStatusTypes[]>(urlSegment);
+        
+        const items = await this.post<CurrentDeploymentStatusTypes[]>(urlSegment);
         return {items};
     }
 
-    private async get<T>(path: string): Promise<T> {
+    // private async get<T>(path: string): Promise<T> {
+    //     const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
+    //     const url = new URL(path, baseUrl);
+    
+    //     const response = await fetch(url.toString(), {
+    //     });
+    
+    //     if (!response.ok) {
+    //       throw await ResponseError.fromResponse(response);
+    //     }
+    
+    //     return response.json() as Promise<T>;
+    // }
+
+    private async post<T>(path: string): Promise<T> {
         const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
         const url = new URL(path, baseUrl);
     
         const response = await fetch(url.toString(), {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         });
     
         if (!response.ok) {
@@ -33,6 +63,6 @@ export class DaiDeployApiClient implements DaiDeployApi {
         }
     
         return response.json() as Promise<T>;
-      }
+    }
 
 }

@@ -3,16 +3,20 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import { LinkButton, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useDeployments } from '../../hooks';
+import { formatTimestamp } from '../../utils/dateTimeUtils';
 
 const columns: TableColumn[] = [
     {
       title: 'Package',
       field: 'package',
       width: 'auto',
+      render: (row: Partial<any>) => (
+        `${row.metadata.application}/${row.metadata.version}`
+      ),
     },
     {
       title: 'Environment',
-      field: 'environment',
+      field: 'metadata.environment',
       width: 'auto',
     },
     {
@@ -33,27 +37,32 @@ const columns: TableColumn[] = [
     {
       title: 'Scheduled Date',
       field: 'scheduledDate',
-      width: 'auto',
-      type: 'datetime',
+      width: 'auto',render: (row: Partial<any>) => (
+        formatTimestamp(row.scheduledDate)
+      ),
     },
     {
       title: 'Start Date',
       field: 'startDate',
       width: 'auto',
-      type: 'datetime',
+      render: (row: Partial<any>) => (
+        formatTimestamp(row.startDate)
+      ),
     },
     {
       title: 'End Date',
       field: 'completionDate',
       width: 'auto',
-      type: 'datetime',
+      render: (row: Partial<any>) => (
+        formatTimestamp(row.completionDate)
+      ),
     },
     {
       title: 'View',
       field: 'taskId',
       width: 'auto',
       render: (row: Partial<any>) => (
-        <LinkButton to={`http://localhost:4516/#/reports/deployments?taskId=${row.taskId}`}>
+        <LinkButton to={`http://localhost:4516/#/reports/deployments?taskId=${row.id}`}>
           <LaunchIcon />
         </LinkButton>
       ),
