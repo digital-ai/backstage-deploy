@@ -1,13 +1,13 @@
 import { Entity } from '@backstage/catalog-model';
 import { useApi } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
-import { CurrentDeploymentStatusTypes, DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
+import { CurrentDeploymentStatus, DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { daiDeployApiRef } from '../api';
 
 export function useDeployments(
     entity: Entity
 ): {
-    items?: CurrentDeploymentStatusTypes[];
+    items?: CurrentDeploymentStatus[];
     loading: boolean;
     error?: Error;
 } {
