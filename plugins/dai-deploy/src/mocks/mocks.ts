@@ -46,7 +46,8 @@ export const entityStub: { entity: Entity } = {
                 "environment_directory_ref": "f21fb964-cc2f-4331-969c-3d7117820e5d",
                 "application_internal_id": "7"
             },
-            "workerId": null
+            "workerId": null,
+            "detailsRedirectUri": "http://localhost:4516/#/explorer?taskId=f851134a-020f-42fc-ae30-daf58cf34ea4"
         },
         {
             "id": "5473142b-5234-43ce-a083-e3dcfc929d72",
@@ -75,6 +76,7 @@ export const entityStub: { entity: Entity } = {
                 "application_reference_id": "e193ff0e-3774-44c7-9da5-e419b5b769de",
                 "environment_reference_id": "f2b25e18-d602-40c2-b88c-db8f8dc37b73"
             },
-            "workerId": 11
+            "workerId": 11,
+            "detailsRedirectUri": "http://localhost:4516/#/explorer?taskId=5473142b-5234-43ce-a083-e3dcfc929d72"
         }
     ];
