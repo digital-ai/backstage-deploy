@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.19.5",
-    "@digital-ai/plugin-dai-deploy-common": "^0.1.1",
+    "@digital-ai/plugin-dai-deploy-common": "^0.1.0",
     "@backstage/config": "^1.1.0",
     "@types/express": "*",
     "express": "^4.17.1",
