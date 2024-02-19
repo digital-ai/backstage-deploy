@@ -4,7 +4,7 @@ import useAsync from 'react-use/lib/useAsync';
 import { CurrentDeploymentStatus, DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { daiDeployApiRef } from '../api';
 
-export function useDeployments(
+export function useCurrentDeployments(
     entity: Entity
 ): {
     items?: CurrentDeploymentStatus[];
@@ -19,7 +19,7 @@ export function useDeployments(
     }
     
     const { value, loading, error } = useAsync(() => {
-        return api.getDeployments(ciId)
+        return api.getCurrentDeployments(ciId)
     }, [api]);
 
     return {

@@ -15,7 +15,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
         this.discoveryApi = options.discoveryApi;
     }
 
-    async getDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatus[]}> {
+    async getCurrentDeployments(ciId: string): Promise<{ items: CurrentDeploymentStatus[]}> {
         const queryString = new URLSearchParams();
         const now = new Date();
         queryString.append('appName', ciId);

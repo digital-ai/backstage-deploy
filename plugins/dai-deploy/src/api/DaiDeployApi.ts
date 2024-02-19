@@ -8,7 +8,7 @@ export const daiDeployApiRef = createApiRef<DaiDeployApi>({
 
 /** @public */  
 export interface DaiDeployApi {
-    getDeployments(
+    getCurrentDeployments(
         ciId: string
     ): Promise<{ items: CurrentDeploymentStatus[] }>;
 }  

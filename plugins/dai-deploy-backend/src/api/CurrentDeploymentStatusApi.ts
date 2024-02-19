@@ -3,7 +3,8 @@ import {Config} from "@backstage/config";
 import {
     CURRENT_DEPLOYMENT_STATUS_API_PATH,
     getCredentials,
-    getDeployApiHost
+    getCurrentTaskDetailsRedirectUri,
+    getDeployApiHost,    
 } from "./apiConfig";
 import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
 
@@ -59,6 +60,8 @@ export class CurrentDeploymentStatusApi {
                 `failed to fetch data, status ${response.status}: ${response.statusText}`,
             );
         }
-        return response.json();
+        const data: CurrentDeploymentStatus[] = await response.json();
+        data.forEach(d => d.detailsRedirectUri = getCurrentTaskDetailsRedirectUri(this.config, d.id));
+        return data;
     }
 }

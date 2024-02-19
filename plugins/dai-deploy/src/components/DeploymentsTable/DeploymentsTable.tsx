@@ -2,7 +2,7 @@ import React from 'react';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { LinkButton, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { useDeployments } from '../../hooks';
+import { useCurrentDeployments } from '../../hooks';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 
 const columns: TableColumn[] = [
@@ -71,7 +71,7 @@ const columns: TableColumn[] = [
   
   export const DeploymentsTable = () => {
     const { entity } = useEntity();
-    const { loading, error, items } = useDeployments(entity)
+    const { loading, error, items } = useCurrentDeployments(entity)
 
     if (error) {
       return <ResponseErrorPanel error={error} />;

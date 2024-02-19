@@ -2,6 +2,7 @@ import {Config} from "@backstage/config";
 
 export const DEPLOYED_APPLICATION_API_PATH = '/deployit/application-status/deployed-applications';
 export const CURRENT_DEPLOYMENT_STATUS_API_PATH = '/deployit/taskmonitor/deployment';
+export const CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH = '/#/explorer?taskId=';
 
 export const getCredentials = (config: Config) => {
     try {
@@ -25,4 +26,8 @@ export const getDeployApiHost = (config: Config): string => {
 
 export const getEncodedQueryVal = (queryString?: string): string => {
     return encodeURIComponent((queryString || queryString == 'undefined') ? queryString : '');
+}
+
+export const getCurrentTaskDetailsRedirectUri = (config: Config, taskId: string): string => {
+    return `${getDeployApiHost(config)}${CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH}${taskId}`;
 }
