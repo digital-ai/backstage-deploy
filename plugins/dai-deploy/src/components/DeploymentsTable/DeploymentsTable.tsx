@@ -62,7 +62,7 @@ const columns: TableColumn[] = [
       field: 'taskId',
       width: 'auto',
       render: (row: Partial<any>) => (
-        <LinkButton to={`http://localhost:4516/#/reports/deployments?taskId=${row.id}`}>
+        <LinkButton to={`${row.detailsRedirectUri}`}>
           <LaunchIcon />
         </LinkButton>
       ),
