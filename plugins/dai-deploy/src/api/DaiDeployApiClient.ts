@@ -23,7 +23,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
         queryString.append('endDate', moment(now).format(endDateFormat));
         queryString.append('order', 'end:desc');
         queryString.append('pageNumber', '1');
-        queryString.append('resultsPerPage', '10');
+        queryString.append('resultsPerPage', '100');
         queryString.append('taskSet', 'ALL');
         
         const urlSegment = `deployment-status?${queryString}`;
