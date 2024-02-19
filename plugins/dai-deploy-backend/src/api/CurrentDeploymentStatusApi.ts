@@ -4,9 +4,12 @@ import {
     CURRENT_DEPLOYMENT_STATUS_API_PATH,
     getCredentials,
     getCurrentTaskDetailsRedirectUri,
-    getDeployApiHost,    
+    getDeployApiHost,
 } from "./apiConfig";
-import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
+import {
+    CurrentDeploymentStatus,
+    CurrentDeploymentStatusResponse
+} from "@digital-ai/plugin-dai-deploy-common";
 
 export class CurrentDeploymentStatusApi {
     private readonly logger: Logger;
@@ -31,7 +34,7 @@ export class CurrentDeploymentStatusApi {
     }
 
     async getCurrentDeploymentStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatus[]> {
+                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatusResponse> {
         this.logger?.debug(
             `Calling Current deployment status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
         );
@@ -62,6 +65,6 @@ export class CurrentDeploymentStatusApi {
         }
         const data: CurrentDeploymentStatus[] = await response.json();
         data.forEach(d => d.detailsRedirectUri = getCurrentTaskDetailsRedirectUri(this.config, d.id));
-        return data;
+        return { currentDeploymentStatus: data, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }

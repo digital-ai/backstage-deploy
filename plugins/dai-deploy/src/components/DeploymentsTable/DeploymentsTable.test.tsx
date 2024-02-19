@@ -19,29 +19,29 @@ jest.mock('@backstage/plugin-catalog-react', () => ({
 }));
 
 const discoveryApi: DiscoveryApi = {
-  getBaseUrl: async () => 'http://example.com/api/dai-deploy', 
+  getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 }
 
 describe('DeploymentsTable', () => {
   const worker = setupServer();
-  setupRequestMockHandlers(worker); 
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     jest.resetAllMocks();
 
     entity = entityStub;
-      entity.entity.metadata.annotations ? 
+      entity.entity.metadata.annotations ?
         entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] = 'test-app' : '';
   });
 
   const expectedColumns = [
-        'Package', 
-        'Environment', 
-        'Type', 
-        'User', 
-        'State', 
-        'Scheduled Date', 
-        'Start Date', 
+        'Package',
+        'Environment',
+        'Type',
+        'User',
+        'State',
+        'Scheduled Date',
+        'Start Date',
         'End Date',
         'View'
     ];
@@ -57,11 +57,12 @@ describe('DeploymentsTable', () => {
       ),
     );
     const rendered = await renderContent();
+    const currentDeploymentStatus = currentDeploymentResponse.currentDeploymentStatus;
     expect(rendered.getByText('Deployment Status')).toBeInTheDocument();
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
-    currentDeploymentResponse.forEach(
+      currentDeploymentStatus.forEach(
       e => {
         expect(rendered.getByText(e.metadata.application + '/' + e.metadata.version)).toBeInTheDocument()
         expect(rendered.getByText(e.metadata.environment)).toBeInTheDocument()
@@ -76,9 +77,9 @@ describe('DeploymentsTable', () => {
         }
         if (e.completionDate) {
           expect(rendered.getByText(formatTimestamp(e.completionDate))).toBeInTheDocument()
-        }        
+        }
       }
-    );    
+    );
   });
 
   it('should render content with no rows', async () => {
@@ -91,12 +92,13 @@ describe('DeploymentsTable', () => {
         ),
       ),
     );
+    const currentDeploymentStatus = currentDeploymentResponse.currentDeploymentStatus;
     const rendered = await renderContent();
     expect(rendered.getByText('Deployment Status')).toBeInTheDocument();
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
-    currentDeploymentResponse.forEach(
+      currentDeploymentStatus.forEach(
       e => {
         expect(rendered.queryByText(e.metadata.application + '/' + e.metadata.version)).not.toBeInTheDocument()
         expect(rendered.queryByText(e.metadata.environment)).not.toBeInTheDocument()
@@ -111,9 +113,9 @@ describe('DeploymentsTable', () => {
         }
         if (e.completionDate) {
           expect(rendered.queryByText(formatTimestamp(e.completionDate))).not.toBeInTheDocument()
-        }        
+        }
       }
-    );    
+    );
   });
 
 });
@@ -130,6 +132,6 @@ async function renderContent() {
         ]
       }>
       <DeploymentsTable />
-    </TestApiProvider>      
+    </TestApiProvider>
   );
 }

@@ -1,13 +1,18 @@
 import { Entity } from '@backstage/catalog-model';
 import { useApi } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
-import { CurrentDeploymentStatus, DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
-import { daiDeployApiRef } from '../api';
+import {
+    CurrentDeploymentStatusResponse,
+    DAI_DEPLOY_CI_ID_ANNOTATION
+} from '@digital-ai/plugin-dai-deploy-common';
+import {daiDeployApiRef} from '../api';
 
 export function useCurrentDeployments(
-    entity: Entity
+    entity: Entity,
+    page: number,
+    rowsPerPage: number
 ): {
-    items?: CurrentDeploymentStatus[];
+    items?: CurrentDeploymentStatusResponse;
     loading: boolean;
     error?: Error;
 } {
@@ -17,10 +22,10 @@ export function useCurrentDeployments(
     if (!ciId) {
         throw new Error(`Value for annotation "${DAI_DEPLOY_CI_ID_ANNOTATION}" was not found`);
     }
-    
+
     const { value, loading, error } = useAsync(() => {
-        return api.getCurrentDeployments(ciId)
-    }, [api]);
+        return api.getCurrentDeployments(ciId, page, rowsPerPage)
+    }, [api, page, rowsPerPage]);
 
     return {
         items: value?.items,

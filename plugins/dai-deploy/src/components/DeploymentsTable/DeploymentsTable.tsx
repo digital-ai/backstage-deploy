@@ -1,9 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { LinkButton, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useCurrentDeployments } from '../../hooks';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
+import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
+
+type DenseTableProps = {
+    tableData: CurrentDeploymentStatus[];
+    loading: boolean;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    onPageChange: (page: number) => void;
+    onRowsPerPageChange: (rows: number) => void;
+};
 
 const columns: TableColumn[] = [
     {
@@ -67,25 +78,49 @@ const columns: TableColumn[] = [
         </LinkButton>
       ),
     },
-  ];
-  
+];
+
+export const DenseTable = ({tableData, loading, page, pageSize, totalCount, onPageChange, onRowsPerPageChange}: DenseTableProps) => {
+    return (
+        <Table
+            title="Deployment Status"
+            columns={columns}
+            data={tableData}
+            page={page}
+            totalCount={totalCount}
+            isLoading={loading}
+            options={{
+                paging: true,
+                search: false,
+                pageSize: pageSize,
+                padding: 'dense',
+                showFirstLastPageButtons: true,
+            }}
+            onPageChange={onPageChange}
+            onRowsPerPageChange={onRowsPerPageChange}
+        />
+    );
+};
+
   export const DeploymentsTable = () => {
     const { entity } = useEntity();
-    const { loading, error, items } = useCurrentDeployments(entity)
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const { items, loading, error} = useCurrentDeployments(entity, page, rowsPerPage);
 
     if (error) {
       return <ResponseErrorPanel error={error} />;
     }
-   
-    return (<Table 
-        title="Deployment Status"
-        isLoading={loading}
-        columns={columns}
-        options={{
-            paging: true,
-            pageSize: 5,
-            search: false
-        }}
-        data={items ?? []}
+
+    return (
+        <DenseTable
+        page={page}
+        pageSize={rowsPerPage}
+        loading={loading}
+        totalCount={items?.totalCount ?? 100}
+        tableData={items?.currentDeploymentStatus || []}
+        onRowsPerPageChange={setRowsPerPage}
+        onPageChange={setPage}
     />);
   }
