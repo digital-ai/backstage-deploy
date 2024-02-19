@@ -14,6 +14,8 @@ jobs:
   build_job:
     name: Build & Test
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:    
     - uses: actions/checkout@v4
     - name: Use Node.js
@@ -37,5 +39,3 @@ jobs:
       if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
       run: yarn publish
-      env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

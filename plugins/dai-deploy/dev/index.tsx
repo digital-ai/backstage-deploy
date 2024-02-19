@@ -1,11 +1,11 @@
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { daiDeployPlugin, DaiDeployPage } from '../src/plugin';
+import { daiDeployPlugin, DaiDeployEntityDeploymentsContent } from '../src/plugin';
 
 createDevApp()
   .registerPlugin(daiDeployPlugin)
   .addPage({
-    element: <DaiDeployPage />,
+    element: <DaiDeployEntityDeploymentsContent />,
     title: 'Root Page',
     path: '/dai-deploy'
   })
