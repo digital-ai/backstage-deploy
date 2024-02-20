@@ -8,7 +8,10 @@ on:
         type: string
       publish:
         required: false
-        type: boolean  
+        type: boolean
+      local-links:
+        required: false
+        type: boolean    
 
 jobs:
   build_job:
@@ -23,6 +26,10 @@ jobs:
       with:
         node-version: '18.x'
         registry-url: 'https://npm.pkg.github.com'
+    - name: Link common
+      if: ${{ inputs.local-links }}
+      working-directory: ${{ inputs.plugin-path }}    
+      run: yarn link "@digital-ai/plugin-dai-deploy-common"
     - name: Install dependencies
       working-directory: ${{ inputs.plugin-path }}
       run: yarn install
@@ -35,6 +42,10 @@ jobs:
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
+    - name: Link
+      if: ${{ inputs.local-links }}
+      working-directory: ${{ inputs.plugin-path }}
+      run: yarn link
     - name: Publish to registry
       if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
