@@ -8,7 +8,7 @@ on:
         type: string
       publish:
         required: false
-        type: boolean  
+        type: boolean
 
 jobs:
   build_job:
