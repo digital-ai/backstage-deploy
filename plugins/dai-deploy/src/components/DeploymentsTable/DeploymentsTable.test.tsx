@@ -9,6 +9,7 @@ import { currentDeploymentResponse, entityStub } from '../../mocks/mocks';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { daiDeployApiRef, DaiDeployApiClient } from '../../api';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
+import capitalize from "lodash/capitalize";
 
 let entity: { entity: Entity };
 
@@ -66,9 +67,9 @@ describe('DeploymentsTable', () => {
       e => {
         expect(rendered.getByText(e.metadata.application + '/' + e.metadata.version)).toBeInTheDocument()
         expect(rendered.getByText(e.metadata.environment)).toBeInTheDocument()
-        expect(rendered.getByText(e.metadata.taskType)).toBeInTheDocument()
+        expect(rendered.getByText(capitalize(e.metadata.taskType))).toBeInTheDocument()
         expect(rendered.getByText(e.owner)).toBeInTheDocument()
-        expect(rendered.getByText(e.state)).toBeInTheDocument()
+        expect(rendered.getByText(capitalize(e.state))).toBeInTheDocument()
         if (e.scheduledDate)  {
           expect(rendered.getByText(formatTimestamp(e.scheduledDate))).toBeInTheDocument()
         }
