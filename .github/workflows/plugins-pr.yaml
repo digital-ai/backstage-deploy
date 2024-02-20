@@ -9,21 +9,60 @@ on:
       - 'plugins/**/**/*.md'
 
 jobs:
-  dai-deploy-common-ci-workflow:
-    name: Run build & test for dai-deploy-common plugin
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-common
-      local-links: true
-  dai-deploy-backend-ci-workflow:    
-    name: Run build & test for dai-deploy-backend plugin
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-backend  
-      local-links: true
-  dai-deploy-ci-workflow:    
-    name: Run build & test for dai-deploy plugin
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy
-      local-links: true
+  ci-workflow:
+    name: Build, test all plugins
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:    
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        registry-url: 'https://npm.pkg.github.com'
+    - name: [dai-deploy-common] Install dependencies
+      working-directory: ./plugins/dai-deploy-common
+      run: yarn install
+    - name: [dai-deploy-common] Run tsc
+      working-directory: ./plugins/dai-deploy-common
+      run: yarn tsc
+    - name: [dai-deploy-common] Build
+      working-directory: ./plugins/dai-deploy-common
+      run: yarn build
+    - name: [dai-deploy-common] Run tests  
+      working-directory: ./plugins/dai-deploy-common
+      run: yarn test
+    - name: [dai-deploy-common] Link
+      working-directory: ./plugins/dai-deploy-common
+      run: yarn link
+    - name: [dai-deploy-backend] Use local link
+      working-directory: ./plugins/dai-deploy-backend
+      run: yarn link "@digital-ai/plugin-dai-deploy-common"
+    - name: [dai-deploy-backend] Install dependencies
+      working-directory: ./plugins/dai-deploy-backend
+      run: yarn install
+    - name: [dai-deploy-backend] Run tsc
+      working-directory: ./plugins/dai-deploy-backend
+      run: yarn tsc
+    - name: [dai-deploy-backend] Build
+      working-directory: ./plugins/dai-deploy-backend
+      run: yarn build
+    - name: [dai-deploy-backend] Run tests  
+      working-directory: ./plugins/dai-deploy-backend
+      run: yarn test
+    - name: [dai-deploy] Use local link
+      working-directory: ./plugins/dai-deploy
+      run: yarn link "@digital-ai/plugin-dai-deploy-common"
+    - name: [dai-deploy] Install dependencies
+      working-directory: ./plugins/dai-deploy
+      run: yarn install
+    - name: [dai-deploy] Run tsc
+      working-directory: ./plugins/dai-deploy
+      run: yarn tsc
+    - name: [dai-deploy] Build
+      working-directory: ./plugins/dai-deploy
+      run: yarn build
+    - name: [dai-deploy] Run tests  
+      working-directory: ./plugins/dai-deploy
+      run: yarn test
