@@ -15,54 +15,55 @@ jobs:
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:    
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
         registry-url: 'https://npm.pkg.github.com'
-    - name: [dai-deploy-common] Install dependencies
+    - name: dai-deploy-common - Install dependencies
       working-directory: ./plugins/dai-deploy-common
       run: yarn install
-    - name: [dai-deploy-common] Run tsc
+    - name: dai-deploy-common - Run tsc
       working-directory: ./plugins/dai-deploy-common
       run: yarn tsc
-    - name: [dai-deploy-common] Build
+    - name: dai-deploy-common - Build
       working-directory: ./plugins/dai-deploy-common
       run: yarn build
-    - name: [dai-deploy-common] Run tests  
+    - name: dai-deploy-common - Run tests  
       working-directory: ./plugins/dai-deploy-common
       run: yarn test
-    - name: [dai-deploy-common] Link
+    - name: dai-deploy-common - Link
       working-directory: ./plugins/dai-deploy-common
       run: yarn link
-    - name: [dai-deploy-backend] Use local link
+    - name: dai-deploy-backend - Use local link
       working-directory: ./plugins/dai-deploy-backend
       run: yarn link "@digital-ai/plugin-dai-deploy-common"
-    - name: [dai-deploy-backend] Install dependencies
+    - name: dai-deploy-backend - Install dependencies
       working-directory: ./plugins/dai-deploy-backend
       run: yarn install
-    - name: [dai-deploy-backend] Run tsc
+    - name: dai-deploy-backend - Run tsc
       working-directory: ./plugins/dai-deploy-backend
       run: yarn tsc
-    - name: [dai-deploy-backend] Build
+    - name: dai-deploy-backend - Build
       working-directory: ./plugins/dai-deploy-backend
       run: yarn build
-    - name: [dai-deploy-backend] Run tests  
+    - name: dai-deploy-backend - Run tests  
       working-directory: ./plugins/dai-deploy-backend
       run: yarn test
-    - name: [dai-deploy] Use local link
+    - name: dai-deploy - Use local link
       working-directory: ./plugins/dai-deploy
       run: yarn link "@digital-ai/plugin-dai-deploy-common"
-    - name: [dai-deploy] Install dependencies
+    - name: dai-deploy - Install dependencies
       working-directory: ./plugins/dai-deploy
       run: yarn install
-    - name: [dai-deploy] Run tsc
+    - name: dai-deploy - Run tsc
       working-directory: ./plugins/dai-deploy
       run: yarn tsc
-    - name: [dai-deploy] Build
+    - name: dai-deploy - Build
       working-directory: ./plugins/dai-deploy
       run: yarn build
-    - name: [dai-deploy] Run tests  
+    - name: dai-deploy - Run tests  
       working-directory: ./plugins/dai-deploy
       run: yarn test
