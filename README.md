@@ -6,9 +6,9 @@ The following sections links will help you get the (Digital.ai) Dai Deploy plugi
 
 ### Dai Deploy Backend
 
-Refer this readme [Dai Deploy backend plugin](https://github.com/digital-ai/backstage-deploy/tree/main/plugins/dai-deploy-backend)
+Refer this wiki page [Dai Deploy backend plugin](https://github.com/digital-ai/backstage-deploy/wiki/Dai-Deploy-Plugin-%E2%80%90-Backend)
 
 ### Dai Deploy
 
-Refer this readme [Dai Deploy plugin](https://github.com/digital-ai/backstage-deploy/tree/main/plugins/dai-deploy)
+Refer this wiki page [Dai Deploy plugin](https://github.com/digital-ai/backstage-deploy/wiki/Dai-Deploy-Plugin-%E2%80%90-Frontend)
 
