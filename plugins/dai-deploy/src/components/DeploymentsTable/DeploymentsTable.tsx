@@ -1,15 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { LinkButton, ResponseErrorPanel, Table, TableColumn } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useCurrentDeployments } from '../../hooks';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
+import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
+import capitalize from 'lodash/capitalize';
+
+type DenseTableProps = {
+    tableData: CurrentDeploymentStatus[];
+    loading: boolean;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    onPageChange: (page: number) => void;
+    onRowsPerPageChange: (rows: number) => void;
+};
+
+const headerStyle: React.CSSProperties = { textTransform: "capitalize", whiteSpace: 'nowrap' };
+const cellStyle: React.CSSProperties = { width: 'auto', whiteSpace: 'nowrap' };
 
 const columns: TableColumn[] = [
     {
       title: 'Package',
       field: 'package',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
       render: (row: Partial<any>) => (
         `${row.metadata.application}/${row.metadata.version}`
       ),
@@ -17,34 +33,47 @@ const columns: TableColumn[] = [
     {
       title: 'Environment',
       field: 'metadata.environment',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
     },
     {
       title: 'Type',
       field: 'metadata.taskType',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      render: (row: Partial<any>) => (
+          capitalize(row.metadata.taskType)
+      ),
     },
     {
       title: 'User',
       field: 'owner',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
     },
     {
       title: 'State',
       field: 'state',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      render: (row: Partial<any>) => (
+          capitalize(row.state)
+      ),
     },
     {
       title: 'Scheduled Date',
       field: 'scheduledDate',
-      width: 'auto',render: (row: Partial<any>) => (
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      render: (row: Partial<any>) => (
         formatTimestamp(row.scheduledDate)
       ),
     },
     {
       title: 'Start Date',
       field: 'startDate',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
       render: (row: Partial<any>) => (
         formatTimestamp(row.startDate)
       ),
@@ -52,7 +81,8 @@ const columns: TableColumn[] = [
     {
       title: 'End Date',
       field: 'completionDate',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
       render: (row: Partial<any>) => (
         formatTimestamp(row.completionDate)
       ),
@@ -60,32 +90,60 @@ const columns: TableColumn[] = [
     {
       title: 'View',
       field: 'taskId',
-      width: 'auto',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
       render: (row: Partial<any>) => (
         <LinkButton to={`${row.detailsRedirectUri}`}>
           <LaunchIcon />
         </LinkButton>
       ),
     },
-  ];
-  
-  export const DeploymentsTable = () => {
+];
+
+export const DenseTable = ({tableData, loading, page, pageSize, totalCount, onPageChange, onRowsPerPageChange}: DenseTableProps) => {
+    return (
+        <Table
+            title="Deployment Status"
+            columns={columns}
+            data={tableData}
+            page={page}
+            totalCount={totalCount}
+            isLoading={loading}
+            options={{
+                paging: true,
+                search: false,
+                pageSize: pageSize,
+                pageSizeOptions: [5, 10, 20, 50],
+                padding: 'dense',
+                showFirstLastPageButtons: true,
+                showEmptyDataSourceMessage: !loading
+            }}
+            onPageChange={onPageChange}
+            onRowsPerPageChange={onRowsPerPageChange}
+        />
+    );
+};
+
+export const DeploymentsTable = () => {
     const { entity } = useEntity();
-    const { loading, error, items } = useCurrentDeployments(entity)
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const { items, loading, error} = useCurrentDeployments(entity, page, rowsPerPage);
 
     if (error) {
       return <ResponseErrorPanel error={error} />;
     }
-   
-    return (<Table 
-        title="Deployment Status"
-        isLoading={loading}
-        columns={columns}
-        options={{
-            paging: true,
-            pageSize: 5,
-            search: false
-        }}
-        data={items ?? []}
-    />);
-  }
+
+    return (
+        <DenseTable
+            page={page}
+            pageSize={rowsPerPage}
+            loading={loading}
+            totalCount={items?.totalCount ?? 100}
+            tableData={items?.currentDeploymentStatus || []}
+            onRowsPerPageChange={setRowsPerPage}
+            onPageChange={setPage}
+        />
+    );
+}
