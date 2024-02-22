@@ -26,18 +26,18 @@ Configuration Details:
 
 Here's how to get the backend up and running:
 
-1. First we need to add the `@backstage/plugin-dai-deploy-backend` package to your backend:
+1. First we need to add the `@digital-ai/plugin-dai-deploy-backend` package to your backend:
 
    ```sh
    # From your Backstage root directory
-   yarn --cwd packages/backend add @backstage/plugin-dai-deploy-backend
+   yarn --cwd packages/backend add @digital-ai/plugin-dai-deploy-backend
    ```
 
 2. Then we will create a new file named `packages/backend/src/plugins/dai-deploy.ts`, and add the
    following to it:
 
    ```ts
-   import { createRouter } from '@backstage/plugin-dai-deploy-backend';
+   import { createRouter } from '@digital-ai/plugin-dai-deploy-backend';
    import { Router } from 'express';
    import type { PluginEnvironment } from '../types';
 
@@ -82,7 +82,7 @@ In your `packages/backend/src/index.ts` make the following changes:
 
   // ... other feature additions
 
-+ backend.add(import('@backstage/plugin-dai-deploy-backend'));
++ backend.add(import('@digital-ai/plugin-dai-deploy-backend'));
 
   backend.start();
 ```
