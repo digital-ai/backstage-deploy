@@ -37,11 +37,11 @@ spec:
 
 To get the Dai Deploy - Deployment Status component working you'll need to do the following two steps:
 
-1. First we need to add the `@backstage/plugin-dai-deploy` package to your frontend app:
+1. First we need to add the `@digital-ai/plugin-dai-deploy` package to your frontend app:
 
    ```bash
    # From your Backstage root directory
-   yarn --cwd packages/app add @backstage/plugin-dai-deploy
+   yarn --cwd packages/app add @digital-ai/plugin-dai-deploy
    ```
 
 2. Second we need to add the `DaiDeployEntityDeploymentsContent` extension to the entity page in your app. How to do this will depend on which annotation you are using in your entities:
@@ -52,7 +52,7 @@ To get the Dai Deploy - Deployment Status component working you'll need to do th
        // In packages/app/src/components/catalog/EntityPage.tsx
        import {
          DaiDeployEntityDeploymentsContent
-       } from '@backstage/plugin-dai-deploy';
+       } from '@digital-ai/plugin-dai-deploy';
  
        // For example in the CI/CD section
        const cicdContent = (
