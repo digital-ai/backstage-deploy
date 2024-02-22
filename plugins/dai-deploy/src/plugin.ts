@@ -18,7 +18,7 @@ export const DaiDeployEntityDeploymentsContent = daiDeployPlugin.provide(
   createRoutableExtension({
     name: 'DaiDeployEntityDeploymentsContent',
     component: () =>
-      import('./components/EntityDeployments').then(m => m.EntityDeployments),
+      import('./components/DaiDeployEntityDeploymentsContent').then(m => m.DaiDeployEntityDeploymentsContent),
     mountPoint: daiDeployEntityDeploymentsContentRouteRef,
   }),
 );

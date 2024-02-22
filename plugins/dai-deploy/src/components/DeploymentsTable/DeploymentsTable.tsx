@@ -6,6 +6,8 @@ import { useCurrentDeployments } from '../../hooks';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import {CurrentDeploymentStatus} from "@digital-ai/plugin-dai-deploy-common";
 import capitalize from 'lodash/capitalize';
+import Typography from "@mui/material/Typography";
+import {makeStyles} from "@material-ui/core";
 
 type DenseTableProps = {
     tableData: CurrentDeploymentStatus[];
@@ -19,6 +21,14 @@ type DenseTableProps = {
 
 const headerStyle: React.CSSProperties = { textTransform: "capitalize", whiteSpace: 'nowrap' };
 const cellStyle: React.CSSProperties = { width: 'auto', whiteSpace: 'nowrap' };
+
+const useStyles = makeStyles(theme => ({
+    empty: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        justifyContent: 'center',
+    }
+}));
 
 const columns: TableColumn[] = [
     {
@@ -101,9 +111,10 @@ const columns: TableColumn[] = [
 ];
 
 export const DenseTable = ({tableData, loading, page, pageSize, totalCount, onPageChange, onRowsPerPageChange}: DenseTableProps) => {
+    const classes = useStyles();
     return (
         <Table
-            title="Deployment Status"
+            title={<Typography variant="h6">Deployment tasks</Typography>}
             columns={columns}
             data={tableData}
             page={page}
@@ -120,6 +131,11 @@ export const DenseTable = ({tableData, loading, page, pageSize, totalCount, onPa
             }}
             onPageChange={onPageChange}
             onRowsPerPageChange={onRowsPerPageChange}
+            emptyContent={
+                <Typography color="textSecondary" className={classes.empty}>
+                    No tasks available
+                </Typography>
+            }
         />
     );
 };
