@@ -7,7 +7,8 @@ import {
 } from "./apiConfig";
 import {
     DeploymentHistoryStatus,
-    DeploymentHistoryStatusResponse
+    DeploymentStatusResponse,
+    DeploymentStatus
 } from "@digital-ai/plugin-dai-deploy-common";
 
 export class DeploymentHistoryStatusApi {
@@ -33,7 +34,7 @@ export class DeploymentHistoryStatusApi {
     }
 
     async getDeploymentHistoryStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskId: string): Promise<DeploymentHistoryStatusResponse> {
+                                     resultsPerPage: string, taskId: string): Promise<DeploymentStatusResponse> {
         this.logger?.debug(
             `Calling Deployment History status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
         );
@@ -64,6 +65,12 @@ export class DeploymentHistoryStatusApi {
         }
         const data: DeploymentHistoryStatus[] = await response.json();
         data.forEach(d => d.detailsRedirectUri = getDeploymentHistoryRedirectUri(this.config, d.taskId));
-        return { deploymentHistoryStatus: data, totalCount: Number(response.headers.get('X-Total-Count'))};
+
+        const deploymentStatusData: DeploymentStatus[] = [];
+        data.forEach(d => deploymentStatusData.push({ package: d.package, environment: d.environmentIdWithoutRoot, type: d.type,
+            user: d.user, state: d.status, startDate: d.startDate,
+            completionDate: d.completionDate, detailsRedirectUri: d.detailsRedirectUri}));
+
+        return { deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }
