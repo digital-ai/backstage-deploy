@@ -2,7 +2,7 @@
 
 ## Setup
 
-The following sections links will help you get the (Digital.ai) Dai Deploy plugin and Dai Deploy backend plugin to setup and running.
+The following sections links will help you get the (Digital.ai) Dai Deploy plugin and Dai Deploy backend plugin to setup and running. 
 
 ### Dai Deploy Backend
 
