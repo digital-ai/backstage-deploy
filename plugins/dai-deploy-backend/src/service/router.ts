@@ -54,9 +54,9 @@ export async function createRouter(
     const order = getEncodedQueryVal(req.query.order?.toString());
     const pageNumber = getEncodedQueryVal(req.query.pageNumber?.toString());
     const resultsPerPage = getEncodedQueryVal(req.query.resultsPerPage?.toString());
-    const taskSet = getEncodedQueryVal(req.query.taskSet?.toString());
+    const taskId = getEncodedQueryVal(req.query.taskId?.toString());
     const deploymentHistoryStatus = await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
-        appName, beginDate, endDate, order, pageNumber, resultsPerPage, taskSet);
+        appName, beginDate, endDate, order, pageNumber, resultsPerPage, taskId);
     res.status(200).json(deploymentHistoryStatus);
   });
 
