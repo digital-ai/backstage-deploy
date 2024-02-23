@@ -3,6 +3,8 @@ import {Config} from "@backstage/config";
 export const DEPLOYED_APPLICATION_API_PATH = '/deployit/application-status/deployed-applications';
 export const CURRENT_DEPLOYMENT_STATUS_API_PATH = '/deployit/taskmonitor/deployment';
 export const CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH = '/#/explorer?taskId=';
+export const DEPLOYMENT_HISTORY_STATUS_API_PATH = '/deployit/report/tasks';
+export const DEPLOYMENT_HISTORY_TASK_DETAILS_REDIRECT_PATH = '/#/reports/deployments?taskId=';
 
 export const getCredentials = (config: Config) => {
     try {
@@ -30,4 +32,8 @@ export const getEncodedQueryVal = (queryString?: string): string => {
 
 export const getCurrentTaskDetailsRedirectUri = (config: Config, taskId: string): string => {
     return `${getDeployApiHost(config)}${CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH}${taskId}`;
+}
+
+export const getDeploymentHistoryRedirectUri = (config: Config, taskId: string): string => {
+    return `${getDeployApiHost(config)}${DEPLOYMENT_HISTORY_TASK_DETAILS_REDIRECT_PATH}${taskId}`;
 }
