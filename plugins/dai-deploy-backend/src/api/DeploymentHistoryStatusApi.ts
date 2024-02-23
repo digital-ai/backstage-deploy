@@ -33,7 +33,7 @@ export class DeploymentHistoryStatusApi {
     }
 
     async getDeploymentHistoryStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskSet: string): Promise<DeploymentHistoryStatusResponse> {
+                                     resultsPerPage: string, taskId: string): Promise<DeploymentHistoryStatusResponse> {
         this.logger?.debug(
             `Calling Deployment History status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
         );
@@ -45,7 +45,7 @@ export class DeploymentHistoryStatusApi {
             "id"    : appName
         }];
         const response = await fetch(`${apiUrl}${DEPLOYMENT_HISTORY_STATUS_API_PATH}?begin=${beginDate}&end=${endDate}
-        &order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskSet=${taskSet}`, {
+        &order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskId=${taskId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Basic ${authCredentials}`,
