@@ -42,8 +42,8 @@ export class DeploymentHistoryStatusApi {
         const apiUrl = getDeployApiHost(this.config);
 
         const requestBody = [{
-            "type"  : "udm.Application",
-            "id"    : appName
+            "type": "udm.Application",
+            "id": appName
         }];
         const response = await fetch(`${apiUrl}${DEPLOYMENT_HISTORY_STATUS_API_PATH}?begin=${beginDate}&end=${endDate}
         &order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskId=${taskId}`, {
@@ -57,7 +57,7 @@ export class DeploymentHistoryStatusApi {
         });
         if (!response.ok) {
             if (response.status === 404) {
-                return  await response.json();
+                return await response.json();
             }
             throw new Error(
                 `failed to fetch data, status ${response.status}: ${response.statusText}`,
@@ -67,10 +67,12 @@ export class DeploymentHistoryStatusApi {
         data.forEach(d => d.detailsRedirectUri = getDeploymentHistoryRedirectUri(this.config, d.taskId));
 
         const deploymentStatusData: DeploymentStatus[] = [];
-        data.forEach(d => deploymentStatusData.push({ package: d.package, environment: d.environmentIdWithoutRoot, type: d.type,
-            user: d.user, state: d.status, startDate: d.startDate,
-            completionDate: d.completionDate, detailsRedirectUri: d.detailsRedirectUri}));
+        data.forEach(d => deploymentStatusData.push({
+            package: d.package, environment: d.environmentIdWithoutRoot,
+            type: d.type, user: d.user, state: d.status, startDate: d.startDate, completionDate: d.completionDate,
+            detailsRedirectUri: d.detailsRedirectUri
+        }));
 
-        return { deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
+        return {deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }

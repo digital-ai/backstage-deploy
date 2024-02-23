@@ -5,11 +5,6 @@
  * @packageDocumentation
  */
 
-export type DeploymentHistoryStatusResponse = {
-    deploymentHistoryStatus: DeploymentHistoryStatus[];
-    totalCount?: number;
-}
-
 export type DeploymentHistoryStatus = {
     taskId: string;
     startDate?: string;
