@@ -8,7 +8,7 @@ import {
 } from "./apiConfig";
 import {
     CurrentDeploymentStatus,
-    CurrentDeploymentStatusResponse
+    DeploymentStatus, DeploymentStatusResponse
 } from "@digital-ai/plugin-dai-deploy-common";
 
 export class CurrentDeploymentStatusApi {
@@ -34,7 +34,7 @@ export class CurrentDeploymentStatusApi {
     }
 
     async getCurrentDeploymentStatus(appName: string, beginDate: string, endDate: string, order: string, pageNumber: string,
-                                     resultsPerPage: string, taskSet: string): Promise<CurrentDeploymentStatusResponse> {
+                                     resultsPerPage: string, taskSet: string): Promise<DeploymentStatusResponse> {
         this.logger?.debug(
             `Calling Current deployment status api, start from: ${beginDate} to: ${endDate}, in order of ${order}`,
         );
@@ -42,8 +42,8 @@ export class CurrentDeploymentStatusApi {
         const apiUrl = getDeployApiHost(this.config);
 
         const requestBody = [{
-            "type"  : "udm.Application",
-            "id"    : appName
+            "type": "udm.Application",
+            "id": appName
         }];
         const response = await fetch(`${apiUrl}${CURRENT_DEPLOYMENT_STATUS_API_PATH}?begin=${beginDate}&end=${endDate}
         &order=${order}&page=${pageNumber}&resultsPerPage=${resultsPerPage}&taskSet=${taskSet}`, {
@@ -57,7 +57,7 @@ export class CurrentDeploymentStatusApi {
         });
         if (!response.ok) {
             if (response.status === 404) {
-                return  await response.json();
+                return await response.json();
             }
             throw new Error(
                 `failed to fetch data, status ${response.status}: ${response.statusText}`,
@@ -65,6 +65,15 @@ export class CurrentDeploymentStatusApi {
         }
         const data: CurrentDeploymentStatus[] = await response.json();
         data.forEach(d => d.detailsRedirectUri = getCurrentTaskDetailsRedirectUri(this.config, d.id));
-        return { currentDeploymentStatus: data, totalCount: Number(response.headers.get('X-Total-Count'))};
+
+        const deploymentStatusData: DeploymentStatus[] = [];
+        data.forEach(d => deploymentStatusData.push({
+            package: `${d.metadata.application}/${d.metadata.version}`,
+            environment: d.metadata.environment, type: d.metadata.taskType, user: d.owner, state: d.state,
+            scheduledDate: d.scheduledDate, startDate: d.startDate, completionDate: d.completionDate,
+            detailsRedirectUri: d.detailsRedirectUri
+        }));
+
+        return {deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }
