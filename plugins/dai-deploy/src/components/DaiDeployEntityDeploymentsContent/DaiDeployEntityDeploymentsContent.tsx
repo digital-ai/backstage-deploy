@@ -1,6 +1,5 @@
 import React from 'react';
 import {DeploymentsTable} from "../DeploymentsTable";
-// @ts-ignore
 import deployLogo from '../../assets/deployLogo.svg';
 import {CardTab, TabbedCard} from '@backstage/core-components';
 import {MissingAnnotationEmptyState, useEntity} from "@backstage/plugin-catalog-react";
@@ -8,6 +7,7 @@ import {DAI_DEPLOY_CI_ID_ANNOTATION} from "@digital-ai/plugin-dai-deploy-common"
 import {isCiCdAvailable} from "../isCiCdAvailable";
 import {Box, Paper} from "@material-ui/core";
 import Typography from "@mui/material/Typography";
+import {DeploymentsHistoryTable} from "../DeploymentsHistoryTable";
 
 export const DaiDeployEntityDeploymentsContent = () => {
     const { entity } = useEntity();
@@ -22,11 +22,11 @@ export const DaiDeployEntityDeploymentsContent = () => {
                 </Box>
             <TabbedCard
                 title="">
-                <CardTab label="Deployment Status">
-                    <DeploymentsTable api={"current"} />
+                <CardTab label="Active">
+                    <DeploymentsTable/>
                 </CardTab>
-                <CardTab label="Deployment Reports">
-                    <DeploymentsTable api={"report"}/>
+                <CardTab label="Archived">
+                    <DeploymentsHistoryTable/>
                 </CardTab>
             </TabbedCard>
             </div>

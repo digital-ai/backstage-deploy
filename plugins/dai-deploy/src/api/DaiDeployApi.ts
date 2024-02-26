@@ -1,5 +1,5 @@
 import { createApiRef } from '@backstage/core-plugin-api';
-import { CurrentDeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
+import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
 
 /** @public */
 export const daiDeployApiRef = createApiRef<DaiDeployApi>({
@@ -12,5 +12,12 @@ export interface DaiDeployApi {
         ciId: string,
         page: number,
         rowsPerPage: number
-    ): Promise<{ items: CurrentDeploymentStatusResponse }>;
+    ): Promise<{ items: DeploymentStatusResponse }>;
+
+    getDeploymentsReports(
+        ciId: string,
+        page: number,
+        rowsPerPage: number
+    ): Promise<{ items: DeploymentStatusResponse }>;
+
 }

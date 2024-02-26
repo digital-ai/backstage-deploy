@@ -2,7 +2,6 @@ import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
 import { renderInTestApp, setupRequestMockHandlers, TestApiProvider } from '@backstage/test-utils';
-import { DeploymentsTable } from './DeploymentsTable';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { currentDeploymentResponse, entityStub } from '../../mocks/mocks';
@@ -10,6 +9,8 @@ import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-commo
 import { daiDeployApiRef, DaiDeployApiClient } from '../../api';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import capitalize from "lodash/capitalize";
+import {DeploymentsHistoryTable} from "./DeploymentsHistoryTable";
+
 
 let entity: { entity: Entity };
 
@@ -49,7 +50,7 @@ describe('DeploymentsTable', () => {
 
   it('should render content with rows and columns', async () => {
     worker.use(
-      rest.get('http://example.com/api/dai-deploy/deployment-status', (_, res, ctx) =>
+      rest.get('http://example.com/api/dai-deploy/deployment-history', (_, res, ctx) =>
         res(
           ctx.status(200),
           ctx.set('Content-Type', 'application/json'),
@@ -59,8 +60,7 @@ describe('DeploymentsTable', () => {
     );
     const rendered = await renderContent();
     const currentDeploymentStatus = currentDeploymentResponse.deploymentStatus;
-
-    expect(rendered.getByText('Active')).toBeInTheDocument();
+    expect(rendered.getByText('Deployment Status')).toBeInTheDocument();
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
@@ -94,9 +94,9 @@ describe('DeploymentsTable', () => {
         ),
       ),
     );
-    const currentDeploymentStatus = currentDeploymentResponse.deploymentStatus;
+    const currentDeploymentStatus = currentDeploymentResponse.deploymentStatus
     const rendered = await renderContent();
-    expect(rendered.getByText('Active')).toBeInTheDocument();
+    expect(rendered.getByText('Deployment Status')).toBeInTheDocument();
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
@@ -133,7 +133,7 @@ async function renderContent() {
           ]
         ]
       }>
-      <DeploymentsTable/>
+      <DeploymentsHistoryTable/>
     </TestApiProvider>
   );
 }

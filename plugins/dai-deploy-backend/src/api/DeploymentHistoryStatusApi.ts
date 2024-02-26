@@ -6,10 +6,11 @@ import {
     getDeployApiHost, getDeploymentHistoryRedirectUri,
 } from "./apiConfig";
 import {
+    DeploymentArchiveData,
     DeploymentHistoryStatus,
     DeploymentStatusResponse,
-    DeploymentStatus
 } from "@digital-ai/plugin-dai-deploy-common";
+
 
 export class DeploymentHistoryStatusApi {
     private readonly logger: Logger;
@@ -64,15 +65,23 @@ export class DeploymentHistoryStatusApi {
             );
         }
         const data: DeploymentHistoryStatus[] = await response.json();
-        data.forEach(d => d.detailsRedirectUri = getDeploymentHistoryRedirectUri(this.config, d.taskId));
 
-        const deploymentStatusData: DeploymentStatus[] = [];
-        data.forEach(d => deploymentStatusData.push({
-            package: d.package, environment: d.environmentIdWithoutRoot,
-            type: d.type, user: d.user, state: d.status, startDate: d.startDate, completionDate: d.completionDate,
-            detailsRedirectUri: d.detailsRedirectUri
+        const deploymentArchiveData: DeploymentArchiveData[] = [];
+        data.forEach(d => deploymentArchiveData.push({
+            package: d.package,
+            environment: d.environmentIdWithoutRoot,
+            type: d.type,
+            owner: d.user,
+            state: d.status,
+            startDate: d.startDate,
+            completionDate: d.completionDate,
+            environmentId: d.environmentId,
+            environmentIdWithoutRoot: d.environmentIdWithoutRoot,
+            rolledBack: d.rolledBack,
+            worker_name: d.worker_name,
+            detailsRedirectUri: getDeploymentHistoryRedirectUri(this.config, d.taskId)
         }));
 
-        return {deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
+        return {deploymentStatus: deploymentArchiveData, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }

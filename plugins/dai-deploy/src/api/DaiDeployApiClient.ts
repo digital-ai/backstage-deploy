@@ -1,7 +1,7 @@
 import { DiscoveryApi } from "@backstage/core-plugin-api";
 import { DaiDeployApi } from "./DaiDeployApi";
 import { ResponseError } from '@backstage/errors';
-import {CurrentDeploymentStatusResponse} from '@digital-ai/plugin-dai-deploy-common';
+import {DeploymentStatusResponse} from '@digital-ai/plugin-dai-deploy-common';
 import moment from "moment";
 import { beginDateFormat, endDateFormat } from './utils';
 
@@ -15,7 +15,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
         this.discoveryApi = options.discoveryApi;
     }
 
-    async getCurrentDeployments(ciId: string, page: number, rowsPerPage: number): Promise<{ items: CurrentDeploymentStatusResponse}> {
+    async getCurrentDeployments(ciId: string, page: number, rowsPerPage: number): Promise<{ items: DeploymentStatusResponse}> {
         const queryString = new URLSearchParams();
         const now = new Date();
         queryString.append('appName', ciId);
@@ -27,9 +27,25 @@ export class DaiDeployApiClient implements DaiDeployApi {
         queryString.append('taskSet', 'ALL');
 
         const urlSegment = `deployment-status?${queryString}`;
-        const items = await this.get<CurrentDeploymentStatusResponse>(urlSegment);
+        const items = await this.get<DeploymentStatusResponse>(urlSegment);
         return {items};
     }
+
+    async getDeploymentsReports(ciId: string, page: number, rowsPerPage: number): Promise<{ items: DeploymentStatusResponse}> {
+        const queryString = new URLSearchParams();
+        const now = new Date();
+        queryString.append('appName', ciId);
+        queryString.append('beginDate', moment(now).subtract(7, 'days').format(beginDateFormat));
+        queryString.append('endDate', moment(now).format(endDateFormat));
+        queryString.append('order', 'startDate:desc');
+        queryString.append('pageNumber', page === 0 ? '1' : page.toString());
+        queryString.append('resultsPerPage', rowsPerPage.toString());
+
+        const urlSegment = `deployment-history?${queryString}`;
+        const items = await this.get<DeploymentStatusResponse>(urlSegment);
+        return {items};
+    }
+
 
     private async get<T>(path: string): Promise<T> {
         const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;

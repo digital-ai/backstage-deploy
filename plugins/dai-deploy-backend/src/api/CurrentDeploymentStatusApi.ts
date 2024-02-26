@@ -7,8 +7,8 @@ import {
     getDeployApiHost,
 } from "./apiConfig";
 import {
-    CurrentDeploymentStatus,
-    DeploymentStatus, DeploymentStatusResponse
+    CurrentDeploymentStatus, DeploymentActiveData,
+    DeploymentStatusResponse
 } from "@digital-ai/plugin-dai-deploy-common";
 
 export class CurrentDeploymentStatusApi {
@@ -63,17 +63,29 @@ export class CurrentDeploymentStatusApi {
                 `failed to fetch data, status ${response.status}: ${response.statusText}`,
             );
         }
-        const data: CurrentDeploymentStatus[] = await response.json();
-        data.forEach(d => d.detailsRedirectUri = getCurrentTaskDetailsRedirectUri(this.config, d.id));
+        const data: CurrentDeploymentStatus[] = await response.json(); // deploy api
 
-        const deploymentStatusData: DeploymentStatus[] = [];
-        data.forEach(d => deploymentStatusData.push({
-            package: `${d.metadata.application}/${d.metadata.version}`,
-            environment: d.metadata.environment, type: d.metadata.taskType, user: d.owner, state: d.state,
-            scheduledDate: d.scheduledDate, startDate: d.startDate, completionDate: d.completionDate,
-            detailsRedirectUri: d.detailsRedirectUri
+        const deploymentActiveData: DeploymentActiveData[] = [];
+        data.forEach(d => deploymentActiveData.push({
+            owner: d.owner,
+            state: d.state,
+            startDate: d.startDate,
+            completionDate: d.completionDate,
+            id: d.id,
+            description: d.description,
+            metadata: {
+                    worker_name: d.metadata.worker_name,
+                    environment_id: d.metadata.environment_id,
+                    environment_reference_id: d.metadata.environment_reference_id,
+                    version: d.metadata.version,
+                    environment: d.metadata.environment,
+                    satellite_ids: d.metadata.satellite_ids,
+                    application: d.metadata.application,
+                    taskType: d.metadata.taskType
+                },
+            scheduledDate: d.scheduledDate,
+            detailsRedirectUri: getCurrentTaskDetailsRedirectUri(this.config, d.id)
         }));
-
-        return {deploymentStatus: deploymentStatusData, totalCount: Number(response.headers.get('X-Total-Count'))};
+        return {deploymentStatus: deploymentActiveData, totalCount: Number(response.headers.get('X-Total-Count'))};
     }
 }
