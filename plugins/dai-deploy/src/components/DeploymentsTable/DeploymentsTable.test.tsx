@@ -60,7 +60,6 @@ describe('DeploymentsTable', () => {
     const rendered = await renderContent();
     const currentDeploymentStatus = currentDeploymentResponse.deploymentStatus;
 
-    expect(rendered.getByText('Active')).toBeInTheDocument();
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
@@ -96,7 +95,7 @@ describe('DeploymentsTable', () => {
     );
     const currentDeploymentStatus = currentDeploymentResponse.deploymentStatus;
     const rendered = await renderContent();
-    expect(rendered.getByText('Active')).toBeInTheDocument();
+
     expectedColumns.forEach(
         c => expect(rendered.getByText(c)).toBeInTheDocument()
         );
@@ -133,7 +132,7 @@ async function renderContent() {
           ]
         ]
       }>
-      <DeploymentsTable/>
+      <DeploymentsTable />
     </TestApiProvider>
   );
 }

@@ -26,10 +26,10 @@ export interface MetaData {
 
 export interface DeploymentArchiveData extends DeploymentData {
     type: string;
-    environment?: string;
+    environment: string;
     environmentId: string;
     environmentIdWithoutRoot: string;
     package: string;
-    rolledBack: string;
+    rolledBack: boolean;
     worker_name: string | null;
 }

@@ -16,7 +16,7 @@ export type DeploymentHistoryStatus = {
     environmentId: string;
     environmentIdWithoutRoot: string;
     package: string;
-    rolledBack: string;
+    rolledBack: boolean;
     worker_name: string | null;
     detailsRedirectUri: string;
 }
