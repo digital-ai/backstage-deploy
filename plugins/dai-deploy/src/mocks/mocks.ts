@@ -1,5 +1,7 @@
 import { Entity } from '@backstage/catalog-model';
-import {CurrentDeploymentStatusResponse} from '@digital-ai/plugin-dai-deploy-common';
+import {
+    DeploymentActiveData, DeploymentArchiveData,
+} from '@digital-ai/plugin-dai-deploy-common';
 
 export const entityStub: { entity: Entity } = {
     entity: {
@@ -20,9 +22,9 @@ export const entityStub: { entity: Entity } = {
     },
   };
 
-  export const currentDeploymentResponse: CurrentDeploymentStatusResponse =
+  export const currentDeploymentResponse: { deploymentStatus: DeploymentActiveData[],totalCount: number } =
       {
-          currentDeploymentStatus: [
+          deploymentStatus: [
         {
             "id": "f851134a-020f-42fc-ae30-daf58cf34ea4",
             "owner": "admin",
@@ -37,7 +39,6 @@ export const entityStub: { entity: Entity } = {
                 "application": "cmd-app",
                 "taskType": "INITIAL"
             },
-            "workerId": null,
             "detailsRedirectUri": "http://localhost:4516/#/explorer?taskId=f851134a-020f-42fc-ae30-daf58cf34ea4"
         },
         {
@@ -57,9 +58,29 @@ export const entityStub: { entity: Entity } = {
                 "satellite_ids": "",
                 "application": "D-32171"
             },
-            "workerId": 11,
             "detailsRedirectUri": "http://localhost:4516/#/explorer?taskId=5473142b-5234-43ce-a083-e3dcfc929d72"
         }
     ],
           totalCount: 100
   };
+
+export const deploymentHistoryResponse: { deploymentStatus: DeploymentArchiveData[],totalCount: number } =
+    {
+        deploymentStatus: [
+            {
+                "package": "Commandls/1.0",
+                "environment": "My/test/testenv",
+                "type": "Undeployment",
+                "owner": "admin",
+                "state": "DONE",
+                "startDate": "2024-02-23T09:27:14.277+0000",
+                "completionDate": "2024-02-24T09:27:14.414+0000",
+                "environmentId": "Environments/My/test/testenv",
+                "environmentIdWithoutRoot": "My/test/testenv",
+                "rolledBack": false,
+                "worker_name": "In-process worker",
+                "detailsRedirectUri": "http://localhost:4516/#/reports/deployments?taskId=d140e4e0-7051-42bf-b39e-7e1f18e73f7b"
+            },
+        ],
+        totalCount: 100
+    };

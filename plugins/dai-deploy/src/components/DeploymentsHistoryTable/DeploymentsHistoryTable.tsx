@@ -4,17 +4,19 @@ import {
 } from '@backstage/core-components';
 
 import { useEntity } from '@backstage/plugin-catalog-react';
-import {useCurrentDeployments} from '../../hooks';
-import {defaultActiveColumns, DenseTable} from "../DenseTable/DenseTable";
+import {useDeploymentsReports} from '../../hooks';
+import {
+    defaultArchivedColumns,
+    DenseTable
+} from "../DenseTable/DenseTable";
 
-
-export const DeploymentsTable = () => {
+export const DeploymentsHistoryTable = () => {
     const { entity } = useEntity();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
         const {items, loading, error} =
-            useCurrentDeployments(entity, page, rowsPerPage)
+             useDeploymentsReports(entity, page, rowsPerPage);
 
     if (error) {
       return <ResponseErrorPanel error={error} />;
@@ -29,7 +31,7 @@ export const DeploymentsTable = () => {
             tableData={items?.deploymentStatus || []}
             onRowsPerPageChange={setRowsPerPage}
             onPageChange={setPage}
-            columns={defaultActiveColumns}
+            columns={defaultArchivedColumns}
         />
     );
 }
