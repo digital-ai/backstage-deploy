@@ -1,7 +1,7 @@
-import {Logger} from "winston";
-import {Config} from "@backstage/config";
-import {DEPLOYED_APPLICATION_API_PATH, getCredentials, getDeployApiHost} from "./apiConfig";
-import {DeployedApplicationStatus} from "@digital-ai/plugin-dai-deploy-common";
+import { DEPLOYED_APPLICATION_API_PATH, getCredentials, getDeployApiHost } from "./apiConfig";
+import { Config } from "@backstage/config";
+import { DeployedApplicationStatus } from "@digital-ai/plugin-dai-deploy-common";
+import { Logger } from "winston";
 
 /** @public */
 export class DeployedApplicationStatusApi {

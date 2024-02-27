@@ -1,5 +1,3 @@
-import {Logger} from "winston";
-import {Config} from "@backstage/config";
 import {
     CURRENT_DEPLOYMENT_STATUS_API_PATH,
     getCredentials,
@@ -7,9 +5,12 @@ import {
     getDeployApiHost,
 } from "./apiConfig";
 import {
-    CurrentDeploymentStatus, DeploymentActiveData,
+    CurrentDeploymentStatus, 
+    DeploymentActiveData,
     DeploymentStatusResponse
 } from "@digital-ai/plugin-dai-deploy-common";
+import { Config } from "@backstage/config";
+import { Logger } from "winston";
 
 export class CurrentDeploymentStatusApi {
     private readonly logger: Logger;

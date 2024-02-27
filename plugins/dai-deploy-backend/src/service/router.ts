@@ -1,11 +1,11 @@
+import { CurrentDeploymentStatusApi, DeployedApplicationStatusApi } from "../api";
+import { Config } from "@backstage/config";
+import { DeploymentHistoryStatusApi } from "../api/DeploymentHistoryStatusApi";
+import { Logger } from 'winston';
+import Router from 'express-promise-router';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-import Router from 'express-promise-router';
-import { Logger } from 'winston';
-import { Config } from "@backstage/config";
-import { DeployedApplicationStatusApi, CurrentDeploymentStatusApi } from "../api";
 import { getEncodedQueryVal } from "../api/apiConfig";
-import {DeploymentHistoryStatusApi} from "../api/DeploymentHistoryStatusApi";
 
 export interface RouterOptions {
   config: Config;

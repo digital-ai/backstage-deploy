@@ -1,6 +1,6 @@
-import {createServiceBuilder, loadBackendConfig} from '@backstage/backend-common';
-import { Server } from 'http';
+import { createServiceBuilder, loadBackendConfig } from '@backstage/backend-common';
 import { Logger } from 'winston';
+import { Server } from 'http';
 import { createRouter } from './router';
 
 export interface ServerOptions {

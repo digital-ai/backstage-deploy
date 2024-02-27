@@ -1,9 +1,8 @@
-import { getVoidLogger } from '@backstage/backend-common';
-import express from 'express';
-import request from 'supertest';
-
+import { ConfigReader } from "@backstage/config";
 import { createRouter } from './router';
-import {ConfigReader} from "@backstage/config";
+import express from 'express';
+import { getVoidLogger } from '@backstage/backend-common';
+import request from 'supertest';
 
 describe('createRouter', () => {
   let app: express.Express;
