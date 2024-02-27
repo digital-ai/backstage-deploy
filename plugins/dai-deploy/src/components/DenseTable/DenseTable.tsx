@@ -28,128 +28,136 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const userColumns: TableColumn[] = [
-    {
-        title: 'User',
-        field: 'user',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            ` ${row.owner}`
-        ),
+export const columnFactories = Object.freeze({
+    createUserColumns(): TableColumn {
+        return {
+            title: 'User',
+            field: 'user',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                ` ${row.owner}`
+            ),
+        };
     },
- ]
-export const stateColumns: TableColumn[] = [
-    {
-        title: 'State',
-        field: 'state',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            capitalize(row.state)
-        ),
+    createStateColumns(): TableColumn {
+        return {
+            title: 'State',
+            field: 'state',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                capitalize(row.state)
+            ),
+        };
     },
-]
-export const startAndEndDateColumns: TableColumn[] = [
-        {
-        title: 'Start Date',
-        field: 'startDate',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            formatTimestamp(row.startDate)
-        ),
+    createStartDateColumns(): TableColumn {
+        return {
+            title: 'Start Date',
+            field: 'startDate',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                formatTimestamp(row.startDate)
+            ),
+        };
     },
-    {
-        title: 'End Date',
-        field: 'completionDate',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            formatTimestamp(row.completionDate)
-        ),
-    },
-]
 
-export const packageColumns: TableColumn[] = [
-    {
-        title: 'Package',
-        field: 'package',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            row.metadata ? `${row?.metadata?.application}/${row?.metadata?.version}` : row.package
-        ),
+    createEndDateColumns(): TableColumn {
+        return {
+            title: 'End Date',
+            field: 'completionDate',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                formatTimestamp(row.completionDate)
+            ),
+        };
     },
-]
-export const environmentColumns: TableColumn[] = [
-    {
-        title: 'Environment',
-        field: 'environment',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            row.metadata ?  row.metadata.environment : row.environment
-        ),
+
+    createPackageColumns(): TableColumn {
+        return {
+            title: 'Package',
+            field: 'package',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                row.metadata ? `${row?.metadata?.application}/${row?.metadata?.version}` : row.package
+            ),
+        };
     },
-    ]
-export const typeColumns: TableColumn[] = [
-    {
-        title: 'Type',
-        field: 'type',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            row.metadata ?  capitalize(row.metadata.taskType) : capitalize(row.type)
-        ),
+
+    createEnvironmentColumns(): TableColumn {
+        return {
+            title: 'Environment',
+            field: 'environment',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                row.metadata ?  row.metadata.environment : row.environment
+            ),
+        };
     },
+    createScheduledDateColumns(): TableColumn {
+        return {
+            title: 'Scheduled Date',
+            field: 'scheduledDate',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                formatTimestamp(row.scheduledDate)
+            ),
+        };
+    },
+    createTypeColumns(): TableColumn {
+        return {
+            title: 'Type',
+            field: 'type',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                row.metadata ?  capitalize(row.metadata.taskType) : capitalize(row.type)
+            ),
+        };
+    },
+    createRedirectionColumns(): TableColumn {
+        return {
+            title: 'View',
+            field: 'taskId',
+            cellStyle: cellStyle,
+            headerStyle: headerStyle,
+            render: (row: Partial<any>) => (
+                <LinkButton to={`${row.detailsRedirectUri}`}>
+                    <LaunchIcon />
+                </LinkButton>
+            ),
+        };
+    },
+});
+
+export const defaultActiveColumns: TableColumn[] = [
+    columnFactories.createPackageColumns(),
+    columnFactories.createEnvironmentColumns(),
+    columnFactories.createTypeColumns(),
+    columnFactories.createUserColumns(),
+    columnFactories.createStateColumns(),
+    columnFactories.createScheduledDateColumns(),
+    columnFactories.createStartDateColumns(),
+    columnFactories.createEndDateColumns(),
+    columnFactories.createRedirectionColumns(),
 ];
 
-export const scheduledDateColumns: TableColumn[] = [
-    {
-        title: 'Scheduled Date',
-        field: 'scheduledDate',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            formatTimestamp(row.scheduledDate)
-        ),
-    },
-]
+export const defaultArchivedColumns: TableColumn[] = [
+    columnFactories.createPackageColumns(),
+    columnFactories.createEnvironmentColumns(),
+    columnFactories.createTypeColumns(),
+    columnFactories.createUserColumns(),
+    columnFactories.createStateColumns(),
+    columnFactories.createStartDateColumns(),
+    columnFactories.createEndDateColumns(),
+    columnFactories.createRedirectionColumns(),
+];
 
-export const redirectionColumns: TableColumn[] = [
-    {
-        title: 'View',
-        field: 'taskId',
-        cellStyle: cellStyle,
-        headerStyle: headerStyle,
-        render: (row: Partial<any>) => (
-            <LinkButton to={`${row.detailsRedirectUri}`}>
-                <LaunchIcon />
-            </LinkButton>
-        ),
-    },
-]
-
-export const activeDeploymentColumns: TableColumn[] = [
-    ...packageColumns,
-    ...environmentColumns,
-    ...typeColumns,
-    ...userColumns,
-    ...stateColumns,
-    ...scheduledDateColumns,
-    ...startAndEndDateColumns,
-    ...redirectionColumns
-]
-export const archiveDeploymentColumns: TableColumn[] = [
-    ...packageColumns,
-    ...environmentColumns,
-    ...typeColumns,
-    ...userColumns,
-    ...stateColumns,
-    ...startAndEndDateColumns,
-    ...redirectionColumns
-]
 
 export const DenseTable = ({tableData, loading, page, pageSize, totalCount, onPageChange, onRowsPerPageChange,columns}: DenseTableProps) => {
     const classes = useStyles();

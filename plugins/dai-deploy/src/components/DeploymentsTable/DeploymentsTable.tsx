@@ -5,7 +5,7 @@ import {
 
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {useCurrentDeployments} from '../../hooks';
-import {activeDeploymentColumns, DenseTable} from "../DenseTable/DenseTable";
+import {defaultActiveColumns, DenseTable} from "../DenseTable/DenseTable";
 
 
 export const DeploymentsTable = () => {
@@ -29,7 +29,7 @@ export const DeploymentsTable = () => {
             tableData={items?.deploymentStatus || []}
             onRowsPerPageChange={setRowsPerPage}
             onPageChange={setPage}
-            columns={activeDeploymentColumns}
+            columns={defaultActiveColumns}
         />
     );
 }

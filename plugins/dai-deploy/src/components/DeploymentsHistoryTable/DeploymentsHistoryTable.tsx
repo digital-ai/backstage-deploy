@@ -5,7 +5,10 @@ import {
 
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {useDeploymentsReports} from '../../hooks';
-import {archiveDeploymentColumns, DenseTable} from "../DenseTable/DenseTable";
+import {
+    defaultArchivedColumns,
+    DenseTable
+} from "../DenseTable/DenseTable";
 
 export const DeploymentsHistoryTable = () => {
     const { entity } = useEntity();
@@ -28,7 +31,7 @@ export const DeploymentsHistoryTable = () => {
             tableData={items?.deploymentStatus || []}
             onRowsPerPageChange={setRowsPerPage}
             onPageChange={setPage}
-            columns={archiveDeploymentColumns}
+            columns={defaultArchivedColumns}
         />
     );
 }
