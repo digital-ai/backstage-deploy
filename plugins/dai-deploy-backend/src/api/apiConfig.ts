@@ -27,7 +27,7 @@ export const getDeployApiHost = (config: Config): string => {
 }
 
 export const getEncodedQueryVal = (queryString?: string): string => {
-    return encodeURIComponent((queryString || queryString == 'undefined') ? queryString : '');
+    return encodeURIComponent((queryString || queryString === 'undefined') ? queryString : '');
 }
 
 export const getCurrentTaskDetailsRedirectUri = (config: Config, taskId: string): string => {

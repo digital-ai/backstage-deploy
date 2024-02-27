@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
 import {DAI_DEPLOY_CI_ID_ANNOTATION} from "@digital-ai/plugin-dai-deploy-common";
+import { Entity } from '@backstage/catalog-model';
 
 /**
  * Utility function to determine if the given entity has an Airbrake ID set in the repos catalog-info.yml .

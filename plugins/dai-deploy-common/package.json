@@ -21,12 +21,25 @@
     "test": "backstage-cli package test",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "prepare": "husky",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.13"
+    "@backstage/cli": "^0.22.13",
+    "@spotify/prettier-config": "^15.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "3.2.5"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "lint-staged": {
+    "**/*": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
+  }
 }

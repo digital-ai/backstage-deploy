@@ -1,13 +1,13 @@
+import { Box, Paper } from "@material-ui/core";
+import { CardTab, TabbedCard } from '@backstage/core-components';
+import { MissingAnnotationEmptyState, useEntity } from "@backstage/plugin-catalog-react";
+import { DAI_DEPLOY_CI_ID_ANNOTATION } from "@digital-ai/plugin-dai-deploy-common";
+import { DeploymentsHistoryTable } from "../DeploymentsHistoryTable";
+import { DeploymentsTable } from "../DeploymentsTable";
 import React from 'react';
-import {DeploymentsTable} from "../DeploymentsTable";
-import deployLogo from '../../assets/deployLogo.svg';
-import {CardTab, TabbedCard} from '@backstage/core-components';
-import {MissingAnnotationEmptyState, useEntity} from "@backstage/plugin-catalog-react";
-import {DAI_DEPLOY_CI_ID_ANNOTATION} from "@digital-ai/plugin-dai-deploy-common";
-import {isCiCdAvailable} from "../isCiCdAvailable";
-import {Box, Paper} from "@material-ui/core";
 import Typography from "@mui/material/Typography";
-import {DeploymentsHistoryTable} from "../DeploymentsHistoryTable";
+import deployLogo from '../../assets/deployLogo.svg';
+import { isCiCdAvailable } from "../isCiCdAvailable";
 
 export const DaiDeployEntityDeploymentsContent = () => {
     const { entity } = useEntity();
@@ -33,8 +33,8 @@ export const DaiDeployEntityDeploymentsContent = () => {
             </Paper>
         );
 
-    } else {
+    } 
        return (<MissingAnnotationEmptyState annotation={DAI_DEPLOY_CI_ID_ANNOTATION} />);
-    }
+    
 
 };

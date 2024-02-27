@@ -1,12 +1,8 @@
-import React, {useState} from 'react';
-import {
-    ResponseErrorPanel,
-} from '@backstage/core-components';
-
+import { DenseTable, defaultActiveColumns } from "../DenseTable/DenseTable";
+import React, { useState } from 'react';
+import { ResponseErrorPanel } from '@backstage/core-components';
+import { useCurrentDeployments } from '../../hooks';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import {useCurrentDeployments} from '../../hooks';
-import {defaultActiveColumns, DenseTable} from "../DenseTable/DenseTable";
-
 
 export const DeploymentsTable = () => {
     const { entity } = useEntity();

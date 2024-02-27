@@ -1,11 +1,11 @@
-import { formatTimestamp } from '../../utils/dateTimeUtils';
-import capitalize from 'lodash/capitalize';
-import Typography from "@mui/material/Typography";
-import {makeStyles} from "@material-ui/core";
-import React from "react";
-import LaunchIcon from "@material-ui/icons/Launch";
-import {LinkButton, Table, TableColumn} from "@backstage/core-components";
 import {DeploymentActiveData, DeploymentArchiveData} from "@digital-ai/plugin-dai-deploy-common";
+import {LinkButton, Table, TableColumn} from "@backstage/core-components";
+import LaunchIcon from "@material-ui/icons/Launch";
+import React from "react";
+import Typography from "@mui/material/Typography";
+import capitalize from 'lodash/capitalize';
+import { formatTimestamp } from '../../utils/dateTimeUtils';
+import {makeStyles} from "@material-ui/core";
 
 type DenseTableProps = {
     tableData:  DeploymentArchiveData[] | DeploymentActiveData[] ;
