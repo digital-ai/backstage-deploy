@@ -1,11 +1,11 @@
-import { Entity } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core-plugin-api';
-import useAsync from 'react-use/lib/useAsync';
 import {
     DAI_DEPLOY_CI_ID_ANNOTATION,
     DeploymentStatusResponse
 } from '@digital-ai/plugin-dai-deploy-common';
-import {daiDeployApiRef} from '../api';
+import { Entity } from '@backstage/catalog-model';
+import { daiDeployApiRef } from '../api';
+import { useApi } from '@backstage/core-plugin-api';
+import useAsync from 'react-use/lib/useAsync';
 
 export function useCurrentDeployments(
     entity: Entity,

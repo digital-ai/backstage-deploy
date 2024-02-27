@@ -1,15 +1,17 @@
-import React from 'react';
-import { Entity } from '@backstage/catalog-model';
+/* eslint-disable jest/no-conditional-expect */
+
+import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
-import { renderInTestApp, setupRequestMockHandlers, TestApiProvider } from '@backstage/test-utils';
-import { DeploymentsTable } from './DeploymentsTable';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
+import { TestApiProvider, renderInTestApp, setupRequestMockHandlers } from '@backstage/test-utils';
 import { currentDeploymentResponse, entityStub } from '../../mocks/mocks';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
-import { daiDeployApiRef, DaiDeployApiClient } from '../../api';
-import { formatTimestamp } from '../../utils/dateTimeUtils';
+import { DeploymentsTable } from './DeploymentsTable';
+import { Entity } from '@backstage/catalog-model';
+import React from 'react';
 import capitalize from "lodash/capitalize";
+import { formatTimestamp } from '../../utils/dateTimeUtils';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
 
 let entity: { entity: Entity };
 
@@ -31,8 +33,9 @@ describe('DeploymentsTable', () => {
     jest.resetAllMocks();
 
     entity = entityStub;
-      entity.entity.metadata.annotations ?
-        entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] = 'test-app' : '';
+    if (entity.entity.metadata.annotations) {
+      entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] = 'test-app';
+    }
   });
 
   const expectedColumns = [
@@ -65,7 +68,7 @@ describe('DeploymentsTable', () => {
         );
       currentDeploymentStatus.forEach(
       e => {
-        expect(rendered.getByText(e.metadata.application + '/' + e.metadata.version)).toBeInTheDocument()
+        expect(rendered.getByText(`${e.metadata.application  }/${  e.metadata.version}`)).toBeInTheDocument()
         expect(rendered.getByText(e.metadata.environment)).toBeInTheDocument()
         expect(rendered.getByText(capitalize(e.metadata.taskType))).toBeInTheDocument()
         expect(rendered.getByText(e.owner)).toBeInTheDocument()
@@ -101,7 +104,7 @@ describe('DeploymentsTable', () => {
         );
       currentDeploymentStatus.forEach(
       e => {
-        expect(rendered.queryByText(e.metadata.application + '/' + e.metadata.version)).not.toBeInTheDocument()
+        expect(rendered.queryByText(`${e.metadata.application  }/${  e.metadata.version}`)).not.toBeInTheDocument()
         expect(rendered.queryByText(e.metadata.environment)).not.toBeInTheDocument()
         expect(rendered.queryByText(e.metadata.taskType)).not.toBeInTheDocument()
         expect(rendered.queryByText(e.owner)).not.toBeInTheDocument()

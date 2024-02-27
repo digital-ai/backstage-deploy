@@ -1,7 +1,7 @@
-import { Entity } from '@backstage/catalog-model';
 import {
     DeploymentActiveData, DeploymentArchiveData,
 } from '@digital-ai/plugin-dai-deploy-common';
+import { Entity } from '@backstage/catalog-model';
 
 export const entityStub: { entity: Entity } = {
     entity: {

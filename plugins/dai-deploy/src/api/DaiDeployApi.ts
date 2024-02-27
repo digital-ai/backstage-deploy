@@ -1,5 +1,5 @@
-import { createApiRef } from '@backstage/core-plugin-api';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
+import { createApiRef } from '@backstage/core-plugin-api';
 
 /** @public */
 export const daiDeployApiRef = createApiRef<DaiDeployApi>({
