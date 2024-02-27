@@ -50,7 +50,7 @@ jobs:
       working-directory: ./plugins/dai-deploy-backend
       run: yarn tsc
     - name: dai-deploy-backend - Run lint
-      working-directory: ./plugins/dai-deploy-common
+      working-directory: ./plugins/dai-deploy-backend
       run: yarn lint    
     - name: dai-deploy-backend - Build
       working-directory: ./plugins/dai-deploy-backend
@@ -68,7 +68,7 @@ jobs:
       working-directory: ./plugins/dai-deploy
       run: yarn tsc
     - name: dai-deploy - Run lint
-      working-directory: ./plugins/dai-deploy-common
+      working-directory: ./plugins/dai-deploy
       run: yarn lint      
     - name: dai-deploy - Build
       working-directory: ./plugins/dai-deploy
