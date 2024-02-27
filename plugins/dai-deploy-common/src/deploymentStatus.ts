@@ -1,5 +1,5 @@
 /***/
-import {DeploymentActiveData, DeploymentArchiveData} from "./deploymentsData";
+import { DeploymentActiveData, DeploymentArchiveData } from './deploymentsData';
 
 /**
  * Common functionalities for the dai-deploy plugin.
@@ -8,6 +8,6 @@ import {DeploymentActiveData, DeploymentArchiveData} from "./deploymentsData";
  */
 
 export type DeploymentStatusResponse = {
-    deploymentStatus: DeploymentActiveData[] | DeploymentArchiveData[] ;
-    totalCount?: number;
-}
+  deploymentStatus: DeploymentActiveData[] | DeploymentArchiveData[];
+  totalCount?: number;
+};
