@@ -27,7 +27,7 @@ kind: Component
 metadata:
   # ...
   annotations:
-     dai-deploy/ci-id: 'SatelliteApp'
+    dai-deploy/ci-id: 'SatelliteApp'
 spec:
   type: service
   # ...
@@ -46,24 +46,24 @@ To get the Dai Deploy - Deployment Status component working you'll need to do th
 
 2. Second we need to add the `DaiDeployEntityDeploymentsContent` extension to the entity page in your app. How to do this will depend on which annotation you are using in your entities:
 
-    1. Add the DaiDeployEntityDeploymentsContent in EntityPage:
+   1. Add the DaiDeployEntityDeploymentsContent in EntityPage:
 
-       ```tsx
-       // In packages/app/src/components/catalog/EntityPage.tsx
-       import {
-         DaiDeployEntityDeploymentsContent
-       } from '@digital-ai/plugin-dai-deploy';
- 
-       // For example in the CI/CD section
-       const cicdContent = (
-         <EntitySwitch>
-           // ...
-           <EntitySwitch.Case>
-               <DaiDeployEntityDeploymentsContent />
-           </EntitySwitch.Case>
-           // ...
-         </EntitySwitch>
-       ```
+      ```tsx
+      // In packages/app/src/components/catalog/EntityPage.tsx
+      import {
+        DaiDeployEntityDeploymentsContent
+      } from '@digital-ai/plugin-dai-deploy';
+
+      // For example in the CI/CD section
+      const cicdContent = (
+        <EntitySwitch>
+          // ...
+          <EntitySwitch.Case>
+              <DaiDeployEntityDeploymentsContent />
+          </EntitySwitch.Case>
+          // ...
+        </EntitySwitch>
+      ```
 
 **Notes:**
 
