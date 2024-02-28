@@ -33,8 +33,8 @@ export const DaiDeployEntityDeploymentsContent = () => {
             </Paper>
         );
 
-    } 
+    }
        return (<MissingAnnotationEmptyState annotation={DAI_DEPLOY_CI_ID_ANNOTATION} />);
-    
+
 
 };

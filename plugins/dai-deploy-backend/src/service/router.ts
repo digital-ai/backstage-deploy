@@ -1,27 +1,42 @@
 import { CurrentDeploymentStatusApi, DeployedApplicationStatusApi } from "../api";
 import { Config } from "@backstage/config";
-import { DeploymentHistoryStatusApi } from "../api/DeploymentHistoryStatusApi";
+import { DeploymentHistoryStatusApi } from "../api";
 import { Logger } from 'winston';
+import { InputError, NotAllowedError } from '@backstage/errors';
 import Router from 'express-promise-router';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
 import { getEncodedQueryVal } from "../api/apiConfig";
+import {
+  daiDeployViewPermission,
+  daiDeployViewPermissions
+} from '@digital-ai/plugin-dai-deploy-common';
+import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
+import {
+  PermissionEvaluator,
+  AuthorizeResult,
+} from '@backstage/plugin-permission-common';
+import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
 
 export interface RouterOptions {
   config: Config;
   logger: Logger;
+  permissions: PermissionEvaluator;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config } = options;
+  const { logger, config, permissions } = options;
   const  deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(config, logger);
   const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(config, logger);
   const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(config, logger);
-
+  const permissionIntegrationRouter = createPermissionIntegrationRouter({
+    permissions: daiDeployViewPermissions,
+  });
   const router = Router();
   router.use(express.json());
+  router.use(permissionIntegrationRouter);
 
   router.get('/health', (_, response) => {
     logger.info('PONG!');
@@ -35,6 +50,32 @@ export async function createRouter(
   });
 
   router.get('/deployment-status', async (req, res) => {
+    const token = getBearerTokenFromAuthorizationHeader(
+        req.header('authorization'),
+    );
+    const entityRef = req.body.entityRef;
+    if (typeof entityRef !== 'string') {
+      throw new InputError('Invalid entityRef, not a string');
+    }
+    const decision = permissions
+        ? (
+            await permissions.authorize(
+                [
+                  {
+                    permission: daiDeployViewPermission,
+                    resourceRef: entityRef,
+                  },
+                ],
+                {
+                  token,
+                },
+            )
+        )[0]
+        : undefined;
+    if (decision && decision.result === AuthorizeResult.DENY) {
+      throw new NotAllowedError('Unauthorized');
+    }
+
     const appName = getEncodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());
