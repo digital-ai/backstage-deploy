@@ -3,13 +3,13 @@ import {
   DeployedApplicationStatusApi,
 } from '../api';
 import { Config } from '@backstage/config';
-import { DeploymentHistoryStatusApi } from '../api/DeploymentHistoryStatusApi';
+import { DeploymentHistoryStatusApi } from '../api';
 import { Logger } from 'winston';
 import { InputError, NotAllowedError } from '@backstage/errors';
 import Router from 'express-promise-router';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-import { getEncodedQueryVal } from "../api/apiConfig";
+import {getEncodedQueryVal} from "../api/apiConfig";
 import {
   daiDeployViewPermission,
   daiDeployViewPermissions
