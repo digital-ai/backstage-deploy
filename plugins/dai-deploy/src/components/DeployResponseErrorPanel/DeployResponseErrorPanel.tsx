@@ -16,6 +16,8 @@ export function DeployResponseErrorPanel(props: DeployErrorPanelProps) {
          title = "Connection Failed: Unable to Connect to Digital.ai Deploy";
         } else if(messageString.includes("Unauthorized")){
          title = ("Access Denied: Unauthorized to Use Digital.ai Deploy")
+        } else if (messageString.includes("report#view permission")) {
+         title = ("Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy")
         }
         return (
             <WarningPanel
