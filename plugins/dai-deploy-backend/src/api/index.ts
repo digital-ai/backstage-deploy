@@ -1,3 +1,3 @@
-export * from './CurrentDeploymentStatusApi'
-export * from './DeployedApplicationStatusApi'
-export * from './DeploymentHistoryStatusApi'
+export * from './CurrentDeploymentStatusApi';
+export * from './DeployedApplicationStatusApi';
+export * from './DeploymentHistoryStatusApi';
