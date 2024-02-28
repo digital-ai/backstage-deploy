@@ -1,4 +1,4 @@
-import { ConfigReader } from "@backstage/config";
+import { ConfigReader } from '@backstage/config';
 import { createRouter } from './router';
 import express from 'express';
 import { getVoidLogger } from '@backstage/backend-common';
@@ -8,12 +8,11 @@ describe('createRouter', () => {
   let app: express.Express;
 
   beforeAll(async () => {
-
     const config = new ConfigReader({
       daiDeploy: {
         host: '',
         username: '',
-        password: ''
+        password: '',
       },
     });
     const router = await createRouter({
@@ -53,5 +52,4 @@ describe('createRouter', () => {
       expect(response.body).toEqual({ status: 'ok' });
     });
   });
-
 });

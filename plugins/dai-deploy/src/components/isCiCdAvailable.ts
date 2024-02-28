@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {DAI_DEPLOY_CI_ID_ANNOTATION} from "@digital-ai/plugin-dai-deploy-common";
+import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { Entity } from '@backstage/catalog-model';
 
 /**
@@ -22,4 +22,4 @@ import { Entity } from '@backstage/catalog-model';
  * @public
  */
 export const isCiCdAvailable = (entity: Entity) =>
-    Boolean(entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION]);
+  Boolean(entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION]);

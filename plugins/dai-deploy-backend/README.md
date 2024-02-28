@@ -12,7 +12,7 @@ The Dai Deploy plugin requires the following YAML to be added to your `app-confi
 
 ```yaml
 daiDeploy:
-  host: {HOST} #http://xl-deploy-nightly.xebialabs.com:4516
+  host: { HOST } #http://xl-deploy-nightly.xebialabs.com:4516
   username: ${username}
   password: ${password}
 ```
@@ -52,7 +52,6 @@ Here's how to get the backend up and running:
    ```
 
 3. Next we wire this into the overall backend router, edit `packages/backend/src/index.ts`:
-
 
    ```ts
    import daiDeploy from './plugins/dai-deploy';
