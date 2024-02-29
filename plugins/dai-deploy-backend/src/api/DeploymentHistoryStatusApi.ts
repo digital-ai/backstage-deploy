@@ -62,7 +62,11 @@ export class DeploymentHistoryStatusApi {
     if (!response.ok) {
       if (response.status === 404) {
         return await response.json();
-      }
+      } else if (response.status === 403) {
+          throw new Error(
+              `failed to fetch data, status ${response.status}: ${await response.text()}`,
+          );
+        }
       throw new Error(
         `failed to fetch data, status ${response.status}: ${response.statusText}`,
       );

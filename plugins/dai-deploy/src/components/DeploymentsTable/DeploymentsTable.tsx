@@ -1,6 +1,6 @@
 import { DenseTable, defaultActiveColumns } from '../DenseTable/DenseTable';
 import React, { useState } from 'react';
-import { ResponseErrorPanel } from '@backstage/core-components';
+import { DeployResponseErrorPanel } from "../DeployResponseErrorPanel";
 import { useCurrentDeployments } from '../../hooks';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
@@ -16,7 +16,7 @@ export const DeploymentsTable = () => {
   );
 
   if (error) {
-    return <ResponseErrorPanel error={error} />;
+    return <DeployResponseErrorPanel error={error} />;
   }
 
   return (
