@@ -106,9 +106,9 @@ export const connectionErrorBody: ErrorResponseBody = {
       port: 4516,
       name: "Error",
       message: "connect ECONNREFUSED 127.0.0.1:4516",
-      stack: "Error: connect ECONNREFUSED 127.0.0.1:4516\n    at __node_internal_captureLargerStackTrace (node:internal/errors:496:5)\n    at __node_internal_exceptionWithHostPort (node:internal/errors:671:12)\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1555:16)"
+      stack: "Error: connect ECONNREFUSED 127.0.0.1:4516\n "
     },
-    stack: "TypeError: fetch failed\n    at Object.fetch (node:internal/deps/undici/undici:11372:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at CurrentDeploymentStatusApi.getCurrentDeploymentStatus (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:78:22)\n    at <anonymous> (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:292:37)"
+    stack: "TypeError: fetch failed\n"
   },
   request: { method: 'GET', url: '/deployment-status?appName=Commandls&beginDate=2024-02-19T00%3A00%3A00.000%2B0530&endDate=2024-02-26T23%3A59%3A59.999%2B0530&order=end%3Adesc&pageNumber=1&resultsPerPage=5&taskSet=ALL' },
   response: { statusCode: 500 },
@@ -126,7 +126,7 @@ export const unAuthorizedErrorBody: ErrorResponseBody = {
   "error": {
     "name": "Error",
     "message": "failed to fetch data, status 401: Unauthorized",
-    "stack": "Error: failed to fetch data, status 401: Unauthorized\n    at CurrentDeploymentStatusApi.getCurrentDeploymentStatus (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:95:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at <anonymous> (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:292:37)"
+    "stack": "Error: failed to fetch data, status 401: Unauthorized\n    at CurrentDeploymentStatusApi.getCurrentDeploymentStatus"
   },
   "request": {
     "method": "GET",
@@ -147,7 +147,7 @@ export const permissionErrorBody: ErrorResponseBody = {
   "error": {
     "name": "Error",
     "message": "failed to fetch data, status 403: You do not have report#view permission",
-    "stack": "Error: failed to fetch data, status 403: You do not have report#view permission\n    at DeploymentHistoryStatusApi.getDeploymentHistoryStatus (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:220:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at <anonymous> (/home/ishwarya/Downloads/backstage/working/backstage/node_modules/@digital-ai/plugin-dai-deploy-backend/dist/index.cjs.js:314:37)"
+    "stack": "Error: failed to fetch data, status 403: You do not have report#view permission\n    at DeploymentHistoryStatusApi.getDeploymentHistoryStatus "
   },
   "request": {
     "method": "GET",
