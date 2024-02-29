@@ -4,7 +4,7 @@ import {
   deploymentHistoryDeployApiResponse,
 } from './mockData';
 
-export const handlers = [
+export const mockTestHandlers = [
   http.post('http://localhost/deployit/report/tasks', () => {
     return new HttpResponse(JSON.stringify(deploymentHistoryDeployApiResponse), {
       headers: {

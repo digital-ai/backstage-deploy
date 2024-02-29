@@ -7,11 +7,11 @@ import { CurrentDeploymentStatusApi } from './CurrentDeploymentStatusApi';
 import { DeploymentHistoryStatusApi } from './DeploymentHistoryStatusApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
 import { getVoidLogger } from '@backstage/backend-common';
-import { handlers } from '../mocks/handlers';
+import { mockTestHandlers } from '../mocks/mock.test.handlers';
 import { setupServer } from 'msw/node';
 
 describe('Backend API tests', () => {
-  const server = setupServer(...handlers);
+  const server = setupServer(...mockTestHandlers);
 
   const config = new ConfigReader({
     daiDeploy: {
@@ -27,8 +27,8 @@ describe('Backend API tests', () => {
   });
 
   afterEach(() => {
-    // Remove any handlers you may have added
-    // in individual tests (runtime handlers).
+    // Remove any mockTestHandlers you may have added
+    // in individual tests (runtime mockTestHandlers).
     server.resetHandlers();
   });
 

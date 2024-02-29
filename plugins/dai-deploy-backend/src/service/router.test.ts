@@ -6,14 +6,14 @@ import { ConfigReader } from '@backstage/config';
 import { createRouter } from './router';
 import express from 'express';
 import { getVoidLogger } from '@backstage/backend-common';
-import { handlers } from '../mocks/handlers';
+import { mockTestHandlers } from '../mocks/mock.test.handlers';
 import request from 'supertest';
 import { setupServer } from 'msw/node';
 
 describe('createRouter', () => {
   let app: express.Express;
 
-  const server = setupServer(...handlers);
+  const server = setupServer(...mockTestHandlers);
 
   beforeAll(async () => {
     const config = new ConfigReader({
@@ -38,8 +38,8 @@ describe('createRouter', () => {
   });
 
   afterEach(() => {
-    // Remove any handlers you may have added
-    // in individual tests (runtime handlers).
+    // Remove any mockTestHandlers you may have added
+    // in individual tests (runtime mockTestHandlers).
     server.resetHandlers();
   });
 
