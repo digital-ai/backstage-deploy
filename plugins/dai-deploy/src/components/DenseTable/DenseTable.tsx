@@ -2,7 +2,7 @@ import {
   DeploymentActiveData,
   DeploymentArchiveData,
 } from '@digital-ai/plugin-dai-deploy-common';
-import { LinkButton, Table, TableColumn } from '@backstage/core-components';
+import {Link, LinkButton, Table, TableColumn} from '@backstage/core-components';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
 import Typography from '@mui/material/Typography';
@@ -92,8 +92,11 @@ export const columnFactories = Object.freeze({
       field: 'environment',
       cellStyle: cellStyle,
       headerStyle: headerStyle,
-      render: (row: Partial<any>) =>
-        row.metadata ? row.metadata.environment : row.environment,
+      render: (row: Partial<any>) => (
+        <Link to={row.environmentRedirectUri}>
+          {row.metadata ? row.metadata.environment : row.environment}
+        </Link>
+      )
     };
   },
   createScheduledDateColumns(): TableColumn {

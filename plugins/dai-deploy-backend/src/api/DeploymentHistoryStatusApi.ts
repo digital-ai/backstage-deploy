@@ -1,8 +1,8 @@
 import {
-  DEPLOYMENT_HISTORY_STATUS_API_PATH,
-  getCredentials,
-  getDeployApiHost,
-  getDeploymentHistoryRedirectUri,
+    DEPLOYMENT_HISTORY_STATUS_API_PATH,
+    getCredentials,
+    getDeployApiHost,
+    getDeploymentHistoryRedirectUri, getEnvironmentRedirectUri,
 } from './apiConfig';
 import {
   DeploymentArchiveData,
@@ -87,6 +87,9 @@ export class DeploymentHistoryStatusApi {
           this.config,
           d.taskId,
         ),
+        environmentRedirectUri: getEnvironmentRedirectUri(
+            this.config,
+            d.environmentId)
       }),
     );
 
