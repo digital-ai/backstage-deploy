@@ -5,10 +5,12 @@ import {
 import {Link, LinkButton, Table, TableColumn} from '@backstage/core-components';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
+import SyncIcon from '@material-ui/icons/Sync';
 import Typography from '@mui/material/Typography';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import { makeStyles } from '@material-ui/core';
+
 
 type DenseTableProps = {
   tableData: DeploymentArchiveData[] | DeploymentActiveData[];
@@ -19,6 +21,7 @@ type DenseTableProps = {
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
   columns: TableColumn[];
+  retry: () => void;
 };
 const headerStyle: React.CSSProperties = {
   textTransform: 'capitalize',
@@ -165,6 +168,7 @@ export const DenseTable = ({
   onPageChange,
   onRowsPerPageChange,
   columns,
+  retry
 }: DenseTableProps) => {
   const classes = useStyles();
   return (
@@ -174,15 +178,24 @@ export const DenseTable = ({
       page={page}
       totalCount={totalCount}
       isLoading={loading}
+      actions={[
+        {
+          icon: () => <SyncIcon fontSize="default"/>,
+          tooltip: 'Refresh Data',
+          isFreeAction: true,
+          onClick: () => retry(),
+        },
+      ]}
       options={{
         paging: true,
         search: false,
+        showTitle: false,
         pageSize: pageSize,
         pageSizeOptions: [5, 10, 20, 50],
         padding: 'dense',
         showFirstLastPageButtons: true,
         showEmptyDataSourceMessage: !loading,
-        toolbar: false,
+        toolbar: true,
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}
