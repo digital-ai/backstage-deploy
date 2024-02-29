@@ -14,7 +14,7 @@ export function DeployResponseErrorPanel(props: DeployErrorPanelProps) {
         let title = undefined;
         if (jsonString.includes("ECONNREFUSED")) {
          title = "Connection Failed: Unable to Connect to Digital.ai Deploy";
-        } else if(messageString.includes("Unauthorized")){
+        } else if (messageString.includes("Unauthorized")){
          title = ("Access Denied: Unauthorized to Use Digital.ai Deploy")
         } else if (messageString.includes("report#view permission")) {
          title = ("Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy")
