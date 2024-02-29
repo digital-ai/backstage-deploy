@@ -10,7 +10,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { handlers } from '../mocks/handlers';
 import { setupServer } from 'msw/node';
 
-describe('DeploymentHistoryStatusApi', () => {
+describe('Backend API tests', () => {
   const server = setupServer(...handlers);
 
   const config = new ConfigReader({

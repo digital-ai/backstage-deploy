@@ -6,14 +6,14 @@ import {
 
 export const handlers = [
   http.post('http://localhost/deployit/report/tasks', () => {
-    return new HttpResponse(deploymentHistoryDeployApiResponse, {
+    return new HttpResponse(JSON.stringify(deploymentHistoryDeployApiResponse), {
       headers: {
-        'X-Total-Count': '1',
+        'X-Total-Count': '2',
       },
     });
   }),
   http.post('http://localhost/deployit/taskmonitor/deployment', () => {
-    return new HttpResponse(currentDeploymentsDeployApiResponse, {
+    return new HttpResponse(JSON.stringify(currentDeploymentsDeployApiResponse), {
       headers: {
         'X-Total-Count': '2',
       },
