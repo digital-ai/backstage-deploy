@@ -1,8 +1,8 @@
 import { DenseTable, defaultActiveColumns } from '../DenseTable/DenseTable';
 import React, { useState } from 'react';
+import { DeployResponseErrorPanel } from "../DeployResponseErrorPanel";
 import { useCurrentDeployments } from '../../hooks';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import {DeployResponseErrorPanel} from "../DeployResponseErrorPanel";
 
 export const DeploymentsTable = () => {
   const { entity } = useEntity();

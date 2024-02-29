@@ -1,13 +1,13 @@
-import {WarningPanel} from "@backstage/core-components";
 import React from "react";
 import {ResponseError} from "@backstage/errors";
+import {WarningPanel} from "@backstage/core-components";
 
 type DeployErrorPanelProps = {
     error: Error;
 };
 export function DeployResponseErrorPanel(props: DeployErrorPanelProps) {
     const {error} = props;
-    if (error.name == 'ResponseError') {
+    if (error.name === 'ResponseError') {
         const { body, cause } = error as ResponseError;
         const messageString = cause.message.replace(/\\n/g, '\n');
         const jsonString = JSON.stringify(body, undefined, 2);
@@ -24,13 +24,13 @@ export function DeployResponseErrorPanel(props: DeployErrorPanelProps) {
                 title={title ?? messageString}
             />
         );
-    } else {
+    }
         return (
             <WarningPanel
                 title={error.message}
             />
         );
-    }
+
 
 
 
