@@ -5,8 +5,9 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { daiDeployApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
-import {useAsyncRetry} from "react-use";
 import {useState} from "react";
+import {useAsyncRetry} from "react-use";
+
 
 export function useCurrentDeployments(
   entity: Entity
