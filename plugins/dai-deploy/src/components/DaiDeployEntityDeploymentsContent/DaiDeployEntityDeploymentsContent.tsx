@@ -14,34 +14,31 @@ import { isCiCdAvailable } from '../isCiCdAvailable';
 
 export const DaiDeployEntityDeploymentsContent = () => {
   const { entity } = useEntity();
-  if (isCiCdAvailable(entity)) {
-    return (
-      <Paper elevation={1}>
-        <div>
-          <Box
-            display="inline-flex"
-            alignItems="center"
-            paddingTop={3}
-            paddingLeft={2}
-            paddingBottom={2}
-          >
-            <img src={deployLogo} alt="Deploy logo" height="30px" />
-            <Box mr={2} />
-            <Typography variant="h5">Digital.ai Deploy</Typography>
-          </Box>
-          <TabbedCard title="">
-            <CardTab label="Active">
-              <DeploymentsTable />
-            </CardTab>
-            <CardTab label="Archived">
-              <DeploymentsHistoryTable />
-            </CardTab>
-          </TabbedCard>
-        </div>
-      </Paper>
-    );
-  }
-  return (
+  return isCiCdAvailable(entity) ? (
+    <Paper elevation={1}>
+      <div>
+        <Box
+          display="inline-flex"
+          alignItems="center"
+          paddingTop={3}
+          paddingLeft={2}
+          paddingBottom={2}
+        >
+          <img src={deployLogo} alt="Deploy logo" height="30px" />
+          <Box mr={2} />
+          <Typography variant="h5">Digital.ai Deploy</Typography>
+        </Box>
+        <TabbedCard title="">
+          <CardTab label="Active">
+            <DeploymentsTable />
+          </CardTab>
+          <CardTab label="Archived">
+            <DeploymentsHistoryTable />
+          </CardTab>
+        </TabbedCard>
+      </div>
+    </Paper>
+  ) : (
     <MissingAnnotationEmptyState annotation={DAI_DEPLOY_CI_ID_ANNOTATION} />
   );
 };

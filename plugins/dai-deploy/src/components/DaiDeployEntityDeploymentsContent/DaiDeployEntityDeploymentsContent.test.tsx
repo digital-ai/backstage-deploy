@@ -14,16 +14,11 @@ import {
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DaiDeployEntityDeploymentsContent } from '../DaiDeployEntityDeploymentsContent';
 import { Entity } from '@backstage/catalog-model';
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 import React from 'react';
 import { rest } from 'msw';
 
 let entity: { entity: Entity };
-
-jest.mock('@backstage/plugin-catalog-react', () => ({
-  useEntity: () => {
-    return entity;
-  },
-}));
 
 const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
@@ -49,6 +44,15 @@ describe('DaiDeployEntityDeploymentsContent', () => {
     expect(rendered.getByText('Digital.ai Deploy')).toBeInTheDocument();
     expect(rendered.getByText('Active')).toBeInTheDocument();
     expect(rendered.getByText('Archived')).toBeInTheDocument();
+  });
+
+  it('should display error message for missing annotation', async () => {
+    entity.entity.metadata.annotations = {};
+    const rendered = await renderContent();
+    expect(rendered.getByText('Missing Annotation')).toBeInTheDocument();
+    expect(
+      rendered.getByText(`${DAI_DEPLOY_CI_ID_ANNOTATION}`),
+    ).toBeInTheDocument();
   });
 });
 
@@ -86,7 +90,9 @@ async function renderContent() {
         [daiDeployApiRef, new DaiDeployApiClient({ discoveryApi })],
       ]}
     >
-      <DaiDeployEntityDeploymentsContent />
+      <EntityProvider entity={entity.entity}>
+        <DaiDeployEntityDeploymentsContent />
+      </EntityProvider>
     </TestApiProvider>,
   );
 }
