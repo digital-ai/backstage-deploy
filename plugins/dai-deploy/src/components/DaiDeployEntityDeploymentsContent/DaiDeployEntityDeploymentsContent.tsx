@@ -27,7 +27,7 @@ export const DaiDeployEntityDeploymentsContent = () => {
           >
             <img src={deployLogo} alt="Deploy logo" height="30px" />
             <Box mr={2} />
-            <Typography variant="h5">Digital ai Deploy</Typography>
+            <Typography variant="h5">Digital.ai Deploy</Typography>
           </Box>
           <TabbedCard title="">
             <CardTab label="Active">
