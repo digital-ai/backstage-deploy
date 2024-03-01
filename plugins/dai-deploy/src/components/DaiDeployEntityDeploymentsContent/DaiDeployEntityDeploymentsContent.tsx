@@ -10,8 +10,9 @@ import { DeploymentsTable } from '../DeploymentsTable';
 import { Paper } from '@material-ui/core';
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import deployLogo from '../../assets/deployLogo.svg';
 import { isCiCdAvailable } from '../isCiCdAvailable';
+import deployLogo from '../../assets/deployLogo.svg';
+
 
 const useStyles = makeStyles(theme => ({
   cardTabHeaderSpacing: {
