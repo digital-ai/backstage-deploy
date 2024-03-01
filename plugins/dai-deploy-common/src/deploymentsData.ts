@@ -4,6 +4,7 @@ export interface DeploymentData {
   startDate?: string;
   completionDate?: string;
   detailsRedirectUri: string;
+  environmentRedirectUri: string;
 }
 
 export interface DeploymentActiveData extends DeploymentData {

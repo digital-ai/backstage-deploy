@@ -9,7 +9,7 @@ export const DeploymentsTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { items, loading, error } = useCurrentDeployments(
+  const { items, loading, error, retry } = useCurrentDeployments(
     entity,
     page,
     rowsPerPage,
@@ -29,6 +29,7 @@ export const DeploymentsTable = () => {
       onRowsPerPageChange={setRowsPerPage}
       onPageChange={setPage}
       columns={defaultActiveColumns}
+      retry={retry}
     />
   );
 };
