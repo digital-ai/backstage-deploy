@@ -1,5 +1,6 @@
 import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
+import { SetupServer, setupServer } from 'msw/node';
 import {
   TestApiProvider,
   renderInTestApp,
@@ -15,7 +16,6 @@ import { DaiDeployEntityDeploymentsContent } from '../DaiDeployEntityDeployments
 import { Entity } from '@backstage/catalog-model';
 import React from 'react';
 import { rest } from 'msw';
-import { SetupServer, setupServer } from 'msw/node';
 
 let entity: { entity: Entity };
 

@@ -1,1 +1,3 @@
+cd plugins/dai-deploy
+
 yarn lint-staged
