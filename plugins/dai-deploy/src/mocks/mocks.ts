@@ -45,6 +45,8 @@ export const currentDeploymentResponse: {
       },
       detailsRedirectUri:
         'http://localhost:4516/#/explorer?taskId=f851134a-020f-42fc-ae30-daf58cf34ea4',
+      environmentRedirectUri:
+          'http://localhost:4516/#/explorer?ciId=Environments/localhost-env-1'
     },
     {
       id: '5473142b-5234-43ce-a083-e3dcfc929d72',
@@ -65,6 +67,8 @@ export const currentDeploymentResponse: {
       },
       detailsRedirectUri:
         'http://localhost:4516/#/explorer?taskId=5473142b-5234-43ce-a083-e3dcfc929d72',
+      environmentRedirectUri:
+          'http://localhost:4516/#/explorer?ciId=Environments/localhost-env'
     },
   ],
   totalCount: 100,
@@ -89,6 +93,8 @@ export const deploymentHistoryResponse: {
       worker_name: 'In-process worker',
       detailsRedirectUri:
         'http://localhost:4516/#/reports/deployments?taskId=d140e4e0-7051-42bf-b39e-7e1f18e73f7b',
+      environmentRedirectUri:
+        'http://localhost:4516/#/explorer?ciId=Environments%2FMy%2Fstage%2Ftestenv'
     },
   ],
   totalCount: 100,

@@ -9,7 +9,7 @@ export const DeploymentsHistoryTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { items, loading, error } = useDeploymentsReports(
+  const { items, loading, error,retry } = useDeploymentsReports(
     entity,
     page,
     rowsPerPage,
@@ -29,6 +29,7 @@ export const DeploymentsHistoryTable = () => {
       onRowsPerPageChange={setRowsPerPage}
       onPageChange={setPage}
       columns={defaultArchivedColumns}
+      retry={retry}
     />
   );
 };

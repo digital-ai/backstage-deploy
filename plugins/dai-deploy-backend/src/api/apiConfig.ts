@@ -6,6 +6,8 @@ export const CURRENT_DEPLOYMENT_STATUS_API_PATH =
   '/deployit/taskmonitor/deployment';
 export const CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH =
   '/#/explorer?taskId=';
+export const ENVIRONMENT_REDIRECT_PATH =
+    '/#/explorer?ciId=';
 export const DEPLOYMENT_HISTORY_STATUS_API_PATH = '/deployit/report/tasks';
 export const DEPLOYMENT_HISTORY_TASK_DETAILS_REDIRECT_PATH =
   '/#/reports/deployments?taskId=';
@@ -41,6 +43,13 @@ export const getCurrentTaskDetailsRedirectUri = (
   taskId: string,
 ): string => {
   return `${getDeployApiHost(config)}${CURRENT_DEPLOYMENT_TASK_DETAILS_REDIRECT_PATH}${taskId}`;
+};
+
+export const getEnvironmentRedirectUri = (
+    config: Config,
+    ciId: string,
+): string => {
+  return `${getDeployApiHost(config)}${ENVIRONMENT_REDIRECT_PATH}${ciId}`;
 };
 
 export const getDeploymentHistoryRedirectUri = (

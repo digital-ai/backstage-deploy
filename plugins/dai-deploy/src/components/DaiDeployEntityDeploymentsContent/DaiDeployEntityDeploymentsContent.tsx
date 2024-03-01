@@ -1,4 +1,4 @@
-import { Box, Paper } from '@material-ui/core';
+import {Box, makeStyles } from '@material-ui/core';
 import { CardTab, TabbedCard } from '@backstage/core-components';
 import {
   MissingAnnotationEmptyState,
@@ -7,13 +7,22 @@ import {
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsHistoryTable } from '../DeploymentsHistoryTable';
 import { DeploymentsTable } from '../DeploymentsTable';
+import { Paper } from '@material-ui/core';
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import deployLogo from '../../assets/deployLogo.svg';
 import { isCiCdAvailable } from '../isCiCdAvailable';
 
+const useStyles = makeStyles(theme => ({
+  cardTabHeaderSpacing: {
+    paddingLeft: theme.spacing(10),
+    paddingRight: theme.spacing(10),
+
+  },
+}));
 export const DaiDeployEntityDeploymentsContent = () => {
   const { entity } = useEntity();
+  const classes = useStyles();
   if (isCiCdAvailable(entity)) {
     return (
       <Paper elevation={1}>
@@ -30,10 +39,10 @@ export const DaiDeployEntityDeploymentsContent = () => {
             <Typography variant="h5">Digital ai Deploy</Typography>
           </Box>
           <TabbedCard title="">
-            <CardTab label="Active">
+            <CardTab label="Active" className={classes.cardTabHeaderSpacing}>
               <DeploymentsTable />
             </CardTab>
-            <CardTab label="Archived">
+            <CardTab label="Archived" className={classes.cardTabHeaderSpacing}>
               <DeploymentsHistoryTable />
             </CardTab>
           </TabbedCard>
