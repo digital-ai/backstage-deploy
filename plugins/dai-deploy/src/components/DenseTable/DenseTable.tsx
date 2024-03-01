@@ -8,8 +8,8 @@ import React from 'react';
 import SyncIcon from '@material-ui/icons/Sync';
 import Typography from '@mui/material/Typography';
 import capitalize from 'lodash/capitalize';
-import { makeStyles } from '@material-ui/core';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
+import { makeStyles } from '@material-ui/core';
 
 
 
