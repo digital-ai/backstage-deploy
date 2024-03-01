@@ -3,7 +3,6 @@ import { DenseTable } from '../DenseTable';
 import React from 'react';
 import { TableColumn } from '@backstage/core-components';
 
-
 describe('', () => {
   const columns: TableColumn[] = [
     {
