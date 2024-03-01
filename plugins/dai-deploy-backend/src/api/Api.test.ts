@@ -8,6 +8,7 @@ import {
 } from '../mocks/mockData';
 import {
   error403ResponseHandler,
+  error404ResponseHandler,
   error500ResponseHandler,
   mockTestHandlers,
 } from '../mocks/mock.test.handlers';
@@ -356,5 +357,63 @@ describe('Backend API tests for 500 response', () => {
           '',
         ),
     ).rejects.toThrow('failed to fetch data, status 500: Unexpected error');
+  });
+});
+
+describe('Backend API tests for 404 response', () => {
+  const server = setupServer(...error404ResponseHandler);
+
+  beforeAll(() => {
+    // Start the interception.
+    server.listen();
+  });
+
+  afterEach(() => {
+    // Remove any mockTestHandlers you may have added
+    // in individual tests (runtime mockTestHandlers).
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    // Disable request interception and clean up.
+    server.close();
+  });
+
+  it('Get 404 response from current deployment status from Deploy API', async () => {
+    const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
+      config,
+      getVoidLogger(),
+    );
+
+    const deploymentStatusResponse: DeploymentStatusResponse =
+      await currentDeploymentStatusApi.getCurrentDeploymentStatus(
+        'app',
+        '2024-02-16T02:03:07.953+0000',
+        '2024-02-23T02:03:07.974+0000',
+        'startDate:desc',
+        '1',
+        '5',
+        '',
+      );
+    expect(deploymentStatusResponse).toEqual('[]');
+  });
+
+  it('Get 404 response from deployment History from Deploy API', async () => {
+    const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
+      config,
+      getVoidLogger(),
+    );
+
+    const deploymentStatusResponse: DeploymentStatusResponse =
+      await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
+        'app',
+        '2024-02-16T02:03:07.953+0000',
+        '2024-02-23T02:03:07.974+0000',
+        'startDate:desc',
+        '1',
+        '5',
+        '',
+      );
+    expect(deploymentStatusResponse).toEqual('[]');
   });
 });
