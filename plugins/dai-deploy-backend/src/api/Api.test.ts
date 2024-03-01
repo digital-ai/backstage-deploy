@@ -8,7 +8,6 @@ import {
 } from '../mocks/mockData';
 import {
   error403ResponseHandler,
-  error404ResponseHandler,
   error500ResponseHandler,
   mockTestHandlers,
 } from '../mocks/mock.test.handlers';
