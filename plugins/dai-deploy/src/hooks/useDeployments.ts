@@ -6,17 +6,22 @@ import { Entity } from '@backstage/catalog-model';
 import { daiDeployApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
 import {useAsyncRetry} from "react-use";
+import {useState} from "react";
 
 export function useCurrentDeployments(
-  entity: Entity,
-  page: number,
-  rowsPerPage: number,
+  entity: Entity
 ): {
   loading: boolean | false | true;
   error: undefined | Error;
   items: DeploymentStatusResponse | undefined;
-  retry: () => void
+  retry: () => void;
+  page: any;
+  setPage: any;
+  rowsPerPage: any;
+  setRowsPerPage: any
 } {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
 
@@ -26,7 +31,7 @@ export function useCurrentDeployments(
     );
   }
 
-  const { value, loading, error,retry } = useAsyncRetry(async() => {
+  const { value, loading, error, retry } = useAsyncRetry(async() => {
     return api.getCurrentDeployments(ciId, page, rowsPerPage);
   }, [api, page, rowsPerPage]);
 
@@ -34,20 +39,28 @@ export function useCurrentDeployments(
     items: value?.items,
     loading,
     error,
-    retry
+    retry,
+    page,
+    setPage,
+    rowsPerPage,
+    setRowsPerPage
   };
 }
 
 export function useDeploymentsReports(
-  entity: Entity,
-  page: number,
-  rowsPerPage: number,
+  entity: Entity
 ): {
   items?: DeploymentStatusResponse;
   loading: boolean;
   error?: Error;
-  retry: () => void
+  retry: () => void;
+  page: any;
+  setPage: any;
+  rowsPerPage: any;
+  setRowsPerPage: any
 } {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
 
@@ -65,6 +78,10 @@ export function useDeploymentsReports(
     items: value?.items,
     loading,
     error,
-    retry
+    retry,
+    page,
+    setPage,
+    rowsPerPage,
+    setRowsPerPage
   };
 }

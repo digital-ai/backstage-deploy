@@ -261,7 +261,6 @@ export const DenseTable = ({
         showFirstLastPageButtons: true,
         showEmptyDataSourceMessage: !loading,
         toolbar: true,
-        toolbarButtonAlignment: "left"
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

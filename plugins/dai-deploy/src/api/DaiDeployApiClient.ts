@@ -26,7 +26,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
     queryString.append('order', 'end:desc');
-    queryString.append('pageNumber', page === 0 ? '1' : page.toString());
+    queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
     queryString.append('taskSet', 'ALL');
 
@@ -49,7 +49,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
     queryString.append('order', 'startDate:desc');
-    queryString.append('pageNumber', page === 0 ? '1' : page.toString());
+    queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
 
     const urlSegment = `deployment-history?${queryString}`;
