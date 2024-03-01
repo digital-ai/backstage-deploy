@@ -1,4 +1,4 @@
-import {Box, makeStyles, Paper} from '@material-ui/core';
+import {Box, makeStyles } from '@material-ui/core';
 import { CardTab, TabbedCard } from '@backstage/core-components';
 import {
   MissingAnnotationEmptyState,
@@ -7,6 +7,7 @@ import {
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsHistoryTable } from '../DeploymentsHistoryTable';
 import { DeploymentsTable } from '../DeploymentsTable';
+import Paper from '@material-ui/core';
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import deployLogo from '../../assets/deployLogo.svg';
