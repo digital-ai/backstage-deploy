@@ -25,6 +25,7 @@ describe('DenseTable', () => {
       totalCount: 0,
       onPageChange: () => {},
       onRowsPerPageChange: () => {},
+      retry: () => {},
     });
     columns.forEach(c =>
       expect(rendered.getByText(c.title as string)).toBeInTheDocument(),
@@ -50,6 +51,7 @@ describe('DenseTable', () => {
       totalCount: data.length,
       onPageChange: () => {},
       onRowsPerPageChange: () => {},
+      retry: () => {},
     });
     columns.forEach(c =>
       expect(rendered.getByText(c.title as string)).toBeInTheDocument(),
@@ -71,6 +73,7 @@ async function renderContent(args: {
   totalCount: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  retry: () => void;
   columns: TableColumn[];
 }) {
   return await renderInTestApp(
@@ -84,6 +87,7 @@ async function renderContent(args: {
         totalCount={args.totalCount}
         onPageChange={args.onPageChange}
         onRowsPerPageChange={args.onRowsPerPageChange}
+        retry={args.retry}
       />
     </TestApiProvider>,
   );
