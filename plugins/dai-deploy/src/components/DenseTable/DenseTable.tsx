@@ -2,9 +2,15 @@ import {
   DeploymentActiveData,
   DeploymentArchiveData,
 } from '@digital-ai/plugin-dai-deploy-common';
-import { LinkButton, Table, TableColumn } from '@backstage/core-components';
+import {
+  Link,
+  LinkButton,
+  Table,
+  TableColumn,
+} from '@backstage/core-components';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
+import SyncIcon from '@material-ui/icons/Sync';
 import Typography from '@mui/material/Typography';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
@@ -19,6 +25,7 @@ type DenseTableProps = {
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
   columns: TableColumn[];
+  retry: () => void;
 };
 const headerStyle: React.CSSProperties = {
   textTransform: 'capitalize',
@@ -38,10 +45,12 @@ export const columnFactories = Object.freeze({
   createUserColumns(): TableColumn {
     return {
       title: 'User',
-      field: 'user',
+      field: 'owner',
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => ` ${row.owner}`,
+      searchable: true,
+      sorting: true,
     };
   },
   createStateColumns(): TableColumn {
@@ -51,6 +60,8 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => capitalize(row.state),
+      searchable: true,
+      sorting: true,
     };
   },
   createStartDateColumns(): TableColumn {
@@ -60,6 +71,8 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.startDate),
+      searchable: true,
+      sorting: true,
     };
   },
 
@@ -70,6 +83,8 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.completionDate),
+      searchable: true,
+      sorting: true,
     };
   },
 
@@ -79,10 +94,31 @@ export const columnFactories = Object.freeze({
       field: 'package',
       cellStyle: cellStyle,
       headerStyle: headerStyle,
+      render: (row: Partial<any>) => row.package,
+      searchable: true,
+      sorting: true,
+    };
+  },
+
+  createActivePackageColumns(): TableColumn {
+    return {
+      title: 'Package',
+      field: 'metadata.application',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      customFilterAndSearch: (query, row: any) =>
+        `${row.metadata.application} ${row.metadata.version}`
+          .toLocaleUpperCase('en-US')
+          .includes(query.toLocaleUpperCase('en-US')),
       render: (row: Partial<any>) =>
-        row.metadata
-          ? `${row?.metadata?.application}/${row?.metadata?.version}`
-          : row.package,
+        `${row.metadata.application}/${row.metadata.version}`,
+      customSort: (a: any, b: any) => {
+        const packageA = `${a.metadata.application} ${a.metadata.version}`;
+        const packageB = `${b.metadata.application} ${b.metadata.version}`;
+        return packageA.localeCompare(packageB);
+      },
+      searchable: true,
+      sorting: true,
     };
   },
 
@@ -92,8 +128,25 @@ export const columnFactories = Object.freeze({
       field: 'environment',
       cellStyle: cellStyle,
       headerStyle: headerStyle,
-      render: (row: Partial<any>) =>
-        row.metadata ? row.metadata.environment : row.environment,
+      render: (row: Partial<any>) => (
+        <Link to={row.environmentRedirectUri}>{row.environment}</Link>
+      ),
+      searchable: true,
+      sorting: true,
+    };
+  },
+
+  createActiveEnvironmentColumns(): TableColumn {
+    return {
+      title: 'Environment',
+      field: 'metadata.environment',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      render: (row: Partial<any>) => (
+        <Link to={row.environmentRedirectUri}>{row.metadata.environment}</Link>
+      ),
+      searchable: true,
+      sorting: true,
     };
   },
   createScheduledDateColumns(): TableColumn {
@@ -103,6 +156,8 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.scheduledDate),
+      searchable: true,
+      sorting: true,
     };
   },
   createTypeColumns(): TableColumn {
@@ -111,10 +166,24 @@ export const columnFactories = Object.freeze({
       field: 'type',
       cellStyle: cellStyle,
       headerStyle: headerStyle,
-      render: (row: Partial<any>) =>
-        row.metadata ? capitalize(row.metadata.taskType) : capitalize(row.type),
+      render: (row: Partial<any>) => capitalize(row.type),
+      searchable: true,
+      sorting: true,
     };
   },
+
+  createActiveTypeColumns(): TableColumn {
+    return {
+      title: 'Type',
+      field: 'metadata.taskType',
+      cellStyle: cellStyle,
+      headerStyle: headerStyle,
+      render: (row: Partial<any>) => capitalize(row.metadata.taskType),
+      searchable: true,
+      sorting: true,
+    };
+  },
+
   createRedirectionColumns(): TableColumn {
     return {
       title: 'View',
@@ -126,14 +195,16 @@ export const columnFactories = Object.freeze({
           <LaunchIcon />
         </LinkButton>
       ),
+      searchable: true,
+      sorting: true,
     };
   },
 });
 
 export const defaultActiveColumns: TableColumn[] = [
-  columnFactories.createPackageColumns(),
-  columnFactories.createEnvironmentColumns(),
-  columnFactories.createTypeColumns(),
+  columnFactories.createActivePackageColumns(),
+  columnFactories.createActiveEnvironmentColumns(),
+  columnFactories.createActiveTypeColumns(),
   columnFactories.createUserColumns(),
   columnFactories.createStateColumns(),
   columnFactories.createScheduledDateColumns(),
@@ -162,6 +233,7 @@ export const DenseTable = ({
   onPageChange,
   onRowsPerPageChange,
   columns,
+  retry,
 }: DenseTableProps) => {
   const classes = useStyles();
   return (
@@ -171,15 +243,25 @@ export const DenseTable = ({
       page={page}
       totalCount={totalCount}
       isLoading={loading}
+      actions={[
+        {
+          icon: () => <SyncIcon fontSize="default" />,
+          tooltip: 'Refresh Data',
+          isFreeAction: true,
+          onClick: () => retry(),
+        },
+      ]}
       options={{
         paging: true,
-        search: false,
+        search: true,
+        showTitle: false,
         pageSize: pageSize,
         pageSizeOptions: [5, 10, 20, 50],
         padding: 'dense',
         showFirstLastPageButtons: true,
         showEmptyDataSourceMessage: !loading,
-        toolbar: false,
+        toolbar: true,
+        toolbarButtonAlignment: 'left',
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

@@ -5,16 +5,17 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { daiDeployApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
-import useAsync from 'react-use/lib/useAsync';
+import { useAsyncRetry } from 'react-use';
 
 export function useCurrentDeployments(
   entity: Entity,
   page: number,
   rowsPerPage: number,
 ): {
-  items?: DeploymentStatusResponse;
-  loading: boolean;
-  error?: Error;
+  loading: boolean | false | true;
+  error: undefined | Error;
+  items: DeploymentStatusResponse | undefined;
+  retry: () => void;
 } {
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
@@ -25,7 +26,7 @@ export function useCurrentDeployments(
     );
   }
 
-  const { value, loading, error } = useAsync(() => {
+  const { value, loading, error, retry } = useAsyncRetry(async () => {
     return api.getCurrentDeployments(ciId, page, rowsPerPage);
   }, [api, page, rowsPerPage]);
 
@@ -33,6 +34,7 @@ export function useCurrentDeployments(
     items: value?.items,
     loading,
     error,
+    retry,
   };
 }
 
@@ -44,6 +46,7 @@ export function useDeploymentsReports(
   items?: DeploymentStatusResponse;
   loading: boolean;
   error?: Error;
+  retry: () => void;
 } {
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
@@ -54,7 +57,7 @@ export function useDeploymentsReports(
     );
   }
 
-  const { value, loading, error } = useAsync(() => {
+  const { value, loading, error, retry } = useAsyncRetry(async () => {
     return api.getDeploymentsReports(ciId, page, rowsPerPage);
   }, [api, page, rowsPerPage]);
 
@@ -62,5 +65,6 @@ export function useDeploymentsReports(
     items: value?.items,
     loading,
     error,
+    retry,
   };
 }
