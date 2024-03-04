@@ -8,6 +8,7 @@ import {
   deploymentHistoryBackendApiResponse,
 } from '../mocks/mockData';
 import {
+  error401ResponseHandler,
   error403ResponseHandler,
   error404ResponseHandler,
   error500ResponseHandler,
@@ -135,6 +136,28 @@ describe('Backend API tests for Current Deployment Status', () => {
     );
   });
 
+  it('Get 401 response from current deployment status from Deploy API', async () => {
+    server.resetHandlers(...error401ResponseHandler);
+
+    const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
+        config,
+        getVoidLogger(),
+    );
+
+    await expect(
+        async () =>
+            await currentDeploymentStatusApi.getCurrentDeploymentStatus(
+                'app',
+                '2024-02-16T02:03:07.953+0000',
+                '2024-02-23T02:03:07.974+0000',
+                'startDate:desc',
+                '1',
+                '5',
+                'ALL',
+            ),
+    ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
+  });
+
   it('Get 403 response from current deployment status from Deploy API', async () => {
     server.resetHandlers(...error403ResponseHandler);
 
@@ -143,18 +166,16 @@ describe('Backend API tests for Current Deployment Status', () => {
       getVoidLogger(),
     );
 
-    await expect(
-      async () =>
-        await currentDeploymentStatusApi.getCurrentDeploymentStatus(
-          'app',
-          '2024-02-16T02:03:07.953+0000',
-          '2024-02-23T02:03:07.974+0000',
-          'startDate:desc',
-          '1',
-          '5',
-          'ALL',
+    await expect(currentDeploymentStatusApi.getCurrentDeploymentStatus(
+            'app',
+            '2024-02-16T02:03:07.953+0000',
+            '2024-02-23T02:03:07.974+0000',
+            'startDate:desc',
+            '1',
+            '5',
+            'ALL',
         ),
-    ).rejects.toThrow('failed to fetch data, status 403');
+    ).rejects.toThrow('failed to fetch data, status 403: forbidden');
   });
 
   it('Get 500 response from current deployment status from Deploy API', async () => {
@@ -296,6 +317,28 @@ describe('Backend API tests for Deployment History Status', () => {
     );
   });
 
+  it('Get 401 response from deployment History from Deploy API', async () => {
+    server.resetHandlers(...error401ResponseHandler);
+
+    const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
+        config,
+        getVoidLogger(),
+    );
+
+    await expect(
+        async () =>
+            await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
+                'app',
+                '2024-02-16T02:03:07.953+0000',
+                '2024-02-23T02:03:07.974+0000',
+                'startDate:desc',
+                '1',
+                '5',
+                '',
+            ),
+    ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
+  });
+
   it('Get 403 response from deployment History from Deploy API', async () => {
     server.resetHandlers(...error403ResponseHandler);
 
@@ -315,7 +358,7 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('failed to fetch data, status 403');
+    ).rejects.toThrow('failed to fetch data, status 403: You do not have report#view permission');
   });
 
   it('Get 500 response from deployment History from Deploy API', async () => {
