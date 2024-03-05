@@ -1,28 +1,34 @@
-import {Box, makeStyles } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 import { CardTab, TabbedCard } from '@backstage/core-components';
 import {
   MissingAnnotationEmptyState,
   useEntity,
 } from '@backstage/plugin-catalog-react';
+import { appThemeApiRef, useApi } from '@backstage/core-plugin-api';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsHistoryTable } from '../DeploymentsHistoryTable';
 import { DeploymentsTable } from '../DeploymentsTable';
 import { Paper } from '@material-ui/core';
 import React from 'react';
-import Typography from '@mui/material/Typography';
-import deployLogo from '../../assets/deployLogo.svg';
+import deployLogoBlack from '../../assets/deployLogoBlack.svg';
+import deployLogoWhite from '../../assets/deployLogoWhite.svg';
 import { isCiCdAvailable } from '../isCiCdAvailable';
+import { useObservable } from 'react-use';
 
 const useStyles = makeStyles(theme => ({
   cardTabHeaderSpacing: {
     paddingLeft: theme.spacing(10),
     paddingRight: theme.spacing(10),
-
   },
 }));
 export const DaiDeployEntityDeploymentsContent = () => {
   const { entity } = useEntity();
   const classes = useStyles();
+  const appThemeApi = useApi(appThemeApiRef);
+  const themeId = useObservable(
+    appThemeApi.activeThemeId$(),
+    appThemeApi.getActiveThemeId(),
+  );
   if (isCiCdAvailable(entity)) {
     return (
       <Paper elevation={1}>
@@ -34,9 +40,15 @@ export const DaiDeployEntityDeploymentsContent = () => {
             paddingLeft={2}
             paddingBottom={2}
           >
-            <Typography variant="h5">digital.ai</Typography>
-            <img src={deployLogo} alt="Deploy logo" height="40px" />
-            <Typography variant="h5">deploy</Typography>
+            {themeId === 'dark' ? (
+              <div>
+                <img src={deployLogoWhite} alt="Deploy logo" />
+              </div>
+            ) : (
+              <div>
+                <img src={deployLogoBlack} alt="Deploy logo" />
+              </div>
+            )}
           </Box>
           <TabbedCard title="">
             <CardTab label="Active" className={classes.cardTabHeaderSpacing}>
