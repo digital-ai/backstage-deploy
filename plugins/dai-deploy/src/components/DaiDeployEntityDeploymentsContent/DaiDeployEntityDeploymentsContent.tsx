@@ -40,15 +40,10 @@ export const DaiDeployEntityDeploymentsContent = () => {
             paddingLeft={2}
             paddingBottom={2}
           >
-            {themeId === 'dark' ? (
-              <div>
-                <img src={deployLogoWhite} alt="Deploy logo" />
-              </div>
-            ) : (
-              <div>
-                <img src={deployLogoBlack} alt="Deploy logo" />
-              </div>
-            )}
+            <img
+              src={themeId === 'dark' ? deployLogoWhite : deployLogoBlack}
+              alt="Deploy logo"
+            />
           </Box>
           <TabbedCard title="">
             <CardTab label="Active" className={classes.cardTabHeaderSpacing}>
