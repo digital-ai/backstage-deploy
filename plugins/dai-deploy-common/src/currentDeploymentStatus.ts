@@ -6,11 +6,6 @@
  */
 
 /** @public */
-export type CurrentDeploymentStatusResponse = {
-  currentDeploymentStatus: CurrentDeploymentStatus[];
-  totalCount?: number;
-};
-
 export type CurrentDeploymentStatus = {
   id: string;
   owner: string;
@@ -21,7 +16,6 @@ export type CurrentDeploymentStatus = {
   completionDate?: string;
   metadata: metaData;
   workerId: number | null;
-  detailsRedirectUri: string;
 };
 
 export type metaData = {
