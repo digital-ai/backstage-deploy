@@ -7,7 +7,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 export const DeploymentsTable = () => {
   const { entity } = useEntity();
 
-  const { items, loading, error, retry, page, setPage, rowsPerPage, setRowsPerPage  } = useCurrentDeployments(
+  const { items, loading, error, retry, page, setPage, rowsPerPage, setRowsPerPage, setOrderDirection, setOrderBy } = useCurrentDeployments(
     entity
   );
 
@@ -26,6 +26,8 @@ export const DeploymentsTable = () => {
       onPageChange={setPage}
       columns={defaultActiveColumns}
       retry={retry}
+      onOrderDirection={setOrderDirection}
+      onOrderBy={setOrderBy}
     />
   );
 };

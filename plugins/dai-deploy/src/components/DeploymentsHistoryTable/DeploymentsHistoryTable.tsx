@@ -8,7 +8,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 export const DeploymentsHistoryTable = () => {
   const { entity } = useEntity();
 
-  const { items, loading, error, retry, page, setPage, rowsPerPage, setRowsPerPage } = useDeploymentsReports(
+  const { items, loading, error, retry, page, setPage, rowsPerPage, setRowsPerPage, setOrderDirection, setOrderBy} = useDeploymentsReports(
     entity
   );
 
@@ -27,6 +27,8 @@ export const DeploymentsHistoryTable = () => {
       onPageChange={setPage}
       columns={defaultArchivedColumns}
       retry={retry}
-    />
+      onOrderDirection={setOrderDirection}
+      onOrderBy={setOrderBy}
+      />
   );
 };
