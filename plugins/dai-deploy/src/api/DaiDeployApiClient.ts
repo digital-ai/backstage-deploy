@@ -21,14 +21,14 @@ export class DaiDeployApiClient implements DaiDeployApi {
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const now = new Date();
-    const Order = `${orderBy}:${orderDirection}`;
+    const order = `${orderBy}:${orderDirection}`;
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
       moment(now).subtract(7, 'days').format(beginDateFormat),
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
-    queryString.append('order', Order);
+    queryString.append('order', order);
     queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
     queryString.append('taskSet', 'ALL');
@@ -46,7 +46,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     orderDirection:string
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
-    const Order = `${orderBy}:${orderDirection}`;
+    const order = `${orderBy}:${orderDirection}`;
     const now = new Date();
     queryString.append('appName', ciId);
     queryString.append(
@@ -54,7 +54,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
       moment(now).subtract(7, 'days').format(beginDateFormat),
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
-    queryString.append('order', Order);
+    queryString.append('order', order);
     queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
 
