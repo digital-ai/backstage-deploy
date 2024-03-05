@@ -34,9 +34,9 @@ export const DaiDeployEntityDeploymentsContent = () => {
             paddingLeft={2}
             paddingBottom={2}
           >
-            <img src={deployLogo} alt="Deploy logo" height="20px" />
-            <Box mr={2} />
-            <Typography variant="h5">Digital.ai Deploy</Typography>
+            <Typography variant="h5">digital.ai</Typography>
+            <img src={deployLogo} alt="Deploy logo" height="40px" />
+            <Typography variant="h5">deploy</Typography>
           </Box>
           <TabbedCard title="">
             <CardTab label="Active" className={classes.cardTabHeaderSpacing}>
