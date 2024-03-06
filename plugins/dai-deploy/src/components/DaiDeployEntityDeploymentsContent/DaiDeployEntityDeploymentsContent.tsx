@@ -1,4 +1,4 @@
-import {Box, makeStyles } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 import { CardTab, TabbedCard } from '@backstage/core-components';
 import {
   MissingAnnotationEmptyState,
@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
   cardTabHeaderSpacing: {
     paddingLeft: theme.spacing(10),
     paddingRight: theme.spacing(10),
-
   },
 }));
 export const DaiDeployEntityDeploymentsContent = () => {

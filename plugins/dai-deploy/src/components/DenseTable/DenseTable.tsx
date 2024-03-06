@@ -2,7 +2,12 @@ import {
   DeploymentActiveData,
   DeploymentArchiveData,
 } from '@digital-ai/plugin-dai-deploy-common';
-import {Link, LinkButton, Table, TableColumn} from '@backstage/core-components';
+import {
+  Link,
+  LinkButton,
+  Table,
+  TableColumn,
+} from '@backstage/core-components';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -10,8 +15,6 @@ import Typography from '@mui/material/Typography';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import { makeStyles } from '@material-ui/core';
-
-
 
 type DenseTableProps = {
   tableData: DeploymentArchiveData[] | DeploymentActiveData[];
@@ -24,7 +27,7 @@ type DenseTableProps = {
   columns: TableColumn[];
   retry: () => void;
   onOrderDirection: (order: string) => void;
-  onOrderBy:  (orderBy: number) => void;
+  onOrderBy: (orderBy: number) => void;
 };
 const headerStyle: React.CSSProperties = {
   textTransform: 'capitalize',
@@ -49,7 +52,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => ` ${row.owner}`,
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
   createStateColumns(): TableColumn {
@@ -60,7 +63,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => capitalize(row.state),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
   createStartDateColumns(): TableColumn {
@@ -71,7 +74,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.startDate),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -83,7 +86,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.completionDate),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -95,7 +98,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => row.package,
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -106,17 +109,18 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       customFilterAndSearch: (query, row: any) =>
-          `${row.metadata.application} ${row.metadata.version}`
-              .toLocaleUpperCase('en-US')
-              .includes(query.toLocaleUpperCase('en-US')),
-      render: (row: Partial<any>) => `${row.metadata.application}/${row.metadata.version}`,
+        `${row.metadata.application} ${row.metadata.version}`
+          .toLocaleUpperCase('en-US')
+          .includes(query.toLocaleUpperCase('en-US')),
+      render: (row: Partial<any>) =>
+        `${row.metadata.application}/${row.metadata.version}`,
       customSort: (a: any, b: any) => {
-        const packageA = `${a.metadata.application} ${a.metadata.version}`
-        const packageB = `${b.metadata.application} ${b.metadata.version}`
+        const packageA = `${a.metadata.application} ${a.metadata.version}`;
+        const packageB = `${b.metadata.application} ${b.metadata.version}`;
         return packageA.localeCompare(packageB);
       },
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -127,12 +131,10 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => (
-        <Link to={row.environmentRedirectUri}>
-          {row.environment}
-        </Link>
+        <Link to={row.environmentRedirectUri}>{row.environment}</Link>
       ),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -143,12 +145,10 @@ export const columnFactories = Object.freeze({
       cellStyle: cellStyle,
       headerStyle: headerStyle,
       render: (row: Partial<any>) => (
-          <Link to={row.environmentRedirectUri}>
-            {row.metadata.environment}
-          </Link>
+        <Link to={row.environmentRedirectUri}>{row.metadata.environment}</Link>
       ),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
   createScheduledDateColumns(): TableColumn {
@@ -159,7 +159,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => formatTimestamp(row.scheduledDate),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
   createTypeColumns(): TableColumn {
@@ -170,7 +170,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => capitalize(row.type),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -182,7 +182,7 @@ export const columnFactories = Object.freeze({
       headerStyle: headerStyle,
       render: (row: Partial<any>) => capitalize(row.metadata.taskType),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 
@@ -198,7 +198,7 @@ export const columnFactories = Object.freeze({
         </LinkButton>
       ),
       searchable: true,
-      sorting: true
+      sorting: true,
     };
   },
 });
@@ -237,7 +237,7 @@ export const DenseTable = ({
   columns,
   retry,
   onOrderDirection,
-  onOrderBy
+  onOrderBy,
 }: DenseTableProps) => {
   const classes = useStyles();
   return (
@@ -249,7 +249,7 @@ export const DenseTable = ({
       isLoading={loading}
       actions={[
         {
-          icon: () => <SyncIcon fontSize="default"/>,
+          icon: () => <SyncIcon fontSize="default" />,
           tooltip: 'Refresh Data',
           isFreeAction: true,
           onClick: () => retry(),
@@ -265,12 +265,13 @@ export const DenseTable = ({
         showFirstLastPageButtons: true,
         showEmptyDataSourceMessage: !loading,
         toolbar: true,
+        toolbarButtonAlignment: 'left',
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}
       onOrderChange={(orderBy, orderDirection) => {
-         onOrderBy(orderBy)
-         onOrderDirection(orderDirection)
+        onOrderBy(orderBy);
+        onOrderDirection(orderDirection);
       }}
       emptyContent={
         <Typography color="textSecondary" className={classes.empty}>

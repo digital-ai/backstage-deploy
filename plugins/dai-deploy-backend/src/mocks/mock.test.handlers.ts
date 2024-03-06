@@ -44,13 +44,13 @@ export const error404ResponseHandler = [
 
 export const error403ResponseHandler = [
   http.post('http://localhost/deployit/report/tasks', () => {
-    return new HttpResponse("You do not have report#view permission", {
+    return new HttpResponse('You do not have report#view permission', {
       status: 403,
       statusText: 'forbidden',
     });
   }),
-  http.post("http://localhost/deployit/taskmonitor/deployment", () => {
-    return new HttpResponse("You do not have report#view permission", {
+  http.post('http://localhost/deployit/taskmonitor/deployment', () => {
+    return new HttpResponse('You do not have report#view permission', {
       status: 403,
       statusText: 'forbidden',
     });

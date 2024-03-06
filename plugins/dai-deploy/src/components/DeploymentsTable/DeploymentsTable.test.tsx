@@ -1,6 +1,6 @@
 /* eslint-disable jest/no-conditional-expect */
 
-import {DaiDeployApi, DaiDeployApiClient, daiDeployApiRef} from '../../api';
+import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
@@ -10,18 +10,19 @@ import {
 import {
   connectionErrorResponse,
   currentDeploymentResponse,
-  entityStub, permissionErorResponse, unAuthorizedErrorResponse
+  entityStub,
+  permissionErorResponse,
+  unAuthorizedErrorResponse,
 } from '../../mocks/mocks';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsTable } from './DeploymentsTable';
 import { Entity } from '@backstage/catalog-model';
 import React from 'react';
-import { ResponseError } from "@backstage/errors";
+import { ResponseError } from '@backstage/errors';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-
 
 let entity: { entity: Entity };
 
@@ -158,61 +159,89 @@ describe('DeploymentsTable', () => {
       getCurrentDeployments: () => Promise.reject(new Error('Failed to fetch')),
     };
     const { getByText } = await renderInTestApp(
-        <TestApiProvider apis={[
-            [discoveryApiRef, discoveryApi],
-            [daiDeployApiRef, currentStatusApiWithError]]}>
-          <DeploymentsTable />
-        </TestApiProvider>,
+      <TestApiProvider
+        apis={[
+          [discoveryApiRef, discoveryApi],
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
     );
-    expect(getByText("Warning: Failed to fetch")).toBeInTheDocument();
+    expect(getByText('Warning: Failed to fetch')).toBeInTheDocument();
   });
 
   it('should show the appropriate error in case of a connection error', async () => {
-    const deployConnectionRefused =  await ResponseError.fromResponse(connectionErrorResponse as Response)
+    const deployConnectionRefused = await ResponseError.fromResponse(
+      connectionErrorResponse as Response,
+    );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployConnectionRefused),
     };
     const { getByText } = await renderInTestApp(
-        <TestApiProvider apis={[
+      <TestApiProvider
+        apis={[
           [discoveryApiRef, discoveryApi],
-          [daiDeployApiRef, currentStatusApiWithError]]}>
-          <DeploymentsTable />
-        </TestApiProvider>,
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
     );
-    expect(getByText(`Warning: Connection Failed: Unable to Connect to Digital.ai Deploy`)).toBeInTheDocument();
+    expect(
+      getByText(
+        `Warning: Connection Failed: Unable to Connect to Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
   });
   it('should show the appropriate error in case of a Unauthorized', async () => {
-    const deployUnAuthorizedResponse =  await ResponseError.fromResponse(unAuthorizedErrorResponse as Response)
+    const deployUnAuthorizedResponse = await ResponseError.fromResponse(
+      unAuthorizedErrorResponse as Response,
+    );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployUnAuthorizedResponse),
     };
     const { getByText } = await renderInTestApp(
-        <TestApiProvider apis={[
+      <TestApiProvider
+        apis={[
           [discoveryApiRef, discoveryApi],
-          [daiDeployApiRef, currentStatusApiWithError]]}>
-          <DeploymentsTable />
-        </TestApiProvider>,
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
     );
-    expect(getByText(`Warning: Access Denied: Unauthorized to Use Digital.ai Deploy`)).toBeInTheDocument();
+    expect(
+      getByText(
+        `Warning: Access Denied: Unauthorized to Use Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
   });
 
   it('should show the appropriate error in case of a permission error in deploy', async () => {
-    const deployPermissionErorResponse =  await ResponseError.fromResponse(permissionErorResponse as Response)
+    const deployPermissionErorResponse = await ResponseError.fromResponse(
+      permissionErorResponse as Response,
+    );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployPermissionErorResponse),
     };
     const { getByText } = await renderInTestApp(
-        <TestApiProvider apis={[
+      <TestApiProvider
+        apis={[
           [discoveryApiRef, discoveryApi],
-          [daiDeployApiRef, currentStatusApiWithError]]}>
-          <DeploymentsTable />
-        </TestApiProvider>,
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
     );
-    expect(getByText(`Warning: Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy`)).toBeInTheDocument();
+    expect(
+      getByText(
+        `Warning: Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
   });
-
 });
-
 
 async function renderContent() {
   return await renderInTestApp(

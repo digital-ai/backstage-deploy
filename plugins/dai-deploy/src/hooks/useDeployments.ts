@@ -5,34 +5,31 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { daiDeployApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
-import {useAsyncRetry} from "react-use";
-import {useState} from "react";
-
+import { useAsyncRetry } from 'react-use';
+import { useState } from 'react';
 
 enum activeDeploymentOrderBy {
-  "package" = 0 ,
-  "environment" = 1,
-  "type" = 2,
-  "user" = 3,
-  "state" = 4,
-  "scheduled" = 5,
-  "begin" = 6,
-  "end" = 7
+  'package' = 0,
+  'environment' = 1,
+  'type' = 2,
+  'user' = 3,
+  'state' = 4,
+  'scheduled' = 5,
+  'begin' = 6,
+  'end' = 7,
 }
 
 enum archivedDeploymentOrderBy {
-  "package" = 0 ,
-  "environment_id" = 1,
-  "taskType" = 2,
-  "owner" = 3,
-  "state" = 4,
-  "startDate" = 5,
-  "completionDate" = 6
+  'package' = 0,
+  'environment_id' = 1,
+  'taskType' = 2,
+  'owner' = 3,
+  'state' = 4,
+  'startDate' = 5,
+  'completionDate' = 6,
 }
 
-export function useCurrentDeployments(
-  entity: Entity
-): {
+export function useCurrentDeployments(entity: Entity): {
   loading: boolean | false | true;
   error: undefined | Error;
   items: DeploymentStatusResponse | undefined;
@@ -42,7 +39,7 @@ export function useCurrentDeployments(
   rowsPerPage: any;
   setRowsPerPage: (pageSize: number) => void;
   setOrderDirection: (order: string) => void;
-  setOrderBy:  (orderBy: number) => void;
+  setOrderBy: (orderBy: number) => void;
 } {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -50,16 +47,23 @@ export function useCurrentDeployments(
   const [orderDirection, setOrderDirection] = useState('desc');
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
-  const direction = orderDirection === '' ? 'desc' : orderDirection
-  const sortColumn = orderBy !== -1 ? activeDeploymentOrderBy[orderBy] :  'begin'
+  const direction = orderDirection === '' ? 'desc' : orderDirection;
+  const sortColumn =
+    orderBy !== -1 ? activeDeploymentOrderBy[orderBy] : 'begin';
   if (!ciId) {
     throw new Error(
       `Value for annotation "${DAI_DEPLOY_CI_ID_ANNOTATION}" was not found`,
     );
   }
 
-  const { value, loading, error, retry } = useAsyncRetry(async() => {
-    return api.getCurrentDeployments(ciId, page, rowsPerPage, sortColumn, direction);
+  const { value, loading, error, retry } = useAsyncRetry(async () => {
+    return api.getCurrentDeployments(
+      ciId,
+      page,
+      rowsPerPage,
+      sortColumn,
+      direction,
+    );
   }, [api, page, rowsPerPage, orderBy, orderDirection]);
 
   return {
@@ -72,14 +76,11 @@ export function useCurrentDeployments(
     rowsPerPage,
     setRowsPerPage,
     setOrderDirection,
-    setOrderBy
+    setOrderBy,
   };
 }
 
-
-export function useDeploymentsReports(
-  entity: Entity
-): {
+export function useDeploymentsReports(entity: Entity): {
   items?: DeploymentStatusResponse;
   loading: boolean;
   error?: Error;
@@ -89,7 +90,7 @@ export function useDeploymentsReports(
   rowsPerPage: any;
   setRowsPerPage: (pageSize: number) => void;
   setOrderDirection: (order: string) => void;
-  setOrderBy:  (orderBy: number) => void;
+  setOrderBy: (orderBy: number) => void;
 } {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -98,8 +99,9 @@ export function useDeploymentsReports(
 
   const api = useApi(daiDeployApiRef);
   const ciId = entity.metadata.annotations?.[DAI_DEPLOY_CI_ID_ANNOTATION];
-  const direction = orderDirection === '' ? 'desc' : orderDirection
-  const sortColumn = orderBy !== -1 ? archivedDeploymentOrderBy[orderBy] :  'startDate'
+  const direction = orderDirection === '' ? 'desc' : orderDirection;
+  const sortColumn =
+    orderBy !== -1 ? archivedDeploymentOrderBy[orderBy] : 'startDate';
 
   if (!ciId) {
     throw new Error(
@@ -107,8 +109,14 @@ export function useDeploymentsReports(
     );
   }
 
-  const { value, loading, error,retry } = useAsyncRetry(async() => {
-    return api.getDeploymentsReports(ciId, page, rowsPerPage, sortColumn, direction);
+  const { value, loading, error, retry } = useAsyncRetry(async () => {
+    return api.getDeploymentsReports(
+      ciId,
+      page,
+      rowsPerPage,
+      sortColumn,
+      direction,
+    );
   }, [api, page, rowsPerPage, orderBy, orderDirection]);
 
   return {
@@ -121,6 +129,6 @@ export function useDeploymentsReports(
     rowsPerPage,
     setRowsPerPage,
     setOrderDirection,
-    setOrderBy
+    setOrderBy,
   };
 }

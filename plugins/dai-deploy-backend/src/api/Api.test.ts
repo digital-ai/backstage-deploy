@@ -140,21 +140,21 @@ describe('Backend API tests for Current Deployment Status', () => {
     server.resetHandlers(...error401ResponseHandler);
 
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
-        config,
-        getVoidLogger(),
+      config,
+      getVoidLogger(),
     );
 
     await expect(
-        async () =>
-            await currentDeploymentStatusApi.getCurrentDeploymentStatus(
-                'app',
-                '2024-02-16T02:03:07.953+0000',
-                '2024-02-23T02:03:07.974+0000',
-                'startDate:desc',
-                '1',
-                '5',
-                'ALL',
-            ),
+      async () =>
+        await currentDeploymentStatusApi.getCurrentDeploymentStatus(
+          'app',
+          '2024-02-16T02:03:07.953+0000',
+          '2024-02-23T02:03:07.974+0000',
+          'startDate:desc',
+          '1',
+          '5',
+          'ALL',
+        ),
     ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
   });
 
@@ -166,15 +166,16 @@ describe('Backend API tests for Current Deployment Status', () => {
       getVoidLogger(),
     );
 
-    await expect(currentDeploymentStatusApi.getCurrentDeploymentStatus(
-            'app',
-            '2024-02-16T02:03:07.953+0000',
-            '2024-02-23T02:03:07.974+0000',
-            'startDate:desc',
-            '1',
-            '5',
-            'ALL',
-        ),
+    await expect(
+      currentDeploymentStatusApi.getCurrentDeploymentStatus(
+        'app',
+        '2024-02-16T02:03:07.953+0000',
+        '2024-02-23T02:03:07.974+0000',
+        'startDate:desc',
+        '1',
+        '5',
+        'ALL',
+      ),
     ).rejects.toThrow('failed to fetch data, status 403: forbidden');
   });
 
@@ -321,21 +322,21 @@ describe('Backend API tests for Deployment History Status', () => {
     server.resetHandlers(...error401ResponseHandler);
 
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
-        config,
-        getVoidLogger(),
+      config,
+      getVoidLogger(),
     );
 
     await expect(
-        async () =>
-            await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
-                'app',
-                '2024-02-16T02:03:07.953+0000',
-                '2024-02-23T02:03:07.974+0000',
-                'startDate:desc',
-                '1',
-                '5',
-                '',
-            ),
+      async () =>
+        await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
+          'app',
+          '2024-02-16T02:03:07.953+0000',
+          '2024-02-23T02:03:07.974+0000',
+          'startDate:desc',
+          '1',
+          '5',
+          '',
+        ),
     ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
   });
 
@@ -358,7 +359,9 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('failed to fetch data, status 403: You do not have report#view permission');
+    ).rejects.toThrow(
+      'failed to fetch data, status 403: You do not have report#view permission',
+    );
   });
 
   it('Get 500 response from deployment History from Deploy API', async () => {
