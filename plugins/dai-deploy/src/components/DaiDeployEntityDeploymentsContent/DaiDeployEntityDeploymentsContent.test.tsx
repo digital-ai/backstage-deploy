@@ -40,7 +40,7 @@ describe('DaiDeployEntityDeploymentsContent', () => {
         'test-app';
     }
     const rendered = await renderContent();
-    const image = rendered.getByAltText('Deploy logo');
+    const image = rendered.getByAltText('Deploy logo') as HTMLImageElement;
     expect(image).toBeInTheDocument();
     expect(image.src).toContain('deployLogoBlack');
     expect(rendered.getByText('Active')).toBeInTheDocument();
