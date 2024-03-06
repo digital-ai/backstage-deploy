@@ -17,7 +17,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     page: number,
     rowsPerPage: number,
     orderBy: string,
-    orderDirection:string
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const now = new Date();
@@ -43,7 +43,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     page: number,
     rowsPerPage: number,
     orderBy: string,
-    orderDirection:string
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const order = `${orderBy}:${orderDirection}`;

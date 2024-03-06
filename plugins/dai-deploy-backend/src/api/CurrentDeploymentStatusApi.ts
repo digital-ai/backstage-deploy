@@ -2,7 +2,8 @@ import {
   CURRENT_DEPLOYMENT_STATUS_API_PATH,
   getCredentials,
   getCurrentTaskDetailsRedirectUri,
-  getDeployApiHost, getEnvironmentRedirectUri,
+  getDeployApiHost,
+  getEnvironmentRedirectUri,
 } from './apiConfig';
 import {
   CurrentDeploymentStatus,
@@ -84,7 +85,10 @@ export class CurrentDeploymentStatusApi {
         },
         scheduledDate: d.scheduledDate,
         detailsRedirectUri: getCurrentTaskDetailsRedirectUri(this.config, d.id),
-        environmentRedirectUri: getEnvironmentRedirectUri(this.config, d.metadata.environment_id)
+        environmentRedirectUri: getEnvironmentRedirectUri(
+          this.config,
+          d.metadata.environment_id,
+        ),
       }),
     );
     return {
