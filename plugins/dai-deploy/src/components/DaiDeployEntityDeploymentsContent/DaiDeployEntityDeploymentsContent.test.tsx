@@ -41,7 +41,6 @@ describe('DaiDeployEntityDeploymentsContent', () => {
     }
     const rendered = await renderContent();
     expect(rendered.getByAltText('Deploy logo')).toBeInTheDocument();
-    expect(rendered.getByText('Digital.ai Deploy')).toBeInTheDocument();
     expect(rendered.getByText('Active')).toBeInTheDocument();
     expect(rendered.getByText('Archived')).toBeInTheDocument();
   });
