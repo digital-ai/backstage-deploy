@@ -25,6 +25,8 @@ describe('DenseTable', () => {
       totalCount: 0,
       onPageChange: () => {},
       onRowsPerPageChange: () => {},
+      onOrderBy: () => {},
+      onOrderDirection: () => {},
       retry: () => {},
     });
     columns.forEach(c =>
@@ -51,6 +53,8 @@ describe('DenseTable', () => {
       totalCount: data.length,
       onPageChange: () => {},
       onRowsPerPageChange: () => {},
+      onOrderBy: () => {},
+      onOrderDirection: () => {},
       retry: () => {},
     });
     columns.forEach(c =>
@@ -73,6 +77,8 @@ async function renderContent(args: {
   totalCount: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  onOrderBy: () => void;
+  onOrderDirection: () => void;
   retry: () => void;
   columns: TableColumn[];
 }) {
@@ -88,6 +94,8 @@ async function renderContent(args: {
         onPageChange={args.onPageChange}
         onRowsPerPageChange={args.onRowsPerPageChange}
         retry={args.retry}
+        onOrderBy={args.onOrderBy}
+        onOrderDirection={args.onOrderDirection}
       />
     </TestApiProvider>,
   );

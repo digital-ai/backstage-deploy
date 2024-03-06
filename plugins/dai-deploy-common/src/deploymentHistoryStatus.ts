@@ -18,5 +18,4 @@ export type DeploymentHistoryStatus = {
   package: string;
   rolledBack: boolean;
   worker_name: string | null;
-  detailsRedirectUri: string;
 };

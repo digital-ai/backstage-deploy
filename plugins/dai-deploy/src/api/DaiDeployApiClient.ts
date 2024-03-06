@@ -16,17 +16,20 @@ export class DaiDeployApiClient implements DaiDeployApi {
     ciId: string,
     page: number,
     rowsPerPage: number,
+    orderBy: string,
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const now = new Date();
+    const order = `${orderBy}:${orderDirection}`;
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
       moment(now).subtract(7, 'days').format(beginDateFormat),
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
-    queryString.append('order', 'end:desc');
-    queryString.append('pageNumber', page === 0 ? '1' : page.toString());
+    queryString.append('order', order);
+    queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
     queryString.append('taskSet', 'ALL');
 
@@ -39,8 +42,11 @@ export class DaiDeployApiClient implements DaiDeployApi {
     ciId: string,
     page: number,
     rowsPerPage: number,
+    orderBy: string,
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
+    const order = `${orderBy}:${orderDirection}`;
     const now = new Date();
     queryString.append('appName', ciId);
     queryString.append(
@@ -48,8 +54,8 @@ export class DaiDeployApiClient implements DaiDeployApi {
       moment(now).subtract(7, 'days').format(beginDateFormat),
     );
     queryString.append('endDate', moment(now).format(endDateFormat));
-    queryString.append('order', 'startDate:desc');
-    queryString.append('pageNumber', page === 0 ? '1' : page.toString());
+    queryString.append('order', order);
+    queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
 
     const urlSegment = `deployment-history?${queryString}`;

@@ -56,7 +56,13 @@ describe('DeployApiClient', () => {
         ),
       );
 
-      const response = await client.getCurrentDeployments(ciId, 0, 1);
+      const response = await client.getCurrentDeployments(
+        ciId,
+        0,
+        1,
+        'end',
+        'desc',
+      );
       expect(response.items.deploymentStatus.length === 2).toBeTruthy();
     });
     it('should return error', async () => {
@@ -70,7 +76,7 @@ describe('DeployApiClient', () => {
         ),
       );
       try {
-        await client.getCurrentDeployments(ciId, 0, 1);
+        await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc');
       } catch (e) {
         expect(e instanceof ResponseError).toBeTruthy();
       }
@@ -104,7 +110,13 @@ describe('DeployApiClient', () => {
         ),
       );
 
-      const response = await client.getDeploymentsReports(ciId, 0, 1);
+      const response = await client.getDeploymentsReports(
+        ciId,
+        0,
+        1,
+        'startDate',
+        'desc',
+      );
       expect(response.items.deploymentStatus.length === 1).toBeTruthy();
     });
 
@@ -118,7 +130,7 @@ describe('DeployApiClient', () => {
         ),
       );
       try {
-        await client.getDeploymentsReports(ciId, 0, 1);
+        await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc');
       } catch (e) {
         expect(e instanceof ResponseError).toBeTruthy();
       }

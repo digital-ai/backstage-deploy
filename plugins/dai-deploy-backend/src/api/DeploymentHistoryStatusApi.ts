@@ -84,10 +84,6 @@ export class DeploymentHistoryStatusApi {
         state: d.status,
         startDate: d.startDate,
         completionDate: d.completionDate,
-        environmentId: d.environmentId,
-        environmentIdWithoutRoot: d.environmentIdWithoutRoot,
-        rolledBack: d.rolledBack,
-        worker_name: d.worker_name,
         detailsRedirectUri: getDeploymentHistoryRedirectUri(
           this.config,
           d.taskId,

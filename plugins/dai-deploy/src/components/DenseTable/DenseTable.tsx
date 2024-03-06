@@ -26,6 +26,8 @@ type DenseTableProps = {
   onRowsPerPageChange: (rows: number) => void;
   columns: TableColumn[];
   retry: () => void;
+  onOrderDirection: (order: string) => void;
+  onOrderBy: (orderBy: number) => void;
 };
 const headerStyle: React.CSSProperties = {
   textTransform: 'capitalize',
@@ -234,6 +236,8 @@ export const DenseTable = ({
   onRowsPerPageChange,
   columns,
   retry,
+  onOrderDirection,
+  onOrderBy,
 }: DenseTableProps) => {
   const classes = useStyles();
   return (
@@ -265,6 +269,10 @@ export const DenseTable = ({
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}
+      onOrderChange={(orderBy, orderDirection) => {
+        onOrderBy(orderBy);
+        onOrderDirection(orderDirection);
+      }}
       emptyContent={
         <Typography color="textSecondary" className={classes.empty}>
           No tasks available

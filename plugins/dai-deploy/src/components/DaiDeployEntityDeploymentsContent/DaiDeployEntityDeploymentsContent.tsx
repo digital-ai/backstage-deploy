@@ -33,7 +33,7 @@ export const DaiDeployEntityDeploymentsContent = () => {
             paddingLeft={2}
             paddingBottom={2}
           >
-            <img src={deployLogo} alt="Deploy logo" height="30px" />
+            <img src={deployLogo} alt="Deploy logo" height="20px" />
             <Box mr={2} />
             <Typography variant="h5">Digital.ai Deploy</Typography>
           </Box>
