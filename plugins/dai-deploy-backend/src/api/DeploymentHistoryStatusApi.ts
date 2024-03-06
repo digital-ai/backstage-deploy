@@ -1,4 +1,9 @@
 import {
+    AuthenticationError,
+    NotAllowedError,
+    NotFoundError
+} from '@backstage/errors';
+import {
   DEPLOYMENT_HISTORY_STATUS_API_PATH,
   getCredentials,
   getDeployApiHost,
@@ -61,16 +66,19 @@ export class DeploymentHistoryStatusApi {
       },
     );
     if (!response.ok) {
-      if (response.status === 404) {
-        return await response.json();
-      } else if (response.status === 403) {
+        this.logger?.error(`Error occurred while accessing deploy: status: ${response.status}, statusText: ${response.statusText}`)
+        if (response.status === 401) {
+            throw new AuthenticationError(`${response.statusText}`);
+        } else if (response.status === 403 ){
+            const responseText = await response.text()
+            this.logger?.error(`Response Error - ${responseText}`)
+            throw new NotAllowedError(responseText);
+        } else if (response.status === 404) {
+            throw new NotFoundError(`${response.statusText}`);
+        }
         throw new Error(
-          `failed to fetch data, status ${response.status}: ${await response.text()}`,
+            `failed to fetch data, status ${response.status}: ${response.statusText}`,
         );
-      }
-      throw new Error(
-        `failed to fetch data, status ${response.status}: ${response.statusText}`,
-      );
     }
     const data: DeploymentHistoryStatus[] = await response.json();
 

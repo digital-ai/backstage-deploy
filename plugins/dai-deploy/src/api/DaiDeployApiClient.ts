@@ -1,8 +1,13 @@
+import {
+  AuthenticationError,
+  NotAllowedError,
+  NotFoundError,
+  ServiceUnavailableError
+} from '@backstage/errors';
 import { beginDateFormat, endDateFormat } from './utils';
 import { DaiDeployApi } from './DaiDeployApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { ResponseError } from '@backstage/errors';
+import { DiscoveryApi } from '@backstage/core-plugin-api'
 import moment from 'moment';
 
 export class DaiDeployApiClient implements DaiDeployApi {
@@ -76,7 +81,18 @@ export class DaiDeployApiClient implements DaiDeployApi {
     });
 
     if (!response.ok) {
-      throw await ResponseError.fromResponse(response);
+      if (response.status === 401) {
+        throw new AuthenticationError(`Access Denied: Missing or invalid deploy Token. Unauthorized to Use Digital.ai Deploy`);
+      } else if (response.status === 403) {
+        throw new NotAllowedError("Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy");
+      } else if (response.status === 404) {
+        throw new NotFoundError('Deploy service request not found',response.statusText);
+      } else if (response.status === 500) {
+        throw new ServiceUnavailableError(`Deploy Service Unavailable`)
+      }
+      throw new Error(
+          `Unexpected error: failed to fetch data, status ${response.status}: ${response.statusText}`,
+      );
     }
 
     return (await response.json()) as Promise<T>;
