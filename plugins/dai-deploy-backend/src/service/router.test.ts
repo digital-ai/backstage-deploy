@@ -71,7 +71,9 @@ describe('router api tests', () => {
       server.resetHandlers(...error404ResponseHandler);
       const response = await request(app).get('/deployment-status');
       console.log(response.body.error.message);
-      expect(response.body.error.message).toEqual('Not found');
+      expect(response.body.error.message).toEqual(
+        'Deploy service request not found',
+      );
     });
 
     it('GET 403 from deploy for /deployment-status', async () => {
@@ -79,7 +81,7 @@ describe('router api tests', () => {
       const response = await request(app).get('/deployment-status');
       expect(response.status).toEqual(403);
       expect(response.body.error.message).toContain(
-        'You do not have report#view permission',
+        'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
       );
     });
 
@@ -104,7 +106,9 @@ describe('router api tests', () => {
     it('GET 404 from deploy for  /deployment-history', async () => {
       server.resetHandlers(...error404ResponseHandler);
       const response = await request(app).get('/deployment-history');
-      expect(response.body.error.message).toEqual('Not found');
+      expect(response.body.error.message).toEqual(
+        'Deploy service request not found',
+      );
     });
 
     it('GET 403 from deploy for  /deployment-history', async () => {
@@ -112,7 +116,7 @@ describe('router api tests', () => {
       const response = await request(app).get('/deployment-history');
       expect(response.status).toEqual(403);
       expect(response.body.error.message).toContain(
-        'You do not have report#view permission',
+        'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
       );
     });
 

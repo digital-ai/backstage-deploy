@@ -176,7 +176,9 @@ describe('Backend API tests for Current Deployment Status', () => {
         '5',
         'ALL',
       ),
-    ).rejects.toThrow('You do not have report#view permission');
+    ).rejects.toThrow(
+      'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
+    );
   });
 
   it('Get 500 response from current deployment status from Deploy API', async () => {
@@ -219,7 +221,7 @@ describe('Backend API tests for Current Deployment Status', () => {
           '5',
           'ALL',
         ),
-    ).rejects.toThrow('Not found');
+    ).rejects.toThrow('Deploy service request not found');
   });
 });
 
@@ -359,7 +361,9 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('You do not have report#view permission');
+    ).rejects.toThrow(
+      'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
+    );
   });
 
   it('Get 500 response from deployment History from Deploy API', async () => {
@@ -403,6 +407,6 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('Not found');
+    ).rejects.toThrow('Deploy service request not found');
   });
 });

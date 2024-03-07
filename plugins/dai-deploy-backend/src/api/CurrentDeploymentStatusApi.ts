@@ -1,9 +1,4 @@
 import {
-  AuthenticationError,
-  NotAllowedError,
-  NotFoundError,
-} from '@backstage/errors';
-import {
   CURRENT_DEPLOYMENT_STATUS_API_PATH,
   getCredentials,
   getCurrentTaskDetailsRedirectUri,
@@ -17,6 +12,7 @@ import {
 } from '@digital-ai/plugin-dai-deploy-common';
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
+import {errorResponse, parseErrorResponse, reponseError} from './responseUtil';
 
 export class CurrentDeploymentStatusApi {
   private readonly logger: Logger;
@@ -66,21 +62,7 @@ export class CurrentDeploymentStatusApi {
       },
     );
     if (!response.ok) {
-      this.logger?.error(
-        `Error occurred while accessing deploy: status: ${response.status}, statusText: ${response.statusText}`,
-      );
-      if (response.status === 401) {
-        throw new AuthenticationError(`${response.statusText}`);
-      } else if (response.status === 403) {
-        const responseText = await response.text();
-        this.logger?.error(`Response Error - ${responseText}`);
-        throw new NotAllowedError(responseText);
-      } else if (response.status === 404) {
-        throw new NotFoundError(`${response.statusText}`);
-      }
-      throw new Error(
-        `failed to fetch data, status ${response.status}: ${response.statusText}`,
-      );
+      await parseErrorResponse(this.logger, response);
     }
     const data: CurrentDeploymentStatus[] = await response.json(); // deploy api
 
