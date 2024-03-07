@@ -200,7 +200,7 @@ describe('Backend API tests for Current Deployment Status', () => {
           '5',
           'ALL',
         ),
-    ).rejects.toThrow('failed to fetch data, status 500: Unexpected error');
+    ).rejects.toThrow('failed to fetch data, status 500 Unexpected error');
   });
 
   it('Get 404 response from current deployment status from Deploy API', async () => {
@@ -385,7 +385,7 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('failed to fetch data, status 500: Unexpected error');
+    ).rejects.toThrow('failed to fetch data, status 500 Unexpected error');
   });
 
   it('Get 404 response from deployment History from Deploy API', async () => {
