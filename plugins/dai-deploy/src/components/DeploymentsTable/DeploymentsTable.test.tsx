@@ -1,5 +1,9 @@
 /* eslint-disable jest/no-conditional-expect */
-
+import {
+  AuthenticationError,
+  NotAllowedError,
+  ServiceUnavailableError,
+} from '@backstage/errors';
 import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
 import {
@@ -7,18 +11,11 @@ import {
   renderInTestApp,
   setupRequestMockHandlers,
 } from '@backstage/test-utils';
-import {
-  connectionErrorResponse,
-  currentDeploymentResponse,
-  entityStub,
-  permissionErorResponse,
-  unAuthorizedErrorResponse,
-} from '../../mocks/mocks';
+import { currentDeploymentResponse, entityStub } from '../../mocks/mocks';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsTable } from './DeploymentsTable';
 import { Entity } from '@backstage/catalog-model';
 import React from 'react';
-import { ResponseError } from '@backstage/errors';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import { rest } from 'msw';
@@ -172,8 +169,8 @@ describe('DeploymentsTable', () => {
   });
 
   it('should show the appropriate error in case of a connection error', async () => {
-    const deployConnectionRefused = await ResponseError.fromResponse(
-      connectionErrorResponse as Response,
+    const deployConnectionRefused = new ServiceUnavailableError(
+      `Deploy Service Unavailable`,
     );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployConnectionRefused),
@@ -189,14 +186,12 @@ describe('DeploymentsTable', () => {
       </TestApiProvider>,
     );
     expect(
-      getByText(
-        `Warning: Connection Failed: Unable to Connect to Digital.ai Deploy`,
-      ),
+      getByText(`Warning: Deploy Service Unavailable`),
     ).toBeInTheDocument();
   });
   it('should show the appropriate error in case of a Unauthorized', async () => {
-    const deployUnAuthorizedResponse = await ResponseError.fromResponse(
-      unAuthorizedErrorResponse as Response,
+    const deployUnAuthorizedResponse = new AuthenticationError(
+      `Access Denied: Missing or invalid deploy Token. Unauthorized to Use Digital.ai Deploy`,
     );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployUnAuthorizedResponse),
@@ -213,14 +208,14 @@ describe('DeploymentsTable', () => {
     );
     expect(
       getByText(
-        `Warning: Access Denied: Unauthorized to Use Digital.ai Deploy`,
+        `Warning: Access Denied: Missing or invalid deploy Token. Unauthorized to Use Digital.ai Deploy`,
       ),
     ).toBeInTheDocument();
   });
 
   it('should show the appropriate error in case of a permission error in deploy', async () => {
-    const deployPermissionErorResponse = await ResponseError.fromResponse(
-      permissionErorResponse as Response,
+    const deployPermissionErorResponse = new NotAllowedError(
+      'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
     );
     const currentStatusApiWithError: Partial<DaiDeployApi> = {
       getCurrentDeployments: () => Promise.reject(deployPermissionErorResponse),
@@ -237,7 +232,7 @@ describe('DeploymentsTable', () => {
     );
     expect(
       getByText(
-        `Warning: Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy`,
+        `Warning: Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy`,
       ),
     ).toBeInTheDocument();
   });

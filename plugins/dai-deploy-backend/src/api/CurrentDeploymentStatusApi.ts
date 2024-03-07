@@ -1,7 +1,7 @@
 import {
-    AuthenticationError,
-    NotAllowedError,
-    NotFoundError
+  AuthenticationError,
+  NotAllowedError,
+  NotFoundError,
 } from '@backstage/errors';
 import {
   CURRENT_DEPLOYMENT_STATUS_API_PATH,
@@ -66,12 +66,14 @@ export class CurrentDeploymentStatusApi {
       },
     );
     if (!response.ok) {
-      this.logger?.error(`Error occurred while accessing deploy: status: ${response.status}, statusText: ${response.statusText}`)
+      this.logger?.error(
+        `Error occurred while accessing deploy: status: ${response.status}, statusText: ${response.statusText}`,
+      );
       if (response.status === 401) {
         throw new AuthenticationError(`${response.statusText}`);
-      } else if (response.status === 403 ){
-        const responseText = await response.text()
-        this.logger?.error(`Response Error - ${responseText}`)
+      } else if (response.status === 403) {
+        const responseText = await response.text();
+        this.logger?.error(`Response Error - ${responseText}`);
         throw new NotAllowedError(responseText);
       } else if (response.status === 404) {
         throw new NotFoundError(`${response.statusText}`);
