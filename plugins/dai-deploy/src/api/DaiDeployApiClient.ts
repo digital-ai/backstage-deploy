@@ -3,6 +3,7 @@ import {
   NotAllowedError,
   NotFoundError,
   ServiceUnavailableError,
+  parseErrorResponseBody,
 } from '@backstage/errors';
 import { beginDateFormat, endDateFormat } from './utils';
 import { DaiDeployApi } from './DaiDeployApi';
@@ -81,19 +82,13 @@ export class DaiDeployApiClient implements DaiDeployApi {
     });
 
     if (!response.ok) {
+      const data = await parseErrorResponseBody(response);
       if (response.status === 401) {
-        throw new AuthenticationError(
-          `Access Denied: Missing or invalid deploy Token. Unauthorized to Use Digital.ai Deploy`,
-        );
+        throw new AuthenticationError(data.error.message);
       } else if (response.status === 403) {
-        throw new NotAllowedError(
-          'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
-        );
+        throw new NotAllowedError(data.error.message);
       } else if (response.status === 404) {
-        throw new NotFoundError(
-          'Deploy service request not found',
-          response.statusText,
-        );
+        throw new NotFoundError(data.error.message);
       } else if (response.status === 500) {
         throw new ServiceUnavailableError(`Deploy Service Unavailable`);
       }

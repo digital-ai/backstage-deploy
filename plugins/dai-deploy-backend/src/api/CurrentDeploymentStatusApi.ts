@@ -12,7 +12,7 @@ import {
 } from '@digital-ai/plugin-dai-deploy-common';
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
-import {errorResponse, parseErrorResponse, reponseError} from './responseUtil';
+import { parseErrorResponse } from './responseUtil';
 
 export class CurrentDeploymentStatusApi {
   private readonly logger: Logger;
