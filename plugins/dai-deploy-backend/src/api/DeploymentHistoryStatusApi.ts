@@ -3,6 +3,7 @@ import {
   getCredentials,
   getDeployApiHost,
   getDeploymentHistoryRedirectUri,
+  getEnvironmentRedirectUri,
 } from './apiConfig';
 import {
   DeploymentArchiveData,
@@ -62,6 +63,10 @@ export class DeploymentHistoryStatusApi {
     if (!response.ok) {
       if (response.status === 404) {
         return await response.json();
+      } else if (response.status === 403) {
+        throw new Error(
+          `failed to fetch data, status ${response.status}: ${await response.text()}`,
+        );
       }
       throw new Error(
         `failed to fetch data, status ${response.status}: ${response.statusText}`,
@@ -79,13 +84,13 @@ export class DeploymentHistoryStatusApi {
         state: d.status,
         startDate: d.startDate,
         completionDate: d.completionDate,
-        environmentId: d.environmentId,
-        environmentIdWithoutRoot: d.environmentIdWithoutRoot,
-        rolledBack: d.rolledBack,
-        worker_name: d.worker_name,
         detailsRedirectUri: getDeploymentHistoryRedirectUri(
           this.config,
           d.taskId,
+        ),
+        environmentRedirectUri: getEnvironmentRedirectUri(
+          this.config,
+          d.environmentId,
         ),
       }),
     );

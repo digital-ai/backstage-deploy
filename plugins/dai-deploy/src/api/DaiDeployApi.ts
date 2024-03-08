@@ -12,11 +12,15 @@ export interface DaiDeployApi {
     ciId: string,
     page: number,
     rowsPerPage: number,
+    orderBy: string,
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }>;
 
   getDeploymentsReports(
     ciId: string,
     page: number,
     rowsPerPage: number,
+    orderBy: string,
+    orderDirection: string,
   ): Promise<{ items: DeploymentStatusResponse }>;
 }

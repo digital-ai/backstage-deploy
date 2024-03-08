@@ -1,22 +1,27 @@
 import { DenseTable, defaultActiveColumns } from '../DenseTable/DenseTable';
-import React, { useState } from 'react';
-import { ResponseErrorPanel } from '@backstage/core-components';
+import { DeployResponseErrorPanel } from '../DeployResponseErrorPanel';
+import React from 'react';
 import { useCurrentDeployments } from '../../hooks';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const DeploymentsTable = () => {
   const { entity } = useEntity();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { items, loading, error } = useCurrentDeployments(
-    entity,
+  const {
+    items,
+    loading,
+    error,
+    retry,
     page,
+    setPage,
     rowsPerPage,
-  );
+    setRowsPerPage,
+    setOrderDirection,
+    setOrderBy,
+  } = useCurrentDeployments(entity);
 
   if (error) {
-    return <ResponseErrorPanel error={error} />;
+    return <DeployResponseErrorPanel error={error} />;
   }
 
   return (
@@ -29,6 +34,9 @@ export const DeploymentsTable = () => {
       onRowsPerPageChange={setRowsPerPage}
       onPageChange={setPage}
       columns={defaultActiveColumns}
+      retry={retry}
+      onOrderDirection={setOrderDirection}
+      onOrderBy={setOrderBy}
     />
   );
 };

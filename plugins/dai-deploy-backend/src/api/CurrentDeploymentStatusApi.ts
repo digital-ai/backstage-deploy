@@ -3,6 +3,7 @@ import {
   getCredentials,
   getCurrentTaskDetailsRedirectUri,
   getDeployApiHost,
+  getEnvironmentRedirectUri,
 } from './apiConfig';
 import {
   CurrentDeploymentStatus,
@@ -76,20 +77,18 @@ export class CurrentDeploymentStatusApi {
         state: d.state,
         startDate: d.startDate,
         completionDate: d.completionDate,
-        id: d.id,
-        description: d.description,
         metadata: {
-          worker_name: d.metadata.worker_name,
-          environment_id: d.metadata.environment_id,
-          environment_reference_id: d.metadata.environment_reference_id,
           version: d.metadata.version,
           environment: d.metadata.environment,
-          satellite_ids: d.metadata.satellite_ids,
           application: d.metadata.application,
           taskType: d.metadata.taskType,
         },
         scheduledDate: d.scheduledDate,
         detailsRedirectUri: getCurrentTaskDetailsRedirectUri(this.config, d.id),
+        environmentRedirectUri: getEnvironmentRedirectUri(
+          this.config,
+          d.metadata.environment_id,
+        ),
       }),
     );
     return {

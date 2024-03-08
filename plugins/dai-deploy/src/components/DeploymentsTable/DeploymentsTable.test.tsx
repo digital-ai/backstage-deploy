@@ -1,17 +1,24 @@
 /* eslint-disable jest/no-conditional-expect */
 
-import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
+import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
   renderInTestApp,
   setupRequestMockHandlers,
 } from '@backstage/test-utils';
-import { currentDeploymentResponse, entityStub } from '../../mocks/mocks';
+import {
+  connectionErrorResponse,
+  currentDeploymentResponse,
+  entityStub,
+  permissionErorResponse,
+  unAuthorizedErrorResponse,
+} from '../../mocks/mocks';
 import { DAI_DEPLOY_CI_ID_ANNOTATION } from '@digital-ai/plugin-dai-deploy-common';
 import { DeploymentsTable } from './DeploymentsTable';
 import { Entity } from '@backstage/catalog-model';
 import React from 'react';
+import { ResponseError } from '@backstage/errors';
 import capitalize from 'lodash/capitalize';
 import { formatTimestamp } from '../../utils/dateTimeUtils';
 import { rest } from 'msw';
@@ -145,6 +152,94 @@ describe('DeploymentsTable', () => {
         ).not.toBeInTheDocument();
       }
     });
+  });
+
+  it('should show the error', async () => {
+    const currentStatusApiWithError: Partial<DaiDeployApi> = {
+      getCurrentDeployments: () => Promise.reject(new Error('Failed to fetch')),
+    };
+    const { getByText } = await renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [discoveryApiRef, discoveryApi],
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
+    );
+    expect(getByText('Warning: Failed to fetch')).toBeInTheDocument();
+  });
+
+  it('should show the appropriate error in case of a connection error', async () => {
+    const deployConnectionRefused = await ResponseError.fromResponse(
+      connectionErrorResponse as Response,
+    );
+    const currentStatusApiWithError: Partial<DaiDeployApi> = {
+      getCurrentDeployments: () => Promise.reject(deployConnectionRefused),
+    };
+    const { getByText } = await renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [discoveryApiRef, discoveryApi],
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
+    );
+    expect(
+      getByText(
+        `Warning: Connection Failed: Unable to Connect to Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
+  });
+  it('should show the appropriate error in case of a Unauthorized', async () => {
+    const deployUnAuthorizedResponse = await ResponseError.fromResponse(
+      unAuthorizedErrorResponse as Response,
+    );
+    const currentStatusApiWithError: Partial<DaiDeployApi> = {
+      getCurrentDeployments: () => Promise.reject(deployUnAuthorizedResponse),
+    };
+    const { getByText } = await renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [discoveryApiRef, discoveryApi],
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
+    );
+    expect(
+      getByText(
+        `Warning: Access Denied: Unauthorized to Use Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('should show the appropriate error in case of a permission error in deploy', async () => {
+    const deployPermissionErorResponse = await ResponseError.fromResponse(
+      permissionErorResponse as Response,
+    );
+    const currentStatusApiWithError: Partial<DaiDeployApi> = {
+      getCurrentDeployments: () => Promise.reject(deployPermissionErorResponse),
+    };
+    const { getByText } = await renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [discoveryApiRef, discoveryApi],
+          [daiDeployApiRef, currentStatusApiWithError],
+        ]}
+      >
+        <DeploymentsTable />
+      </TestApiProvider>,
+    );
+    expect(
+      getByText(
+        `Warning: Permission Denied: The configured Deploy User lacks necessary permission for report#view in Digital.ai Deploy`,
+      ),
+    ).toBeInTheDocument();
   });
 });
 
