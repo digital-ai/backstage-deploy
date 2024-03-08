@@ -14,16 +14,29 @@ import express from 'express';
 import { getVoidLogger } from '@backstage/backend-common';
 import request from 'supertest';
 import { setupServer } from 'msw/node';
+import { PermissionEvaluator } from '@backstage/plugin-permission-common';
 
 let app: express.Express;
 
 function configureMockServer() {
   const server = setupServer();
 
+  const mockedAuthorize: jest.MockedFunction<PermissionEvaluator['authorize']> =
+    jest.fn();
+  const mockedPermissionQuery: jest.MockedFunction<
+    PermissionEvaluator['authorizeConditional']
+  > = jest.fn();
+
+  const permissionEvaluator: PermissionEvaluator = {
+    authorize: mockedAuthorize,
+    authorizeConditional: mockedPermissionQuery,
+  };
+
   beforeAll(async () => {
     const router = await createRouter({
       config,
       logger: getVoidLogger(),
+      permissions: permissionEvaluator,
     });
     app = express().use(router);
     // Start the interception.

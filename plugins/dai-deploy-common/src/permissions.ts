@@ -1,5 +1,5 @@
-import { createPermission } from '@backstage/plugin-permission-common';
 import { RESOURCE_TYPE_CATALOG_ENTITY } from '@backstage/plugin-catalog-common/alpha';
+import { createPermission } from '@backstage/plugin-permission-common';
 
 /**
  * This permission is used to determine if a user is allowed to view the deploy plugin
@@ -17,4 +17,4 @@ export const daiDeployViewPermission = createPermission({
 /**
  * @public
  */
-export const daiDeployViewPermissions = [daiDeployViewPermission];
+export const daiDeployPermissions = [daiDeployViewPermission];

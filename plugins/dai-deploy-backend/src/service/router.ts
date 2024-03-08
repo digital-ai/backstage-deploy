@@ -9,10 +9,10 @@ import { InputError, NotAllowedError } from '@backstage/errors';
 import Router from 'express-promise-router';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-import {getEncodedQueryVal} from "../api/apiConfig";
+import { getEncodedQueryVal } from '../api/apiConfig';
 import {
+  daiDeployPermissions,
   daiDeployViewPermission,
-  daiDeployViewPermissions
 } from '@digital-ai/plugin-dai-deploy-common';
 import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
 import {
@@ -44,7 +44,7 @@ export async function createRouter(
     logger,
   );
   const permissionIntegrationRouter = createPermissionIntegrationRouter({
-    permissions: daiDeployViewPermissions,
+    permissions: daiDeployPermissions,
   });
 
   const router = Router();
@@ -65,29 +65,39 @@ export async function createRouter(
 
   router.get('/deployment-status', async (req, res) => {
     const token = getBearerTokenFromAuthorizationHeader(
-        req.header('authorization'),
+      req.header('authorization'),
     );
-    const entityRef = req.body.entityRef;
+    const entityRef = decodeURIComponent(
+      getEncodedQueryVal(req.query.entityRef?.toString()),
+    );
     if (typeof entityRef !== 'string') {
       throw new InputError('Invalid entityRef, not a string');
     }
+    logger.info(`token ######################## : ${token}`);
+    logger.info(`entityRef ######################## : ${entityRef}`);
     const decision = permissions
-        ? (
-            await permissions.authorize(
-                [
-                  {
-                    permission: daiDeployViewPermission,
-                    resourceRef: entityRef,
-                  },
-                ],
-                {
-                  token,
-                },
-            )
+      ? (
+          await permissions.authorize(
+            [
+              {
+                permission: daiDeployViewPermission,
+                resourceRef: entityRef,
+              },
+            ],
+            {
+              token,
+            },
+          )
         )[0]
-        : undefined;
+      : undefined;
+
+    logger.info(
+      `Permission decision ######################### : ${decision?.result}`,
+    );
     if (decision && decision.result === AuthorizeResult.DENY) {
-      throw new NotAllowedError('Unauthorized');
+      throw new NotAllowedError(
+        'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+      );
     }
 
     const appName = getEncodedQueryVal(req.query.appName?.toString());

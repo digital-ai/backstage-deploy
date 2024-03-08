@@ -1,7 +1,11 @@
 /* eslint-disable jest/no-conditional-expect */
 
 import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
-import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
+import {
+  DiscoveryApi,
+  discoveryApiRef,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
   renderInTestApp,
@@ -36,6 +40,10 @@ const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
 
+const identityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+} as unknown as IdentityApi;
+
 describe('DeploymentsTable', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -67,9 +75,11 @@ describe('DeploymentsTable', () => {
       rest.get(
         'http://example.com/api/dai-deploy/deployment-status',
         (_, res, ctx) =>
+
           res(
             ctx.status(200),
             ctx.set('Content-Type', 'application/json'),
+            ctx.set('Authorization', `Bearer ${identityApi.getCredentials()}`),
             ctx.json(currentDeploymentResponse),
           ),
       ),
@@ -248,7 +258,10 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
-        [daiDeployApiRef, new DaiDeployApiClient({ discoveryApi })],
+        [
+          daiDeployApiRef,
+          new DaiDeployApiClient({ discoveryApi, identityApi }),
+        ],
       ]}
     >
       <DeploymentsTable />

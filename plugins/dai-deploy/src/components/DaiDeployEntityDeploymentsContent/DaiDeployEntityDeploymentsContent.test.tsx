@@ -1,5 +1,9 @@
 import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
-import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
+import {
+  DiscoveryApi,
+  discoveryApiRef,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import { SetupServer, setupServer } from 'msw/node';
 import {
   TestApiProvider,
@@ -23,6 +27,10 @@ let entity: { entity: Entity };
 const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
+
+const identityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+} as unknown as IdentityApi;
 
 describe('DaiDeployEntityDeploymentsContent', () => {
   const worker = setupServer();
@@ -87,7 +95,10 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
-        [daiDeployApiRef, new DaiDeployApiClient({ discoveryApi })],
+        [
+          daiDeployApiRef,
+          new DaiDeployApiClient({ discoveryApi, identityApi }),
+        ],
       ]}
     >
       <EntityProvider entity={entity.entity}>

@@ -1,7 +1,11 @@
 /* eslint-disable jest/no-conditional-expect */
 
 import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
-import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
+import {
+  DiscoveryApi,
+  discoveryApiRef,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
   renderInTestApp,
@@ -28,6 +32,10 @@ jest.mock('@backstage/plugin-catalog-react', () => ({
 const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
+
+const identityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+} as unknown as IdentityApi;
 
 describe('DeploymentsHistoryTable', () => {
   const worker = setupServer();
@@ -133,7 +141,10 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
-        [daiDeployApiRef, new DaiDeployApiClient({ discoveryApi })],
+        [
+          daiDeployApiRef,
+          new DaiDeployApiClient({ discoveryApi, identityApi }),
+        ],
       ]}
     >
       <DeploymentsHistoryTable />

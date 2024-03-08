@@ -2,7 +2,7 @@ import {
   DAI_DEPLOY_CI_ID_ANNOTATION,
   DeploymentStatusResponse,
 } from '@digital-ai/plugin-dai-deploy-common';
-import { Entity } from '@backstage/catalog-model';
+import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 import { daiDeployApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
@@ -56,6 +56,8 @@ export function useCurrentDeployments(entity: Entity): {
     );
   }
 
+  const entityRef = stringifyEntityRef(entity);
+
   const { value, loading, error, retry } = useAsyncRetry(async () => {
     return api.getCurrentDeployments(
       ciId,
@@ -63,6 +65,7 @@ export function useCurrentDeployments(entity: Entity): {
       rowsPerPage,
       sortColumn,
       direction,
+      entityRef,
     );
   }, [api, page, rowsPerPage, orderBy, orderDirection]);
 
@@ -108,7 +111,7 @@ export function useDeploymentsReports(entity: Entity): {
       `Value for annotation "${DAI_DEPLOY_CI_ID_ANNOTATION}" was not found`,
     );
   }
-
+  const entityRef = stringifyEntityRef(entity);
   const { value, loading, error, retry } = useAsyncRetry(async () => {
     return api.getDeploymentsReports(
       ciId,
@@ -116,6 +119,7 @@ export function useDeploymentsReports(entity: Entity): {
       rowsPerPage,
       sortColumn,
       direction,
+      entityRef,
     );
   }, [api, page, rowsPerPage, orderBy, orderDirection]);
 

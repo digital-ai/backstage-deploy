@@ -5,15 +5,23 @@ import {
   deploymentHistoryResponse,
 } from '../mocks/mocks';
 import { DaiDeployApiClient } from './DaiDeployApiClient';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import { rest } from 'msw';
 import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
+import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
 
 const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
+
+const identityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+} as unknown as IdentityApi;
 
 function checkParam(
   params: URLSearchParams,
@@ -26,7 +34,12 @@ function checkParam(
 describe('DeployApiClient', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
-  const client = new DaiDeployApiClient({ discoveryApi });
+  const client = new DaiDeployApiClient({ discoveryApi, identityApi });
+  const entity = stringifyEntityRef({
+    kind: 'Component',
+    name: 'test',
+    namespace: DEFAULT_NAMESPACE,
+  });
 
   describe('getCurrentDeployments', () => {
     it('should return valid reponse', async () => {
@@ -62,6 +75,7 @@ describe('DeployApiClient', () => {
         1,
         'end',
         'desc',
+        entity,
       );
       expect(response.items.deploymentStatus.length === 2).toBeTruthy();
     });
@@ -76,7 +90,7 @@ describe('DeployApiClient', () => {
         ),
       );
       try {
-        await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc');
+        await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc', entity);
       } catch (e) {
         expect(e instanceof ResponseError).toBeTruthy();
       }
@@ -116,6 +130,7 @@ describe('DeployApiClient', () => {
         1,
         'startDate',
         'desc',
+        entity,
       );
       expect(response.items.deploymentStatus.length === 1).toBeTruthy();
     });
@@ -126,11 +141,12 @@ describe('DeployApiClient', () => {
         rest.get(
           'http://example.com/api/dai-deploy/deployment-history',
           (_, res, ctx) =>
-            res(ctx.status(401), ctx.set('Content-Type', 'application/json')),
+            res(ctx.status(401),
+                ctx.set('Content-Type', 'application/json')),
         ),
       );
       try {
-        await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc');
+        await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc', entity);
       } catch (e) {
         expect(e instanceof ResponseError).toBeTruthy();
       }
