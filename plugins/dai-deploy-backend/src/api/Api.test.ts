@@ -155,7 +155,7 @@ describe('Backend API tests for Current Deployment Status', () => {
           '5',
           'ALL',
         ),
-    ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
+    ).rejects.toThrow('Unauthorized');
   });
 
   it('Get 403 response from current deployment status from Deploy API', async () => {
@@ -176,7 +176,9 @@ describe('Backend API tests for Current Deployment Status', () => {
         '5',
         'ALL',
       ),
-    ).rejects.toThrow('failed to fetch data, status 403: forbidden');
+    ).rejects.toThrow(
+      'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
+    );
   });
 
   it('Get 500 response from current deployment status from Deploy API', async () => {
@@ -198,7 +200,7 @@ describe('Backend API tests for Current Deployment Status', () => {
           '5',
           'ALL',
         ),
-    ).rejects.toThrow('failed to fetch data, status 500: Unexpected error');
+    ).rejects.toThrow('failed to fetch data, status 500 Unexpected error');
   });
 
   it('Get 404 response from current deployment status from Deploy API', async () => {
@@ -208,18 +210,18 @@ describe('Backend API tests for Current Deployment Status', () => {
       config,
       getVoidLogger(),
     );
-
-    const deploymentStatusResponse: DeploymentStatusResponse =
-      await currentDeploymentStatusApi.getCurrentDeploymentStatus(
-        'app',
-        '2024-02-16T02:03:07.953+0000',
-        '2024-02-23T02:03:07.974+0000',
-        'startDate:desc',
-        '1',
-        '5',
-        '',
-      );
-    expect(deploymentStatusResponse).toEqual('[]');
+    await expect(
+      async () =>
+        await currentDeploymentStatusApi.getCurrentDeploymentStatus(
+          'app',
+          '2024-02-16T02:03:07.953+0000',
+          '2024-02-23T02:03:07.974+0000',
+          'startDate:desc',
+          '1',
+          '5',
+          'ALL',
+        ),
+    ).rejects.toThrow('Deploy service request not found');
   });
 });
 
@@ -337,7 +339,7 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('failed to fetch data, status 401: Unauthorized');
+    ).rejects.toThrow('Unauthorized');
   });
 
   it('Get 403 response from deployment History from Deploy API', async () => {
@@ -360,7 +362,7 @@ describe('Backend API tests for Deployment History Status', () => {
           '',
         ),
     ).rejects.toThrow(
-      'failed to fetch data, status 403: You do not have report#view permission',
+      'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
     );
   });
 
@@ -383,7 +385,7 @@ describe('Backend API tests for Deployment History Status', () => {
           '5',
           '',
         ),
-    ).rejects.toThrow('failed to fetch data, status 500: Unexpected error');
+    ).rejects.toThrow('failed to fetch data, status 500 Unexpected error');
   });
 
   it('Get 404 response from deployment History from Deploy API', async () => {
@@ -394,16 +396,17 @@ describe('Backend API tests for Deployment History Status', () => {
       getVoidLogger(),
     );
 
-    const deploymentStatusResponse: DeploymentStatusResponse =
-      await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
-        'app',
-        '2024-02-16T02:03:07.953+0000',
-        '2024-02-23T02:03:07.974+0000',
-        'startDate:desc',
-        '1',
-        '5',
-        '',
-      );
-    expect(deploymentStatusResponse).toEqual('[]');
+    await expect(
+      async () =>
+        await deploymentHistoryStatusApi.getDeploymentHistoryStatus(
+          'app',
+          '2024-02-16T02:03:07.953+0000',
+          '2024-02-23T02:03:07.974+0000',
+          'startDate:desc',
+          '1',
+          '5',
+          '',
+        ),
+    ).rejects.toThrow('Deploy service request not found');
   });
 });

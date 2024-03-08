@@ -28,6 +28,7 @@
     "@backstage/backend-common": "^0.19.5",
     "@backstage/backend-plugin-api": "^0.6.12",
     "@backstage/config": "^1.1.0",
+    "@backstage/errors": "^1.2.3",
     "@digital-ai/plugin-dai-deploy-common": "^0.1.0",
     "@types/express": "*",
     "express": "^4.17.1",
@@ -42,8 +43,8 @@
     "@types/supertest": "^2.0.12",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "prettier": "3.2.5",
     "msw": "^2.2.1",
+    "prettier": "3.2.5",
     "supertest": "^6.2.4"
   },
   "files": [

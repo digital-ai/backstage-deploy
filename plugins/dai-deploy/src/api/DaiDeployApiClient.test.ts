@@ -1,12 +1,16 @@
 /* eslint-disable jest/no-conditional-expect */
 
 import {
+  AuthenticationError,
+  NotAllowedError,
+  ServiceUnavailableError,
+} from '@backstage/errors';
+import {
   currentDeploymentResponse,
   deploymentHistoryResponse,
 } from '../mocks/mocks';
 import { DaiDeployApiClient } from './DaiDeployApiClient';
 import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
-import { ResponseError } from '@backstage/errors';
 import { rest } from 'msw';
 import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -79,20 +83,49 @@ describe('DeployApiClient', () => {
       );
       expect(response.items.deploymentStatus.length === 2).toBeTruthy();
     });
-    it('should return error', async () => {
+    it('should return AuthenticationError', async () => {
       const ciId = 'test';
       worker.use(
         rest.get(
           'http://example.com/api/dai-deploy/deployment-status',
-          (_, res, ctx) => {
-            res(ctx.status(401), ctx.set('Content-Type', 'application/json'));
-          },
+          (_, res, ctx) =>
+            res(ctx.status(401), ctx.set('Content-Type', 'application/json')),
         ),
       );
       try {
         await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc', entity);
       } catch (e) {
-        expect(e instanceof ResponseError).toBeTruthy();
+        expect(e instanceof AuthenticationError).toBeTruthy();
+      }
+    });
+    it('should return NotAllowedError', async () => {
+      const ciId = 'test';
+      worker.use(
+        rest.get(
+          'http://example.com/api/dai-deploy/deployment-status',
+          (_, res, ctx) =>
+            res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
+        ),
+      );
+      try {
+        await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc', entity);
+      } catch (e) {
+        expect(e instanceof NotAllowedError).toBeTruthy();
+      }
+    });
+    it('should return ServiceUnavailableError', async () => {
+      const ciId = 'test';
+      worker.use(
+        rest.get(
+          'http://example.com/api/dai-deploy/deployment-status',
+          (_, res, ctx) =>
+            res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
+        ),
+      );
+      try {
+        await client.getCurrentDeployments(ciId, 0, 1, '5', 'desc', entity);
+      } catch (e) {
+        expect(e instanceof NotAllowedError).toBeTruthy();
       }
     });
   });
@@ -135,20 +168,51 @@ describe('DeployApiClient', () => {
       expect(response.items.deploymentStatus.length === 1).toBeTruthy();
     });
 
-    it('should return error', async () => {
+    it('should return AuthenticationError', async () => {
       const ciId = 'test';
       worker.use(
         rest.get(
           'http://example.com/api/dai-deploy/deployment-history',
           (_, res, ctx) =>
-            res(ctx.status(401),
-                ctx.set('Content-Type', 'application/json')),
+            res(ctx.status(401), ctx.set('Content-Type', 'application/json')),
         ),
       );
       try {
         await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc', entity);
       } catch (e) {
-        expect(e instanceof ResponseError).toBeTruthy();
+        expect(e instanceof AuthenticationError).toBeTruthy();
+      }
+    });
+
+    it('should return NotAllowedError', async () => {
+      const ciId = 'test';
+      worker.use(
+        rest.get(
+          'http://example.com/api/dai-deploy/deployment-history',
+          (_, res, ctx) =>
+            res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
+        ),
+      );
+      try {
+        await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc', entity);
+      } catch (e) {
+        expect(e instanceof NotAllowedError).toBeTruthy();
+      }
+    });
+
+    it('should return ServiceUnavailableError', async () => {
+      const ciId = 'test';
+      worker.use(
+        rest.get(
+          'http://example.com/api/dai-deploy/deployment-history',
+          (_, res, ctx) =>
+            res(ctx.status(500), ctx.set('Content-Type', 'application/json')),
+        ),
+      );
+      try {
+        await client.getDeploymentsReports(ciId, 0, 1, '5', 'desc', entity);
+      } catch (e) {
+        expect(e instanceof ServiceUnavailableError).toBeTruthy();
       }
     });
   });

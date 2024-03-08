@@ -12,6 +12,7 @@ import {
 } from '@digital-ai/plugin-dai-deploy-common';
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
+import { parseErrorResponse } from './responseUtil';
 
 export class CurrentDeploymentStatusApi {
   private readonly logger: Logger;
@@ -61,12 +62,7 @@ export class CurrentDeploymentStatusApi {
       },
     );
     if (!response.ok) {
-      if (response.status === 404) {
-        return await response.json();
-      }
-      throw new Error(
-        `failed to fetch data, status ${response.status}: ${response.statusText}`,
-      );
+      await parseErrorResponse(this.logger, response);
     }
     const data: CurrentDeploymentStatus[] = await response.json(); // deploy api
 

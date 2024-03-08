@@ -48,8 +48,9 @@ describe('DaiDeployEntityDeploymentsContent', () => {
         'test-app';
     }
     const rendered = await renderContent();
-    expect(rendered.getByAltText('Deploy logo')).toBeInTheDocument();
-    expect(rendered.getByText('Digital.ai Deploy')).toBeInTheDocument();
+    const image = rendered.getByAltText('Deploy logo') as HTMLImageElement;
+    expect(image).toBeInTheDocument();
+    expect(image.src).toContain('deployLogoBlack');
     expect(rendered.getByText('Active')).toBeInTheDocument();
     expect(rendered.getByText('Archived')).toBeInTheDocument();
   });
