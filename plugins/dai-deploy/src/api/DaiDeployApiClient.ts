@@ -1,8 +1,14 @@
+import {
+  AuthenticationError,
+  NotAllowedError,
+  NotFoundError,
+  ServiceUnavailableError,
+  parseErrorResponseBody,
+} from '@backstage/errors';
 import { beginDateFormat, endDateFormat } from './utils';
 import { DaiDeployApi } from './DaiDeployApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { ResponseError } from '@backstage/errors';
 import moment from 'moment';
 
 export class DaiDeployApiClient implements DaiDeployApi {
@@ -76,7 +82,19 @@ export class DaiDeployApiClient implements DaiDeployApi {
     });
 
     if (!response.ok) {
-      throw await ResponseError.fromResponse(response);
+      const data = await parseErrorResponseBody(response);
+      if (response.status === 401) {
+        throw new AuthenticationError(data.error.message);
+      } else if (response.status === 403) {
+        throw new NotAllowedError(data.error.message);
+      } else if (response.status === 404) {
+        throw new NotFoundError(data.error.message);
+      } else if (response.status === 500) {
+        throw new ServiceUnavailableError(`Deploy Service Unavailable`);
+      }
+      throw new Error(
+        `Unexpected error: failed to fetch data, status ${response.status}: ${response.statusText}`,
+      );
     }
 
     return (await response.json()) as Promise<T>;
