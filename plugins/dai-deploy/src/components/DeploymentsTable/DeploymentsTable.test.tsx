@@ -8,7 +8,7 @@ import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import {
   DiscoveryApi,
   discoveryApiRef,
-  IdentityApi,
+  IdentityApi, identityApiRef,
 } from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
@@ -37,8 +37,8 @@ const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
 
-const identityApi = {
-  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+const identityApi: IdentityApi = {
+  getCredentials: async () => 'token'
 } as unknown as IdentityApi;
 
 describe('DeploymentsTable', () => {
@@ -75,7 +75,6 @@ describe('DeploymentsTable', () => {
           res(
             ctx.status(200),
             ctx.set('Content-Type', 'application/json'),
-            ctx.set('Authorization', `Bearer ${identityApi.getCredentials()}`),
             ctx.json(currentDeploymentResponse),
           ),
       ),
@@ -168,6 +167,7 @@ describe('DeploymentsTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, currentStatusApiWithError],
         ]}
       >
@@ -188,6 +188,7 @@ describe('DeploymentsTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, currentStatusApiWithError],
         ]}
       >
@@ -209,6 +210,7 @@ describe('DeploymentsTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, currentStatusApiWithError],
         ]}
       >
@@ -233,6 +235,7 @@ describe('DeploymentsTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, currentStatusApiWithError],
         ]}
       >
@@ -252,6 +255,7 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
+        [identityApiRef, identityApi],
         [
           daiDeployApiRef,
           new DaiDeployApiClient({ discoveryApi, identityApi }),
