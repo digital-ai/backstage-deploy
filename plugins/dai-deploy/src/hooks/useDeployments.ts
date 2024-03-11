@@ -20,7 +20,7 @@ enum activeDeploymentOrderBy {
 }
 
 enum archivedDeploymentOrderBy {
-  'package' = 0,
+  'application' = 0,
   'environment_id' = 1,
   'taskType' = 2,
   'owner' = 3,
