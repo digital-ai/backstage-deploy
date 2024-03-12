@@ -197,8 +197,8 @@ export const columnFactories = Object.freeze({
           <LaunchIcon />
         </LinkButton>
       ),
-      searchable: true,
-      sorting: true,
+      searchable: false,
+      sorting: false,
     };
   },
 });
