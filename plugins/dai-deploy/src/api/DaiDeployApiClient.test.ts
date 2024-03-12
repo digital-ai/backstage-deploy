@@ -6,18 +6,18 @@ import {
   ServiceUnavailableError,
 } from '@backstage/errors';
 import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
+import {
   currentDeploymentResponse,
   deploymentHistoryResponse,
 } from '../mocks/mocks';
 import { DaiDeployApiClient } from './DaiDeployApiClient';
-import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 import { rest } from 'msw';
 import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
-import {
-  DEFAULT_NAMESPACE,
-  stringifyEntityRef,
-} from '@backstage/catalog-model';
 
 const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',

@@ -1,8 +1,9 @@
 import { DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import {
   DiscoveryApi,
-  discoveryApiRef,
   IdentityApi,
+  discoveryApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import { SetupServer, setupServer } from 'msw/node';
 import {
@@ -29,7 +30,7 @@ const discoveryApi: DiscoveryApi = {
 };
 
 const identityApi = {
-  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+  getCredentials: jest.fn(),
 } as unknown as IdentityApi;
 
 describe('DaiDeployEntityDeploymentsContent', () => {
@@ -40,6 +41,9 @@ describe('DaiDeployEntityDeploymentsContent', () => {
     jest.resetAllMocks();
     entity = entityStub;
     setupResponseMocks(worker);
+    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
+        ({token: 'token'})
+    );
   });
 
   it('should display the active and archived tabs', async () => {
@@ -96,6 +100,7 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
+        [identityApiRef, identityApi],
         [
           daiDeployApiRef,
           new DaiDeployApiClient({ discoveryApi, identityApi }),

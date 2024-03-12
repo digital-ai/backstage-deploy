@@ -8,8 +8,9 @@ import {
 import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
 import {
   DiscoveryApi,
+  IdentityApi,
   discoveryApiRef,
-  IdentityApi, identityApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
@@ -38,8 +39,8 @@ const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
 
-const identityApi: IdentityApi = {
-  getCredentials: async () => 'token'
+const identityApi = {
+  getCredentials: jest.fn(),
 } as unknown as IdentityApi;
 
 describe('DeploymentsHistoryTable', () => {
@@ -54,6 +55,9 @@ describe('DeploymentsHistoryTable', () => {
       entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] =
         'test-app';
     }
+    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
+        ({token: 'token'})
+    );
   });
 
   const expectedColumns = [
