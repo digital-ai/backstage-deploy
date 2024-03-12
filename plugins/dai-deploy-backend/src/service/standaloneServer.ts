@@ -1,13 +1,13 @@
 import {
-  createServiceBuilder,
   HostDiscovery,
-  loadBackendConfig,
   ServerTokenManager,
+  createServiceBuilder,
+  loadBackendConfig,
 } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { Server } from 'http';
-import { createRouter } from './router';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
+import { createRouter } from './router';
 
 export interface ServerOptions {
   port: number;

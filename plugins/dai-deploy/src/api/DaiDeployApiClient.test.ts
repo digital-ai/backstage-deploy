@@ -24,7 +24,7 @@ const discoveryApi: DiscoveryApi = {
 };
 
 const identityApi = {
-  getCredentials: jest.fn().mockResolvedValue({ token: 'token' }),
+  getCredentials: jest.fn(),
 } as unknown as IdentityApi;
 
 function checkParam(
@@ -36,6 +36,11 @@ function checkParam(
 }
 
 describe('DeployApiClient', () => {
+  beforeEach(() => {
+    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
+        ({token: 'token'})
+    );
+  });
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   const client = new DaiDeployApiClient({ discoveryApi, identityApi });

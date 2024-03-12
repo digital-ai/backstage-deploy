@@ -1,30 +1,32 @@
 import {
+  AuthorizeResult,
+  PermissionEvaluator,
+} from '@backstage/plugin-permission-common';
+import {
   CurrentDeploymentStatusApi,
   DeployedApplicationStatusApi,
 } from '../api';
-import { Config } from '@backstage/config';
-import { DeploymentHistoryStatusApi } from '../api';
-import { Logger } from 'winston';
 import { InputError, NotAllowedError } from '@backstage/errors';
-import Router from 'express-promise-router';
-import { errorHandler } from '@backstage/backend-common';
-import express from 'express';
-import { getEncodedQueryVal } from '../api/apiConfig';
 import {
   daiDeployPermissions,
   daiDeployViewPermission,
 } from '@digital-ai/plugin-dai-deploy-common';
-import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
-import {
-  PermissionEvaluator,
-  AuthorizeResult,
-} from '@backstage/plugin-permission-common';
+
+import { Config } from '@backstage/config';
+import { DeploymentHistoryStatusApi } from '../api';
+import { Logger } from 'winston';
+import Router from 'express-promise-router';
 import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
+import { errorHandler } from '@backstage/backend-common';
+import express from 'express';
+
+import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
+import { getEncodedQueryVal } from '../api/apiConfig';
 
 export interface RouterOptions {
   config: Config;
   logger: Logger;
-  permissions: PermissionEvaluator;
+  permissions?: PermissionEvaluator;
 }
 
 export async function createRouter(
@@ -73,31 +75,18 @@ export async function createRouter(
     if (typeof entityRef !== 'string') {
       throw new InputError('Invalid entityRef, not a string');
     }
-    logger.info(`token ######################## : ${token}`);
-    logger.info(`entityRef ######################## : ${entityRef}`);
-    const decision = permissions
-      ? (
-          await permissions.authorize(
-            [
-              {
-                permission: daiDeployViewPermission,
-                resourceRef: entityRef,
-              },
-            ],
-            {
-              token,
-            },
-          )
-        )[0]
-      : undefined;
 
-    logger.info(
-      `Permission decision ######################### : ${decision?.result}`,
-    );
-    if (decision && decision.result === AuthorizeResult.DENY) {
-      throw new NotAllowedError(
-        'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+    if (permissions) {
+      const decision = await permissions.authorize(
+        [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
+        { token },
       );
+      const { result } = decision[0];
+      if (result === AuthorizeResult.DENY) {
+        throw new NotAllowedError(
+          'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+        );
+      }
     }
 
     const appName = getEncodedQueryVal(req.query.appName?.toString());
@@ -123,6 +112,27 @@ export async function createRouter(
   });
 
   router.get('/deployment-history', async (req, res) => {
+    const token = getBearerTokenFromAuthorizationHeader(
+      req.header('authorization'),
+    );
+    const entityRef = decodeURIComponent(
+      getEncodedQueryVal(req.query.entityRef?.toString()),
+    );
+    if (typeof entityRef !== 'string') {
+      throw new InputError('Invalid entityRef, not a string');
+    }
+    if (permissions) {
+      const decision = await permissions.authorize(
+        [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
+        { token },
+      );
+      const { result } = decision[0];
+      if (result === AuthorizeResult.DENY) {
+        throw new NotAllowedError(
+          'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+        );
+      }
+    }
     const appName = getEncodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());
