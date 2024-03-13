@@ -55,9 +55,9 @@ describe('DeploymentsHistoryTable', () => {
       entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] =
         'test-app';
     }
-    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
-        ({token: 'token'})
-    );
+    jest
+      .spyOn(identityApi, 'getCredentials')
+      .mockImplementation(async () => ({ token: 'token' }));
   });
 
   const expectedColumns = [
@@ -74,7 +74,7 @@ describe('DeploymentsHistoryTable', () => {
   it('should render content with rows and columns', async () => {
     worker.use(
       rest.get(
-        'http://example.com/api/dai-deploy/deployment-history',
+        'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
         (_, res, ctx) =>
           res(
             ctx.status(200),
@@ -111,7 +111,7 @@ describe('DeploymentsHistoryTable', () => {
   it('should render content with no rows', async () => {
     worker.use(
       rest.get(
-        'http://example.com/api/dai-deploy/deployment-history',
+        'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
         (_, res, ctx) =>
           res(
             ctx.status(200),

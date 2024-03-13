@@ -41,9 +41,9 @@ describe('DaiDeployEntityDeploymentsContent', () => {
     jest.resetAllMocks();
     entity = entityStub;
     setupResponseMocks(worker);
-    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
-        ({token: 'token'})
-    );
+    jest
+      .spyOn(identityApi, 'getCredentials')
+      .mockImplementation(async () => ({ token: 'token' }));
   });
 
   it('should display the active and archived tabs', async () => {
@@ -84,7 +84,7 @@ function setupResponseMocks(worker: SetupServer) {
 
   worker.use(
     rest.get(
-      'http://example.com/api/dai-deploy/deployment-status',
+      'http://example.com/api/dai-deploy/deployment-status/:namespace/:kind/:name',
       (_, res, ctx) =>
         res(
           ctx.status(200),

@@ -37,9 +37,9 @@ function checkParam(
 
 describe('DeployApiClient', () => {
   beforeEach(() => {
-    jest.spyOn(identityApi, 'getCredentials').mockImplementation(async () =>
-        ({token: 'token'})
-    );
+    jest
+      .spyOn(identityApi, 'getCredentials')
+      .mockImplementation(async () => ({ token: 'token' }));
   });
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -55,7 +55,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-status',
+          'http://example.com/api/dai-deploy/deployment-status/:namespace/:kind/:name',
           (req, res, ctx) => {
             if (
               checkParam(req.url.searchParams, 'appName', ciId) &&
@@ -92,7 +92,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-status',
+          'http://example.com/api/dai-deploy/deployment-status/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(401), ctx.set('Content-Type', 'application/json')),
         ),
@@ -107,7 +107,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-status',
+          'http://example.com/api/dai-deploy/deployment-status/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
         ),
@@ -122,7 +122,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-status',
+          'http://example.com/api/dai-deploy/deployment-status/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
         ),
@@ -140,7 +140,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-history',
+          'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
           (req, res, ctx) => {
             if (
               checkParam(req.url.searchParams, 'appName', ciId) &&
@@ -177,7 +177,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-history',
+          'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(401), ctx.set('Content-Type', 'application/json')),
         ),
@@ -193,7 +193,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-history',
+          'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(403), ctx.set('Content-Type', 'application/json')),
         ),
@@ -209,7 +209,7 @@ describe('DeployApiClient', () => {
       const ciId = 'test';
       worker.use(
         rest.get(
-          'http://example.com/api/dai-deploy/deployment-history',
+          'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
           (_, res, ctx) =>
             res(ctx.status(500), ctx.set('Content-Type', 'application/json')),
         ),

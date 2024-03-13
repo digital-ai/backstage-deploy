@@ -11,7 +11,6 @@ import {
   daiDeployPermissions,
   daiDeployViewPermission,
 } from '@digital-ai/plugin-dai-deploy-common';
-
 import { Config } from '@backstage/config';
 import { DeploymentHistoryStatusApi } from '../api';
 import { Logger } from 'winston';
@@ -19,9 +18,9 @@ import Router from 'express-promise-router';
 import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-
 import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
 import { getEncodedQueryVal } from '../api/apiConfig';
+import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export interface RouterOptions {
   config: Config;
@@ -65,13 +64,16 @@ export async function createRouter(
     res.status(200).json(status);
   });
 
-  router.get('/deployment-status', async (req, res) => {
+  router.get('/deployment-status/:namespace/:kind/:name', async (req, res) => {
+    const { namespace, kind, name } = req.params;
     const token = getBearerTokenFromAuthorizationHeader(
       req.header('authorization'),
     );
-    const entityRef = decodeURIComponent(
-      getEncodedQueryVal(req.query.entityRef?.toString()),
-    );
+    const entityRef = stringifyEntityRef({
+      kind,
+      namespace,
+      name,
+    });
     if (typeof entityRef !== 'string') {
       throw new InputError('Invalid entityRef, not a string');
     }
@@ -111,13 +113,16 @@ export async function createRouter(
     res.status(200).json(currentDeploymentStatus);
   });
 
-  router.get('/deployment-history', async (req, res) => {
+  router.get('/deployment-history/:namespace/:kind/:name', async (req, res) => {
+    const { namespace, kind, name } = req.params;
     const token = getBearerTokenFromAuthorizationHeader(
       req.header('authorization'),
     );
-    const entityRef = decodeURIComponent(
-      getEncodedQueryVal(req.query.entityRef?.toString()),
-    );
+    const entityRef = stringifyEntityRef({
+      kind,
+      namespace,
+      name,
+    });
     if (typeof entityRef !== 'string') {
       throw new InputError('Invalid entityRef, not a string');
     }

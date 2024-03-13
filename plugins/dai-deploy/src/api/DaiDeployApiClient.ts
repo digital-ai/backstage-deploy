@@ -11,6 +11,7 @@ import { DaiDeployApi } from './DaiDeployApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
 
 import moment from 'moment';
+import { parseEntityRef } from '@backstage/catalog-model';
 
 export class DaiDeployApiClient implements DaiDeployApi {
   private readonly discoveryApi: DiscoveryApi;
@@ -40,6 +41,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     const queryString = new URLSearchParams();
     const now = new Date();
     const order = `${orderBy}:${orderDirection}`;
+    const entityRef = parseEntityRef(entity);
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
@@ -50,9 +52,10 @@ export class DaiDeployApiClient implements DaiDeployApi {
     queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
     queryString.append('taskSet', 'ALL');
-    queryString.append('entityRef', entity);
 
-    const urlSegment = `deployment-status?${queryString}`;
+    const urlSegment = `deployment-status/${encodeURIComponent(entityRef.namespace)}/${encodeURIComponent(
+      entityRef.kind,
+    )}/${encodeURIComponent(entityRef.name)}?${queryString}`;
     const items = await this.get<DeploymentStatusResponse>(urlSegment);
     return { items };
   }
@@ -68,6 +71,7 @@ export class DaiDeployApiClient implements DaiDeployApi {
     const queryString = new URLSearchParams();
     const order = `${orderBy}:${orderDirection}`;
     const now = new Date();
+    const entityRef = parseEntityRef(entity);
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
@@ -77,9 +81,10 @@ export class DaiDeployApiClient implements DaiDeployApi {
     queryString.append('order', order);
     queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
-    queryString.append('entityRef', entity);
 
-    const urlSegment = `deployment-history?${queryString}`;
+    const urlSegment = `deployment-history/${encodeURIComponent(entityRef.namespace)}/${encodeURIComponent(
+      entityRef.kind,
+    )}/${encodeURIComponent(entityRef.name)}?${queryString}`;
     const items = await this.get<DeploymentStatusResponse>(urlSegment);
     return { items };
   }
