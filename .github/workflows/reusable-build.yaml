@@ -34,7 +34,7 @@ jobs:
       run: yarn build
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
-      run: yarn test
+      run:  yarn test --transformIgnorePatterns "node_modules/(?!(.*))"
     - name: Publish to registry
       if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
