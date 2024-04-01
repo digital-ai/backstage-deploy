@@ -75,5 +75,10 @@
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(.*))"
+    ]
   }
 }
