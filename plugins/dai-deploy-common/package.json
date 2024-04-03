@@ -41,5 +41,10 @@
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ]
+  },
+  "dependencies": {
+    "@backstage/plugin-catalog-common": "^1.0.21",
+    "@backstage/plugin-permission-common": "^0.7.12",
+    "@backstage/plugin-permission-node": "^0.7.23"
   }
 }

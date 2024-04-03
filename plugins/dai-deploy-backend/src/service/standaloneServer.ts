@@ -1,9 +1,12 @@
 import {
+  HostDiscovery,
+  ServerTokenManager,
   createServiceBuilder,
   loadBackendConfig,
 } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { Server } from 'http';
+import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { createRouter } from './router';
 
 export interface ServerOptions {
@@ -17,11 +20,19 @@ export async function startStandaloneServer(
 ): Promise<Server> {
   const logger = options.logger.child({ service: 'dai-deploy-backend' });
   const config = await loadBackendConfig({ logger, argv: process.argv });
-
+  const tokenManager = ServerTokenManager.fromConfig(config, {
+    logger,
+  });
+  const discovery = HostDiscovery.fromConfig(config);
+  const permissions = ServerPermissionClient.fromConfig(config, {
+    discovery,
+    tokenManager,
+  });
   logger.debug('Starting application server...');
   const router = await createRouter({
     config,
     logger,
+    permissions,
   });
 
   let service = createServiceBuilder(module)

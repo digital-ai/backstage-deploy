@@ -5,17 +5,29 @@ import {
   ServiceUnavailableError,
   parseErrorResponseBody,
 } from '@backstage/errors';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 import { beginDateFormat, endDateFormat } from './utils';
 import { DaiDeployApi } from './DaiDeployApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
+
 import moment from 'moment';
+import { parseEntityRef } from '@backstage/catalog-model';
 
 export class DaiDeployApiClient implements DaiDeployApi {
   private readonly discoveryApi: DiscoveryApi;
+  private readonly identityApi: IdentityApi;
 
-  public constructor(options: { discoveryApi: DiscoveryApi }) {
+  public constructor(options: {
+    discoveryApi: DiscoveryApi;
+    identityApi: IdentityApi;
+  }) {
     this.discoveryApi = options.discoveryApi;
+    this.identityApi = options.identityApi;
+  }
+
+  private async getToken() {
+    const { token } = await this.identityApi.getCredentials();
+    return token;
   }
 
   async getCurrentDeployments(
@@ -24,10 +36,12 @@ export class DaiDeployApiClient implements DaiDeployApi {
     rowsPerPage: number,
     orderBy: string,
     orderDirection: string,
+    entity: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const now = new Date();
     const order = `${orderBy}:${orderDirection}`;
+    const entityRef = parseEntityRef(entity);
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
@@ -39,7 +53,9 @@ export class DaiDeployApiClient implements DaiDeployApi {
     queryString.append('resultsPerPage', rowsPerPage.toString());
     queryString.append('taskSet', 'ALL');
 
-    const urlSegment = `deployment-status?${queryString}`;
+    const urlSegment = `deployment-status/${encodeURIComponent(entityRef.namespace)}/${encodeURIComponent(
+      entityRef.kind,
+    )}/${encodeURIComponent(entityRef.name)}?${queryString}`;
     const items = await this.get<DeploymentStatusResponse>(urlSegment);
     return { items };
   }
@@ -50,10 +66,12 @@ export class DaiDeployApiClient implements DaiDeployApi {
     rowsPerPage: number,
     orderBy: string,
     orderDirection: string,
+    entity: string,
   ): Promise<{ items: DeploymentStatusResponse }> {
     const queryString = new URLSearchParams();
     const order = `${orderBy}:${orderDirection}`;
     const now = new Date();
+    const entityRef = parseEntityRef(entity);
     queryString.append('appName', ciId);
     queryString.append(
       'beginDate',
@@ -64,7 +82,9 @@ export class DaiDeployApiClient implements DaiDeployApi {
     queryString.append('pageNumber', (page + 1).toString());
     queryString.append('resultsPerPage', rowsPerPage.toString());
 
-    const urlSegment = `deployment-history?${queryString}`;
+    const urlSegment = `deployment-history/${encodeURIComponent(entityRef.namespace)}/${encodeURIComponent(
+      entityRef.kind,
+    )}/${encodeURIComponent(entityRef.name)}?${queryString}`;
     const items = await this.get<DeploymentStatusResponse>(urlSegment);
     return { items };
   }
@@ -72,12 +92,13 @@ export class DaiDeployApiClient implements DaiDeployApi {
   private async get<T>(path: string): Promise<T> {
     const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
     const url = new URL(path, baseUrl);
-
+    const idToken = await this.getToken();
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Authorization: `Bearer ${idToken}`,
       },
     });
 

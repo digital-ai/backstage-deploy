@@ -1,24 +1,37 @@
 import {
+  AuthorizeResult,
+  PermissionEvaluator,
+} from '@backstage/plugin-permission-common';
+import {
   CurrentDeploymentStatusApi,
   DeployedApplicationStatusApi,
 } from '../api';
+import { InputError, NotAllowedError } from '@backstage/errors';
+import {
+  daiDeployPermissions,
+  daiDeployViewPermission,
+} from '@digital-ai/plugin-dai-deploy-common';
 import { Config } from '@backstage/config';
-import { DeploymentHistoryStatusApi } from '../api/DeploymentHistoryStatusApi';
+import { DeploymentHistoryStatusApi } from '../api';
 import { Logger } from 'winston';
 import Router from 'express-promise-router';
+import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
+import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
 import { getEncodedQueryVal } from '../api/apiConfig';
+import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export interface RouterOptions {
   config: Config;
   logger: Logger;
+  permissions?: PermissionEvaluator;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config } = options;
+  const { logger, config, permissions } = options;
   const deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(
     config,
     logger,
@@ -31,9 +44,13 @@ export async function createRouter(
     config,
     logger,
   );
+  const permissionIntegrationRouter = createPermissionIntegrationRouter({
+    permissions: daiDeployPermissions,
+  });
 
   const router = Router();
   router.use(express.json());
+  router.use(permissionIntegrationRouter);
 
   router.get('/health', (_, response) => {
     logger.info('PONG!');
@@ -47,7 +64,33 @@ export async function createRouter(
     res.status(200).json(status);
   });
 
-  router.get('/deployment-status', async (req, res) => {
+  router.get('/deployment-status/:namespace/:kind/:name', async (req, res) => {
+    const { namespace, kind, name } = req.params;
+    const token = getBearerTokenFromAuthorizationHeader(
+      req.header('authorization'),
+    );
+    const entityRef = stringifyEntityRef({
+      kind,
+      namespace,
+      name,
+    });
+    if (typeof entityRef !== 'string') {
+      throw new InputError('Invalid entityRef, not a string');
+    }
+
+    if (permissions) {
+      const decision = await permissions.authorize(
+        [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
+        { token },
+      );
+      const { result } = decision[0];
+      if (result === AuthorizeResult.DENY) {
+        throw new NotAllowedError(
+          'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+        );
+      }
+    }
+
     const appName = getEncodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());
@@ -70,7 +113,31 @@ export async function createRouter(
     res.status(200).json(currentDeploymentStatus);
   });
 
-  router.get('/deployment-history', async (req, res) => {
+  router.get('/deployment-history/:namespace/:kind/:name', async (req, res) => {
+    const { namespace, kind, name } = req.params;
+    const token = getBearerTokenFromAuthorizationHeader(
+      req.header('authorization'),
+    );
+    const entityRef = stringifyEntityRef({
+      kind,
+      namespace,
+      name,
+    });
+    if (typeof entityRef !== 'string') {
+      throw new InputError('Invalid entityRef, not a string');
+    }
+    if (permissions) {
+      const decision = await permissions.authorize(
+        [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
+        { token },
+      );
+      const { result } = decision[0];
+      if (result === AuthorizeResult.DENY) {
+        throw new NotAllowedError(
+          'Access Denied: Unauthorized to access the Backstage Deploy plugin',
+        );
+      }
+    }
     const appName = getEncodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());

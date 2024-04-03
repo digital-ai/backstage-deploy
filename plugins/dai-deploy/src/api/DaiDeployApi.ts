@@ -14,6 +14,7 @@ export interface DaiDeployApi {
     rowsPerPage: number,
     orderBy: string,
     orderDirection: string,
+    entity: string,
   ): Promise<{ items: DeploymentStatusResponse }>;
 
   getDeploymentsReports(
@@ -22,5 +23,6 @@ export interface DaiDeployApi {
     rowsPerPage: number,
     orderBy: string,
     orderDirection: string,
+    entity: string,
   ): Promise<{ items: DeploymentStatusResponse }>;
 }

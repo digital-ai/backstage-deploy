@@ -6,7 +6,12 @@ import {
   ServiceUnavailableError,
 } from '@backstage/errors';
 import { DaiDeployApi, DaiDeployApiClient, daiDeployApiRef } from '../../api';
-import { DiscoveryApi, discoveryApiRef } from '@backstage/core-plugin-api';
+import {
+  DiscoveryApi,
+  IdentityApi,
+  discoveryApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import {
   TestApiProvider,
   renderInTestApp,
@@ -34,6 +39,10 @@ const discoveryApi: DiscoveryApi = {
   getBaseUrl: async () => 'http://example.com/api/dai-deploy',
 };
 
+const identityApi = {
+  getCredentials: jest.fn(),
+} as unknown as IdentityApi;
+
 describe('DeploymentsHistoryTable', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -46,6 +55,9 @@ describe('DeploymentsHistoryTable', () => {
       entity.entity.metadata.annotations[`${DAI_DEPLOY_CI_ID_ANNOTATION}`] =
         'test-app';
     }
+    jest
+      .spyOn(identityApi, 'getCredentials')
+      .mockImplementation(async () => ({ token: 'token' }));
   });
 
   const expectedColumns = [
@@ -62,7 +74,7 @@ describe('DeploymentsHistoryTable', () => {
   it('should render content with rows and columns', async () => {
     worker.use(
       rest.get(
-        'http://example.com/api/dai-deploy/deployment-history',
+        'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
         (_, res, ctx) =>
           res(
             ctx.status(200),
@@ -99,7 +111,7 @@ describe('DeploymentsHistoryTable', () => {
   it('should render content with no rows', async () => {
     worker.use(
       rest.get(
-        'http://example.com/api/dai-deploy/deployment-history',
+        'http://example.com/api/dai-deploy/deployment-history/:namespace/:kind/:name',
         (_, res, ctx) =>
           res(
             ctx.status(200),
@@ -140,6 +152,7 @@ describe('DeploymentsHistoryTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, deploymentHistoryApiWithError],
         ]}
       >
@@ -161,6 +174,7 @@ describe('DeploymentsHistoryTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, deploymentHistoryApiWithError],
         ]}
       >
@@ -183,6 +197,7 @@ describe('DeploymentsHistoryTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, deploymentHistoryApiWithError],
         ]}
       >
@@ -208,6 +223,7 @@ describe('DeploymentsHistoryTable', () => {
       <TestApiProvider
         apis={[
           [discoveryApiRef, discoveryApi],
+          [identityApiRef, identityApi],
           [daiDeployApiRef, deploymentHistoryApiWithError],
         ]}
       >
@@ -227,7 +243,11 @@ async function renderContent() {
     <TestApiProvider
       apis={[
         [discoveryApiRef, discoveryApi],
-        [daiDeployApiRef, new DaiDeployApiClient({ discoveryApi })],
+        [identityApiRef, identityApi],
+        [
+          daiDeployApiRef,
+          new DaiDeployApiClient({ discoveryApi, identityApi }),
+        ],
       ]}
     >
       <DeploymentsHistoryTable />
