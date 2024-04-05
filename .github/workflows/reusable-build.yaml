@@ -34,13 +34,13 @@ jobs:
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
     - name: Set up github authentication
-      if: ${{ inputs.github-publish}}
+      if: ${{ inputs.publish }}
       run: echo "NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
     - name: Bump version
-      if: ${{ inputs.github-publish }}
+      if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
       run: npm version patch -m "Bump version to %s"
     - name: Publish to registry
-      if: ${{ inputs.github-publish }}
+      if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
       run: yarn publish
