@@ -6,7 +6,7 @@ on:
       plugin-path:
         required: true
         type: string
-      publish:
+      github-publish:
         required: false
         type: boolean
 
