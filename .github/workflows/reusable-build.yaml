@@ -36,6 +36,6 @@ jobs:
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
     - name: Publish to registry
-      if: ${{ inputs.publish }}
+      if: ${{ inputs.github-publish }}
       working-directory: ${{ inputs.plugin-path }}
       run: yarn publish

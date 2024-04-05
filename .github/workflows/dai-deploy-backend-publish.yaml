@@ -8,4 +8,4 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy-backend
-      publish: true
+      github-publish: true
