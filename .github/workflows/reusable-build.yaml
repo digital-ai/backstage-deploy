@@ -14,8 +14,6 @@ jobs:
   build_job:
     name: Build & Test
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ if github.event.inputs.github-publish == 'false' }}${{ secrets.NPM_TOKEN }}{{ else }}${{ secrets.GITHUB_TOKEN }}{{ endif }}
     steps:    
     - uses: actions/checkout@v4
     - name: Use Node.js
@@ -35,6 +33,9 @@ jobs:
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
+    - name: Set up github authentication
+      if: ${{ inputs.github-publish}}
+      run: echo "NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
     - name: Bump version
       if: ${{ inputs.github-publish }}
       working-directory: ${{ inputs.plugin-path }}
