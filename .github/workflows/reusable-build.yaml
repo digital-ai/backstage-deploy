@@ -53,17 +53,18 @@ jobs:
 
       # Wording ONLY looks at the commit message, not the PR title
       # Settings > pull requests > allow merge commits > default to pull request title
-      - name: Automated Version Bump
+      - name: Automated Version Bump        
         id: version-bump
-        uses: phips28/gh-action-bump-version@master        
+        run: |
+          cd ${{ inputs.plugin-path }}
+          npm install phips28/gh-action-bump-version@master
+          node_modules/.bin/gh-action-bump-version \
+          --commit-message "CI: bumps version to {{version}} [skip ci]" \
+          --major-wording "MAJOR" \
+          --minor-wording "MINOR" \
+          --target-branch "main"     
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commit-message: "CI: bumps version to {{version}} [skip ci]"
-          major-wording: "MAJOR"
-          minor-wording: "MINOR"
-          target-branch: "main"
-
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
@@ -83,13 +84,14 @@ jobs:
           NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
         run: echo "new version $NEW_VERSION"
 
-      - name: Create tag and release       
-        uses: ncipollo/release-action@v1
-        with:
-          commit: 'main'
-          name: ${{ needs.bump-version.outputs.new-version }}
-          tag: ${{ needs.bump-version.outputs.new-version }}
-
+      - name: Create tag and release 
+        run: |
+          cd ${{ inputs.plugin-path }}
+          npm install ncipollo/release-action@v1
+          node_modules/.bin/release-action \
+          --commit 'main' \
+          --name "${{ needs.bump-version.outputs.new-version }}" \
+          --tag "${{ needs.bump-version.outputs.new-version }}"        
   # https://github.com/marketplace/actions/npm-publish
   github-publish:
     name: Publish Latest to Github registry
