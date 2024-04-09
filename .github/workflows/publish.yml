@@ -37,7 +37,7 @@ jobs:
           major-wording: "MAJOR"
           minor-wording: "MINOR"
           patch-wording: "patch,fix"
-          target-branch: ${{ GITHUB_REF_NAME }}
+          target-branch: 'S-106202'
 
   create-release:
     name: Create GitHub Release
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # necessary to get newly created tag above
-          ref: ${{ GITHUB_REF_NAME }}
+          ref: 'S-106202'
 
       - name: New Version
         working-directory: ${{ inputs.plugin-path }}
@@ -63,7 +63,7 @@ jobs:
         env:
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
-          commit: ${{ GITHUB_REF_NAME }}
+          commit: 'S-106202'
           name: ${{ needs.bump-version.outputs.new-version }}
           tag: ${{ needs.bump-version.outputs.new-version }}
 
