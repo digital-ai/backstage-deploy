@@ -128,14 +128,18 @@ describe('router api tests with permissions ALLOW', () => {
   describe('GET /deployment-history', () => {
     it('returns ok', async () => {
       server.resetHandlers(...mockTestHandlers);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(deploymentHistoryBackendApiResponse);
     });
 
     it('GET 404 from deploy for  /deployment-history', async () => {
       server.resetHandlers(...error404ResponseHandler);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.body.error.message).toEqual(
         'Deploy service request not found',
       );
@@ -143,7 +147,9 @@ describe('router api tests with permissions ALLOW', () => {
 
     it('GET 403 from deploy for  /deployment-history', async () => {
       server.resetHandlers(...error403ResponseHandler);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.status).toEqual(403);
       expect(response.body.error.message).toContain(
         'Permission Denied: The configured Deploy User lacks necessary permission in Digital.ai Deploy',
@@ -152,7 +158,9 @@ describe('router api tests with permissions ALLOW', () => {
 
     it('GET 500 from deploy for  /deployment-history', async () => {
       server.resetHandlers(...error500ResponseHandler);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.status).toEqual(500);
       expect(response.body.error.message).toContain(
         'failed to fetch data, status 500',
@@ -187,7 +195,9 @@ describe('router api tests - with permissions DENY', () => {
   describe('GET /deployment-history', () => {
     it('GET 403 from deploy for /deployment-history', async () => {
       server.resetHandlers(...error403ResponseHandler);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.status).toEqual(403);
       expect(response.body.error.message).toContain(
         'Access Denied: Unauthorized to access the Backstage Deploy plugin',
@@ -210,7 +220,9 @@ describe('router api tests - without permissions', () => {
   describe('GET /deployment-history', () => {
     it('returns ok', async () => {
       server.resetHandlers(...mockTestHandlers);
-      const response = await request(app).get('/deployment-history/:namespace/:kind/:name');
+      const response = await request(app).get(
+        '/deployment-history/:namespace/:kind/:name',
+      );
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(deploymentHistoryBackendApiResponse);
     });
