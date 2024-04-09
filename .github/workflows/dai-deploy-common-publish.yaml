@@ -5,8 +5,15 @@ on: workflow_dispatch
 jobs:
   call-ci-workflow:
     name: Run build & test for dai-deploy-common plugin
-    uses: ./.github/workflows/publish.yml
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+  publish:
+    name: Bump version and Create tag dai-deploy-common plugin.
+    uses: ./.github/workflows/version-tag.yml
     with:
       plugin-path: ./plugins/dai-deploy-common
       publish: true
+      plugin:  dai-deploy-common plugin
+
 

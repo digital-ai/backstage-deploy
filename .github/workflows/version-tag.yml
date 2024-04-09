@@ -9,6 +9,9 @@ on:
       publish:
         required: false
         type: boolean
+      plugin:
+        required: true
+        type: string
 
 jobs:
   bump-version:
@@ -31,10 +34,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
-          commit-message: "CI: bumps version to {{version}} [skip ci]"
+          commit-message: "CI: bumps version to {{version}} [skip ci] {plugin}"
           major-wording: "MAJOR"
           minor-wording: "MINOR"
-          patch-wording: "patch,fix"
           target-branch: 'S-106202'
 
   create-release:
