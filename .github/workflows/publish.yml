@@ -24,8 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Print Branch Name
-        run: echo "Current branch is ${{ GITHUB_REF_NAME }}"
       - name: Automated Version Bump
         id: version-bump
         uses: phips28/gh-action-bump-version@master
