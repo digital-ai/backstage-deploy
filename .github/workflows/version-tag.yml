@@ -6,9 +6,6 @@ on:
       plugin-path:
         required: true
         type: string
-      publish:
-        required: false
-        type: boolean
       plugin:
         required: true
         type: string
@@ -34,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
-          commit-message: "CI: bumps version to {{version}} [skip ci] {plugin}"
+          commit-message: "CI: bumps version to {{version}} [skip ci] {{plugin}}"
           major-wording: "MAJOR"
           minor-wording: "MINOR"
           target-branch: 'S-106202'

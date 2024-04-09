@@ -8,9 +8,10 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy-common
-  publish:
+  version:
     name: Bump version and Create tag dai-deploy-common plugin.
     uses: ./.github/workflows/version-tag.yml
+    needs: [ call-ci-workflow ]
     with:
       plugin-path: ./plugins/dai-deploy-common
       publish: true
