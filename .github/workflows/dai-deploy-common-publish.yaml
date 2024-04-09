@@ -8,16 +8,16 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-common
   version:
-    uses: ./.github/workflows/version-tag.yml
+    uses: ./.github/workflows/version.yaml
     needs: [ call-ci-workflow ]
     with:
       plugin-path: ./plugins/dai-deploy-common
-      plugin:  "dai-deploy-common plugin"
-  release:
-    uses: ./.github/workflows/release.yaml
-    needs: [ call-ci-workflow ]
-    with:
-      plugin-path: ./plugins/dai-deploy-common
-      plugin: "dai-deploy-common plugin"
+      plugin:  dai-deploy-common plugin
+  #release:
+  #  uses: ./.github/workflows/release.yaml
+  #  needs: [ call-ci-workflow ]
+  #  with:
+  #    plugin-path: ./plugins/dai-deploy-common
+  #    plugin: "dai-deploy-common plugin"
 
 

@@ -31,6 +31,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
-          commit-message: "CI: bumps version to {{version}} [skip ci] ${{ inputs.plugin }}"
+          commit-message: "CI: bumps version to {{version}} [skip ci]"
           major-wording: "MAJOR"
           minor-wording: "MINOR"
