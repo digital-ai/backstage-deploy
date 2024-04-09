@@ -9,3 +9,4 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-common
       publish: true
+      
