@@ -11,8 +11,6 @@ on:
         type: boolean
 
 jobs:
-  permissions:
-    contents: write
   bump-version:
     name: Bump Version & Create GitHub Tag
     runs-on: ubuntu-latest
