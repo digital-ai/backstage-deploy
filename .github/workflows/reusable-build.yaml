@@ -6,7 +6,7 @@ on:
       plugin-path:
         required: true
         type: string
-      github-publish:
+      publish:
         required: false
         type: boolean
 
@@ -14,7 +14,9 @@ jobs:
   build_job:
     name: Build & Test
     runs-on: ubuntu-latest
-    steps:    
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v3
@@ -33,26 +35,7 @@ jobs:
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
-    - name: Set up github authentication
-      if: ${{ inputs.github-publish }}
-      run: echo "NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-    - name: Bump version
-      if: ${{ inputs.github-publish }}
-      working-directory: ${{ inputs.plugin-path }}
-      run: npm version patch -m "Bump version to %s"
-    - name: Commit changes
-      if: ${{ inputs.github-publish }}
-      working-directory: ${{ inputs.plugin-path }}
-      run: |
-        git config --global user.email "github.actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add .
-        git commit -m "Bump version for release"
-    - name: Push changes
-      if: ${{ inputs.github-publish }}
-      working-directory: ${{ inputs.plugin-path }}
-      run: git push origin
     - name: Publish to registry
-      if: ${{ inputs.github-publish }}
+      if: ${{ inputs.publish }}
       working-directory: ${{ inputs.plugin-path }}
       run: yarn publish
