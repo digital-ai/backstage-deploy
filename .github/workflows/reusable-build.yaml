@@ -55,8 +55,7 @@ jobs:
       # Settings > pull requests > allow merge commits > default to pull request title
       - name: Automated Version Bump
         id: version-bump
-        uses: phips28/gh-action-bump-version@master
-        working-directory: ${{ inputs.plugin-path }}
+        uses: phips28/gh-action-bump-version@master        
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -84,8 +83,7 @@ jobs:
           NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
         run: echo "new version $NEW_VERSION"
 
-      - name: Create tag and release
-        working-directory: ${{ inputs.plugin-path }}
+      - name: Create tag and release       
         uses: ncipollo/release-action@v1
         with:
           commit: 'main'
