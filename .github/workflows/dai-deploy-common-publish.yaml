@@ -14,7 +14,6 @@ jobs:
     needs: [ call-ci-workflow ]
     with:
       plugin-path: ./plugins/dai-deploy-common
-      publish: true
       plugin:  dai-deploy-common plugin
 
 
