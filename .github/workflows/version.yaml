@@ -9,6 +9,8 @@ on:
       plugin:
         required: true
         type: string
+env:
+  SCOPE: '@digital-ai'
 
 jobs:
   bump-version:
@@ -32,6 +34,4 @@ jobs:
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
           commit-message: "CI: bumps version to {{version}} [skip ci]"
-          major-wording: "MAJOR"
-          minor-wording: "MINOR"
-          tag-prefix:  '${{ inputs.plugin }}v'
+          tag-prefix:  '$SCOPE/${{ inputs.plugin }}/v'
