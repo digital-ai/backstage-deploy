@@ -44,7 +44,7 @@ jobs:
           minor-wording: 'MINOR'
           rc-wording: 'RELEASE,alpha'
           target-branch: '${{ github.ref_name }}'
-          check-last-commit-only: 'true'
+          preid: 'alpha'
 
   create-release:
     name: Create GitHub Release
