@@ -3,17 +3,19 @@ name: Publish dai-deploy-common plugin
 on: workflow_dispatch
 
 jobs:
- # call-ci-workflow:
- #   uses: ./.github/workflows/reusable-build.yaml
- #   with:
- #     plugin-path: ./plugins/dai-deploy-common
+  call-ci-workflow:
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-common
   version-tag:
     uses: ./.github/workflows/version.yaml
-    #needs: [ call-ci-workflow ]
+    needs: [ call-ci-workflow ]
     with:
       plugin-path: ./plugins/dai-deploy-common
       plugin:  dai-deploy-common
-      skip-tag: true
+      tag-skip: true
+      default-release: prerelease
+      skip-release: true
   github-publish:
     uses: ./.github/workflows/github-publish.yaml
     needs: [ version-tag ]

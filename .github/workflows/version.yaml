@@ -9,9 +9,16 @@ on:
       plugin:
         required: true
         type: string
-      skip-tag:
+      tag-skip:
         required: true
         type: boolean
+      default-release:
+        required: true
+        type: string
+      skip-release:
+        required: true
+        type: boolean
+
 
 jobs:
   bump-version:
@@ -37,15 +44,16 @@ jobs:
           PACKAGEJSON_DIR: ${{ inputs.plugin-path }}
         with:
           commit-message: "CI: bumps version to {{version}} [skip ci]"
-          skip-tag: true
           tag-prefix:  '${{ inputs.plugin }}/v'
-          default: prerelease
+          default: '${{ inputs.default-release }}'
+          if: ${{ inputs.tag-skip }}
+          skip-tag: true
 
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: [ bump-version ]
-    if: needs.bump-version.outputs.new-version != '' && inputs.plugin-path == 'plugin'
+    if: needs.bump-version.outputs.new-version != '' && !inputs.skip-release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
