@@ -71,14 +71,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
           always-auth: true
           node-version: '18.x'
           registry-url: 'https://npm.pkg.github.com'
-          fetch-depth: 0  # necessary to get newly created tag above
-      - name: Set up npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-      - name: Set up github authentication
-        run: echo "NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - name: Publish to registry
         working-directory: ${{ inputs.plugin-path }}
         run: yarn publish
