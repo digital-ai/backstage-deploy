@@ -42,8 +42,10 @@ jobs:
           # default: prerelease
           major-wording: 'MAJOR'
           minor-wording: 'MINOR'
+          rc-wording: 'RELEASE,alpha'
           target-branch: '${{ needs.prepare-env.outputs.branch }}'
           preid: 'alpha'
+          check-last-commit-only: 'true'
 
   create-release:
     name: Create GitHub Release
