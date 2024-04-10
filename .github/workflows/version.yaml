@@ -78,6 +78,9 @@ jobs:
           always-auth: true
           node-version: '18.x'
           registry-url: 'https://npm.pkg.github.com'
+      - name: Install dependencies
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn install
       - name: Publish to registry
         working-directory: ${{ inputs.plugin-path }}
         run: yarn publish
