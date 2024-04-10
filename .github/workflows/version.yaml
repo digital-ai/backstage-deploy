@@ -60,30 +60,3 @@ jobs:
         with:
           name: ${{ needs.bump-version.outputs.new-version }}
           tag: ${{ needs.bump-version.outputs.new-version }}
-
-  github-publish:
-    name: Publish Latest to Github registry
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    needs: [bump-version, create-release]
-    if: needs.bump-version.outputs.new-version != ''
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.ref_name }}
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          always-auth: true
-          node-version: '18.x'
-          registry-url: 'https://npm.pkg.github.com'
-      - name: Install dependencies
-        working-directory: ${{ inputs.plugin-path }}
-        run: yarn install
-      - name: Publish to registry
-        working-directory: ${{ inputs.plugin-path }}
-        run: yarn publish

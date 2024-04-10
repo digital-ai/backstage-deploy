@@ -1,0 +1,33 @@
+name: Versioning module
+
+on:
+  workflow_call:
+    inputs:
+      plugin-path:
+        required: true
+        type: string
+
+jobs:
+  github-publish:
+    name: Publish Latest to Github registry
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: '18.x'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Install dependencies
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn install
+      - name: Publish to registry
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn publish
