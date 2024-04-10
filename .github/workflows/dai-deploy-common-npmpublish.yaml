@@ -1,0 +1,23 @@
+name: Publish dai-deploy-common plugin
+
+on: workflow_dispatch
+
+jobs:
+  call-ci-workflow:
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+  version-tag:
+    uses: ./.github/workflows/version.yaml
+    needs: [ call-ci-workflow ]
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+      plugin:  dai-deploy-common
+      tag-skip: false
+      default-release: patch
+      skip-release: false
+  npm-publish:
+    uses: ./.github/workflows/npm-publish.yaml
+    needs: [ version-tag ]
+    with:
+      plugin-path: ./plugins/dai-deploy-common

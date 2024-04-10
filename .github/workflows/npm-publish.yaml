@@ -1,0 +1,30 @@
+name: Versioning module
+
+on:
+  workflow_call:
+    inputs:
+      plugin-path:
+        required: true
+        type: string
+
+jobs:
+  npm-publish:
+    name: Publish Latest to NPM
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessary to get newly created tag above
+          ref: ${{ github.ref_name }}
+
+      # https://github.com/JS-DevTools/npm-publish
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          access: public
+          check-version: true
+          greater-version-only: true
+          token: ${{ secrets.NPM_TOKEN }}
