@@ -1,4 +1,4 @@
-name: Publish dai-deploy-common plugin
+name: Github Publish dai-deploy-common plugin
 
 on: workflow_dispatch
 
