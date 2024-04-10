@@ -62,6 +62,8 @@ jobs:
   github-publish:
     name: Publish Latest to Github registry
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs: [bump-version, create-release]
     if: needs.bump-version.outputs.new-version != ''
 
