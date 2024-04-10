@@ -46,8 +46,11 @@ jobs:
           commit-message: "CI: bumps version to {{version}} [skip ci]"
           tag-prefix:  '${{ inputs.plugin }}/v'
           default: '${{ inputs.default-release }}'
-          if: ${{ inputs.tag-skip }}
-          skip-tag: true
+          skip-tag:  '${{ inputs.tag-skip }}'
+          rc-wording: 'alpha, RELEASE, BETA'
+          major-wording: 'MAJOR'
+          minor-wording: 'MINOR'
+          check-last-commit-only: true
 
   create-release:
     name: Create GitHub Release
