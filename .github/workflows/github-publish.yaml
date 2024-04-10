@@ -28,9 +28,6 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ inputs.plugin-path }}
         run: yarn install
-      - name: Build
-        working-directory: ${{ inputs.plugin-path }}
-        run: yarn build
       - name: Publish to registry
         working-directory: ${{ inputs.plugin-path }}
         run: yarn publish
