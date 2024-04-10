@@ -43,8 +43,7 @@ jobs:
           major-wording: 'MAJOR'
           minor-wording: 'MINOR'
           rc-wording: 'RELEASE,alpha'
-          target-branch: '${{ needs.prepare-env.outputs.branch }}'
-          preid: 'alpha'
+          target-branch: '${{ github.ref_name }}'
           check-last-commit-only: 'true'
 
   create-release:
