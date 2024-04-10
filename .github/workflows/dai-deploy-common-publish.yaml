@@ -13,8 +13,9 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-common
       plugin:  dai-deploy-common
+      skip-tag: true
   github-publish:
-    uses: ./.github/workflows/publish.yaml
+    uses: ./.github/workflows/github-publish.yaml
     needs: [ version-tag ]
     with:
       plugin-path: ./plugins/dai-deploy-common

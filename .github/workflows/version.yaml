@@ -9,6 +9,9 @@ on:
       plugin:
         required: true
         type: string
+      skip-tag:
+        required: true
+        type: boolean
 
 jobs:
   bump-version:
@@ -35,12 +38,18 @@ jobs:
         with:
           commit-message: "CI: bumps version to {{version}} [skip ci]"
           tag-prefix:  '${{ inputs.plugin }}/v'
+          skip-tag: ${{ inputs.skip-tag }}
+          # default: prerelease
+          major-wording: 'MAJOR'
+          minor-wording: 'MINOR'
+          target-branch: '${{ needs.prepare-env.outputs.branch }}'
+          preid: 'alpha'
 
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: [ bump-version ]
-    if: needs.bump-version.outputs.new-version != ''
+    if: needs.bump-version.outputs.new-version != '' && !${{ inputs.skip-tag }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
