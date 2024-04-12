@@ -25,7 +25,7 @@ jobs:
     if: ${{ inputs.github-publish == true }}
     uses: ./.github/workflows/github-publish.yaml
     with:
-      plugin-path: ./plugins/dai-deploy-common
+      plugin-path: ./plugins/dai-deploy
   npm-publish:
     needs: [ call-ci-workflow ]
     if: ${{ inputs.npm-publish == true }}
