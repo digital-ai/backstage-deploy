@@ -1,4 +1,4 @@
-name: Versioning module
+name: github publish module
 
 on:
   workflow_call:
