@@ -2,7 +2,7 @@ name: Push to main on dai-deploy-common plugin
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "S-106202" ]
     paths-ignore:
       # Ignore changes to READMEs and other Markdown.
       - 'plugins/dai-deploy-common/**/README*'
@@ -16,3 +16,12 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy-common
+  version-tag:
+    uses: ./.github/workflows/version.yaml
+    needs: [ call-ci-workflow ]
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+      plugin: dai-deploy-common
+      tag-skip: true
+      default-release: prerelease
+      skip-release: true
