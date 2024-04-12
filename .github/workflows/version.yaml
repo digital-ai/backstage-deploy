@@ -54,7 +54,7 @@ jobs:
           preid: 'alpha'
           ## rc-wording will override the 'preid'
           #rc-wording: ''
-          target-branch: 'S-106202'
+          target-branch: 'S-106202' # need to map it to main branch
 
   create-release:
     name: Create GitHub Release
