@@ -1,11 +1,33 @@
 name: Publish dai-deploy-backend plugin
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      github-publish:
+        description: 'Github publish'
+        required: true
+        default: true
+        type: boolean
+      npm-publish:
+        description: 'Npm publish'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   call-ci-workflow:
-    name: Run build & test for dai-deploy-backend plugin
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy-backend
-      publish: true
+  github-publish:
+    needs: [ call-ci-workflow ]
+    if: ${{ inputs.github-publish == true }}
+    uses: ./.github/workflows/github-publish.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+  npm-publish:
+    needs: [ call-ci-workflow ]
+    if: ${{ inputs.npm-publish == true }}
+    uses: ./.github/workflows/npm-publish.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-backend
