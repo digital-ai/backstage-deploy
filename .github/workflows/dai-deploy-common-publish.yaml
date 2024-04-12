@@ -1,4 +1,4 @@
-name: Github Publish dai-deploy-common plugin
+name: Publish dai-deploy-common plugin
 
 on:
   workflow_dispatch:
@@ -20,11 +20,13 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-common
   github-publish:
+    needs: [ call-ci-workflow ]
     if: ${{ inputs.github-publish == true }}
     uses: ./.github/workflows/github-publish.yaml
     with:
       plugin-path: ./plugins/dai-deploy-common
   npm-publish:
+    needs: [ call-ci-workflow ]
     if: ${{ inputs.npm-publish == true }}
     uses: ./.github/workflows/npm-publish.yaml
     with:
