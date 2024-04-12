@@ -3,7 +3,7 @@ name: Github Publish dai-deploy-common plugin
 on:
   workflow_dispatch:
     github-publish:
-      description: 'Npm publish'
+      description: 'Github publish'
       required: true
       default: true
       type: boolean
