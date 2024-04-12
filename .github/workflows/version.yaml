@@ -47,10 +47,15 @@ jobs:
           tag-prefix:  '${{ inputs.plugin }}/v'
           default: '${{ inputs.default-release }}'
           skip-tag:  '${{ inputs.tag-skip }}'
-          rc-wording: 'alpha, RELEASE, BETA'
           major-wording: 'MAJOR'
           minor-wording: 'MINOR'
           check-last-commit-only: true
+          ## Providing patch-wording will override commits defaulting to a patch bump.
+          patch-wording: 'PATCH'
+          preid: 'alpha'
+          ## rc-wording will override the 'preid'
+          rc-wording: ''
+          target-branch: 'main'
 
   create-release:
     name: Create GitHub Release
