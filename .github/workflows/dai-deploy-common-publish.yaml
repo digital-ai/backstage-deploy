@@ -1,6 +1,17 @@
 name: Github Publish dai-deploy-common plugin
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    github-publish:
+      description: 'Npm publish'
+      required: true
+      default: true
+      type: boolean
+    npm-publish:
+      description: 'Npm publish'
+      required: true
+      default: true
+      type: boolean
 
 jobs:
   call-ci-workflow:
@@ -11,3 +22,9 @@ jobs:
     uses: ./.github/workflows/github-publish.yaml
     with:
       plugin-path: ./plugins/dai-deploy-common
+  npm-publish:
+    if: ${{ inputs.npm-publish == true }}
+    uses: ./.github/workflows/npm-publish.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-common
+

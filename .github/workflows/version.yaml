@@ -37,7 +37,6 @@ jobs:
           tag-prefix:  '${{ inputs.plugin }}/v'
           major-wording: 'MAJOR'
           minor-wording: 'MINOR'
-          patch-wording: 'PATCH'
           preid: 'alpha'
           target-branch: 'S-106202' # need to map it to main branch
 
