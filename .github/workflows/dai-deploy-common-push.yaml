@@ -3,12 +3,6 @@ name: Push to main on dai-deploy-common plugin
 on:
   push:
     branches: [ "S-106202" ]  # need to map it to main branch
-   # paths-ignore:
-      # Ignore changes to READMEs and other Markdown.
-   #   - 'plugins/dai-deploy-common/**/README*'
-    #  - 'plugins/dai-deploy-common/**/*.md'
-     # - 'plugins/dai-deploy/**'
-     # - 'plugins/dai-deploy-backend/**'
 
 jobs:
   changes:
@@ -29,6 +23,7 @@ jobs:
               - 'plugins/dai-deploy-backend/**'
             frontend:
               - 'plugins/dai-deploy/**'
+          base: ${{ github.ref_name }}
   call-ci-workflow:
     needs: changes
     if: ${{ needs.changes.outputs.common == 'true' }}
@@ -53,3 +48,31 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-common
       plugin: dai-deploy-common
+
+  frontend-call-ci-workflow:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'false'}}
+    name: Run build & test for dai-deploy plugin
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy
+  frontend-version-tag:
+    uses: ./.github/workflows/version.yaml
+    needs: [ frontend-call-ci-workflow ]
+    with:
+      plugin-path: ./plugins/dai-deploy
+      plugin: dai-deploy
+
+  frontend1-call-ci-workflow:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'true' && needs.update-dependencies.result == 'success' }}
+    name: Run build & test for dai-deploy plugin
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy
+  frontend1-version-tag:
+    uses: ./.github/workflows/version.yaml
+    needs: [ frontend-call-ci-workflow ]
+    with:
+      plugin-path: ./plugins/dai-deploy
+      plugin: dai-deploy
