@@ -31,3 +31,10 @@ jobs:
           echo "Updating package.json: ./plugins/dai-deploy-backend/package.json"
           sed -i 's/"@digital-ai\/plugin-dai-deploy-common": ".*"/"@digital-ai\/plugin-dai-deploy-common": "'"$PACKAGE_VERSION"'"/' ./plugins/dai-deploy-backend/package.json
           echo "Done"
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "<>"
+          git add .
+          git commit -m "chore: update dependencies"
+          git push    
