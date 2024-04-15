@@ -9,6 +9,7 @@ on:
       - 'plugins/dai-deploy-backend/**/*.md'
       - 'plugins/dai-deploy/**'
       - 'plugins/dai-deploy-common/**'
+      - '.github/**'
 
 jobs:
   call-ci-workflow:

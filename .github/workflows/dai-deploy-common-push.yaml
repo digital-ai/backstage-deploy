@@ -64,15 +64,15 @@ jobs:
       plugin: dai-deploy
 
   frontend1-call-ci-workflow:
-    needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'true' && needs.update-dependencies.result == 'success' }}
+    needs: [changes, update-dependencies]
+    if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'true' }}
     name: Run build & test for dai-deploy plugin
     uses: ./.github/workflows/reusable-build.yaml
     with:
       plugin-path: ./plugins/dai-deploy
   frontend1-version-tag:
     uses: ./.github/workflows/version.yaml
-    needs: [ frontend-call-ci-workflow ]
+    needs: [ frontend1-call-ci-workflow ]
     with:
       plugin-path: ./plugins/dai-deploy
       plugin: dai-deploy
