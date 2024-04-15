@@ -12,7 +12,7 @@ on:
 
 jobs:
   call-ci-workflow:
-    if: github.event_name, 'push' && (contains(toJson(github.event.commits.*.added), 'plugins/dai-deploy-backend/**') || contains(toJson(github.event.commits.*.modified), 'plugins/dai-deploy-backend/**'))
+    if: github.event_name = 'push' && (contains(toJson(github.event.commits.*.added), 'plugins/dai-deploy-backend/**') || contains(toJson(github.event.commits.*.modified), 'plugins/dai-deploy-backend/**'))
     name: Run build & test for dai-deploy-common plugin
     uses: ./.github/workflows/reusable-build.yaml
     with:
