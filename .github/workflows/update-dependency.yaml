@@ -1,0 +1,26 @@
+name: Publish dai-deploy-common plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-dependency:
+    name: Update Latest version of dai-deploy-common.
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update Package of Other Module
+        run: |
+          # Extract the version of the package from the output of the previous jobs
+          PACKAGE_VERSION=$(grep '"version"' ./plugins/dai-deploy-common/package.json | awk -F '"' '{print $4}')
+          echo $PACKAGE_VERSION
+          echo "Updating package.json: ./plugins/dai-deploy/package.json" 
+          sed -i 's/"@digital-ai\/plugin-dai-deploy-common": ".*"/"@digital-ai\/plugin-dai-deploy-common": "'"$PACKAGE_VERSION"'"/' ./plugins/dai-deploy/package.json
+          echo "Updating package.json: ./plugins/dai-deploy-backend/package.json"
+          sed -i 's/"@digital-ai\/plugin-dai-deploy-common": ".*"/"@digital-ai\/plugin-dai-deploy-common": "'"$PACKAGE_VERSION"'"/' ./plugins/dai-deploy-backend/package.json
+          echo "Done"
