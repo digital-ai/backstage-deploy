@@ -1,4 +1,4 @@
-name: Versioning module
+name: Versioning and tag/release creation
 
 on:
   workflow_call:

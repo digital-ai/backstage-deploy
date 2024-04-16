@@ -1,4 +1,4 @@
-name: github publish module
+name: Github publish
 
 on:
   workflow_call:

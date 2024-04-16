@@ -1,14 +1,6 @@
 name: Update-Dependency of dai-deploy-common plugin
 
-on:
-  workflow_call:
-    inputs:
-      plugin-path:
-        required: true
-        type: string
-      plugin:
-        required: true
-        type: string
+on: workflow_call
 
 jobs:
   update-dependency:

@@ -1,4 +1,4 @@
-name: npm publish module
+name: NPM publish
 
 on:
   workflow_call:
@@ -19,10 +19,27 @@ jobs:
         with:
           fetch-depth: 0  # necessary to get newly created tag above
           ref: 'main'
-
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: '18.x'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Install dependencies
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn install
+      - name: Run tsc
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn tsc
+      - name: Build
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn build
+      - name: Run tests
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn test
       # https://github.com/JS-DevTools/npm-publish
       - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v3
         with:
           access: public
           check-version: true

@@ -45,82 +45,27 @@ jobs:
   update-dependencies:
     needs: [ call-ci-workflow, version-tag, github-publish ]
     uses: ./.github/workflows/update-dependency.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-common
-      plugin: dai-deploy-common
 
-  frontend-call-ci-workflow:
+  frontend-ci-workflow:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'false'}}
-    name: Run build & test for dai-deploy plugin without dai-deploy-common changes.
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy
-  frontend-version-tag:
-    uses: ./.github/workflows/version.yaml
-    needs: [ frontend-call-ci-workflow ]
-    with:
-      plugin-path: ./plugins/dai-deploy
-      plugin: dai-deploy
-  frontend-github-publish:
-    needs: [ frontend-call-ci-workflow, frontend-version-tag ]
-    uses: ./.github/workflows/github-publish.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy
+    name: Run dai-deploy plugin without dai-deploy-common changes.
+    uses: ./.github/workflows/dai-deploy-push.yaml
 
-  frontend1-call-ci-workflow:
+  frontend-common-ci-workflow:
     needs: [changes, update-dependencies]
     if: ${{ needs.changes.outputs.frontend == 'true' &&  needs.changes.outputs.common == 'true' }}
-    name: Run build & test for dai-deploy plugin with dai-deploy-common changes.
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy
-  frontend1-version-tag:
-    uses: ./.github/workflows/version.yaml
-    needs: [ frontend1-call-ci-workflow ]
-    with:
-      plugin-path: ./plugins/dai-deploy
-      plugin: dai-deploy
-  frontend1-github-publish:
-    needs: [ frontend1-call-ci-workflow, frontend1-version-tag ]
-    uses: ./.github/workflows/github-publish.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy
+    name: Run dai-deploy plugin with dai-deploy-common changes.
+    uses: ./.github/workflows/dai-deploy-push.yaml
 
-  backend-call-ci-workflow:
+  backend-ci-workflow:
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' &&  needs.changes.outputs.common == 'false'}}
-    name: Run build & test for dai-deploy-backend plugin without dai-deploy-common changes.
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
-  backend-version-tag:
-    uses: ./.github/workflows/version.yaml
-    needs: [ backend-call-ci-workflow ]
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
-      plugin: dai-deploy-backend
-  backend-github-publish:
-    needs: [ backend-call-ci-workflow, backend-version-tag ]
-    uses: ./.github/workflows/github-publish.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
+    name: Run dai-deploy-backend plugin without dai-deploy-common changes.
+    uses: ./.github/workflows/dai-deploy-backend-push.yaml
 
-  backend1-call-ci-workflow:
+  backend-common-ci-workflow:
     needs: [changes, update-dependencies]
     if: ${{ needs.changes.outputs.backend == 'true' &&  needs.changes.outputs.common == 'true' }}
-    name: Run build & test for dai-deploy-backend plugin with dai-deploy-common changes.
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
-  backend1-version-tag:
-    uses: ./.github/workflows/version.yaml
-    needs: [ backend1-call-ci-workflow ]
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
-      plugin: dai-deploy-backend
-  backend1-github-publish:
-    needs: [ backend1-call-ci-workflow, backend1-version-tag ]
-    uses: ./.github/workflows/github-publish.yaml
-    with:
-      plugin-path: ./plugins/dai-deploy-backend
+    name: Run dai-deploy-backend plugin with dai-deploy-common changes.
+    uses: ./.github/workflows/dai-deploy-backend-push.yaml

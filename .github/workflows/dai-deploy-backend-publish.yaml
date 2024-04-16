@@ -6,7 +6,7 @@ on:
       github-publish:
         description: 'Github publish'
         required: true
-        default: true
+        default: false
         type: boolean
       npm-publish:
         description: 'Npm publish'

@@ -1,16 +1,6 @@
 name: Push to main on dai-deploy-backend plugin
 
-on:
-  push:
-    branches: [ "S-106202" ]  # need to map it to main branch
-    paths-ignore:
-      # Ignore changes to READMEs and other Markdown.
-      - 'plugins/dai-deploy-backend/**/README*'
-      - 'plugins/dai-deploy-backend/**/*.md'
-      - 'plugins/dai-deploy-backend/package.json'
-      - 'plugins/dai-deploy/**'
-      - 'plugins/dai-deploy-common/**'
-      - '.github/**'
+on: workflow_call
 
 jobs:
   call-ci-workflow:
@@ -24,3 +14,8 @@ jobs:
     with:
       plugin-path: ./plugins/dai-deploy-backend
       plugin: dai-deploy-backend
+  github-publish:
+    needs: [ call-ci-workflow, version-tag ]
+    uses: ./.github/workflows/github-publish.yaml
+    with:
+      plugin-path: ./plugins/dai-deploy-backend
