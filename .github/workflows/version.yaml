@@ -38,7 +38,7 @@ jobs:
           major-wording: 'MAJOR'
           minor-wording: 'MINOR'
           preid: 'alpha'
-          target-branch: 'S-106202' # need to map it to main branch
+          target-branch: ${{ github.ref_name }} # need to map it to main branch
 
   create-release:
     name: Create GitHub Release
