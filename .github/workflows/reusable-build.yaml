@@ -6,9 +6,6 @@ on:
       plugin-path:
         required: true
         type: string
-      publish:
-        required: false
-        type: boolean
 
 jobs:
   build_job:
@@ -16,8 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:    
+    steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.ref_name }} # need to map it to main branch
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
@@ -35,7 +35,3 @@ jobs:
     - name: Run tests  
       working-directory: ${{ inputs.plugin-path }}
       run: yarn test
-    - name: Publish to registry
-      if: ${{ inputs.publish }}
-      working-directory: ${{ inputs.plugin-path }}
-      run: yarn publish

@@ -1,0 +1,47 @@
+name: NPM publish
+
+on:
+  workflow_call:
+    inputs:
+      plugin-path:
+        required: true
+        type: string
+
+jobs:
+  npm-publish:
+    name: Publish Latest to NPM
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessary to get newly created tag above
+          ref: ${{ github.ref_name }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: '18.x'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Install dependencies
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn install
+      - name: Run tsc
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn tsc
+      - name: Build
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn build
+      - name: Run tests
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn test
+      # https://github.com/JS-DevTools/npm-publish
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          access: public
+          check-version: true
+          greater-version-only: true
+          token: ${{ secrets.NPM_TOKEN }}
