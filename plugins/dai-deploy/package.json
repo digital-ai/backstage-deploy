@@ -1,6 +1,6 @@
 {
   "name": "@digital-ai/plugin-dai-deploy",
-  "version": "0.1.1-alpha.0",
+  "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -33,7 +33,7 @@
     "@backstage/plugin-catalog-react": "^1.10.0",
     "@backstage/plugin-permission-react": "^0.4.20",
     "@backstage/theme": "^0.4.2",
-    "@digital-ai/plugin-dai-deploy-common": "0.1.0-alpha.2",
+    "@digital-ai/plugin-dai-deploy-common": "0.0.1",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.61",
