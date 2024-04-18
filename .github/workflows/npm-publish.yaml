@@ -11,9 +11,6 @@ jobs:
   npm-publish:
     name: Publish Latest to NPM
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,3 +42,6 @@ jobs:
           echo "Publishing the packages to npm"          
           npm publish --access public --verbose
           echo "done"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
