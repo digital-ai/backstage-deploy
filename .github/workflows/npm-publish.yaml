@@ -42,5 +42,5 @@ jobs:
         working-directory: ${{ inputs.plugin-path }}
         run: |
           echo "Publishing the packages to npm"          
-          yarn publish --verbose
+          npm publish --access public --verbose
           echo "done"
