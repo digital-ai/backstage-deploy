@@ -23,7 +23,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           always-auth: true
-          node-version: '18.x'          
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         working-directory: ${{ inputs.plugin-path }}
         run: yarn install
@@ -36,9 +37,9 @@ jobs:
       - name: Run tests
         working-directory: ${{ inputs.plugin-path }}
         run: yarn test
-      # https://github.com/JS-DevTools/npm-publish
-      - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          access: public
-          token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to Npm registry
+        working-directory: ${{ inputs.plugin-path }}
+        run: |
+          echo "Publishing the packages to npm"         
+          yarn publish --access public
+          echo "done"
