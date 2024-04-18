@@ -40,6 +40,6 @@ jobs:
       - name: Publish to Npm registry
         working-directory: ${{ inputs.plugin-path }}
         run: |
-          echo "Publishing the packages to npm"         
-          yarn publish --access public
+          echo "Publishing the packages to npm"          
+          yarn publish --access=public
           echo "done"
