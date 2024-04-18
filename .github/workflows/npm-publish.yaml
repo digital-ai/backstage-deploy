@@ -25,6 +25,7 @@ jobs:
           always-auth: true
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
+          scope: '@digital-ai'
       - name: Install dependencies
         working-directory: ${{ inputs.plugin-path }}
         run: yarn install
