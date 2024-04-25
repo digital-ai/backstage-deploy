@@ -44,6 +44,7 @@ jobs:
         run: |
           echo "Publishing the packages to npm"
           cat $NPM_CONFIG_USERCONFIG
+          cat $secrets.NPM_TOKEN
           npm publish --access public --verbose
           echo "done"
         env:
