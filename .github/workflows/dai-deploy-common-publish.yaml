@@ -56,7 +56,7 @@ jobs:
         run: |
           echo "Publishing the packages to npm"
           cat $NPM_CONFIG_USERCONFIG
-          npm publish --access public --verbose
+          yarn npm publish --access public --verbose
           echo "done"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
