@@ -55,5 +55,5 @@ jobs:
         uses: JS-DevTools/npm-publish@v2
         with:
            token: ${{ secrets.NPM_TOKEN }}
-           package: /plugins/dai-deploy-common
+           package: ./plugins/dai-deploy-common
 
