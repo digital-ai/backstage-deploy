@@ -25,7 +25,7 @@ jobs:
         with:
           always-auth: true
           node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
           scope: '@digital-ai'
       - name: Install dependencies
         working-directory: ${{ inputs.plugin-path }}
@@ -42,7 +42,8 @@ jobs:
       - name: Publish to Npm registry
         working-directory: ${{ inputs.plugin-path }}
         run: |
-          echo "Publishing the packages to npm"          
+          echo "Publishing the packages to npm"
+          cat $NPM_CONFIG_USERCONFIG
           npm publish --access public --verbose
           echo "done"
         env:
