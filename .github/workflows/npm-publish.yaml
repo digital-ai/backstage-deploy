@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0  # necessary to get newly created tag above
           ref: ${{ github.ref_name }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           always-auth: true
           node-version: '18.x'
@@ -43,8 +43,6 @@ jobs:
         working-directory: ${{ inputs.plugin-path }}
         run: |
           echo "Publishing the packages to npm"
-          cat $NPM_CONFIG_USERCONFIG
-          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN  }}' >> $NPM_CONFIG_USERCONFIG
           cat $NPM_CONFIG_USERCONFIG
           npm publish --access public --verbose
           echo "done"
