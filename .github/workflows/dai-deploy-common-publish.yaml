@@ -51,6 +51,9 @@ jobs:
       - name: Run tests
         working-directory: ./plugins/dai-deploy-common
         run: yarn test
+      - name: Run npm view
+        working-directory: ./plugins/dai-deploy-common
+        run: npm view
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v2
         with:
