@@ -45,4 +45,5 @@ jobs:
           access: public
           check-version: true
           greater-version-only: true
+          package: ${{ inputs.plugin-path }}
           token: ${{ secrets.NPM_TOKEN }}
