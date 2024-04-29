@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0  # necessary to get newly created tag above
           ref: ${{ github.ref_name }}
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           always-auth: true
           node-version: '18.x'
@@ -38,12 +38,11 @@ jobs:
       - name: Run tests
         working-directory: ${{ inputs.plugin-path }}
         run: yarn test
-      - name: Publish to Npm registry
-        working-directory: ${{ inputs.plugin-path }}
-        run: |
-          echo "Publishing the packages to npm"
-          cat $NPM_CONFIG_USERCONFIG
-          npm publish --access public --verbose
-          echo "done"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # https://github.com/JS-DevTools/npm-publish
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          access: public
+          check-version: true
+          greater-version-only: true
+          token: ${{ secrets.NPM_TOKEN }}

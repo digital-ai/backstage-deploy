@@ -22,41 +22,8 @@ jobs:
       plugin-path: ./plugins/dai-deploy-common
   npm-publish:
     if: ${{ inputs.npm-publish == true }}
-    name: Publish Latest to NPM
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # necessary to get newly created tag above
-          ref: ${{ github.ref_name }}
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          always-auth: true
-          node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org/'
-          scope: '@digital-ai'
-      - name: Install dependencies
-        working-directory: ./plugins/dai-deploy-common
-        run: yarn install
-      - name: Run tsc
-        working-directory: ./plugins/dai-deploy-common
-        run: yarn tsc
-      - name: Build
-        working-directory: ./plugins/dai-deploy-common
-        run: yarn build
-      - name: Run tests
-        working-directory: ./plugins/dai-deploy-common
-        run: yarn test
-      - name: Run npm view
-        working-directory: ./plugins/dai-deploy-common
-        run: npm view
-      - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v2
-        with:
-           token: ${{ secrets.NPM_TOKEN }}
-           package: ./plugins/dai-deploy-common
+    uses: ./.github/workflows/npm-publish.yaml
+    secrets: inherit
+    with:
+      plugin-path: ./plugins/dai-deploy-common
 
