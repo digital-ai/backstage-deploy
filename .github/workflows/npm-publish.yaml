@@ -43,7 +43,7 @@ jobs:
         uses: JS-DevTools/npm-publish@v3
         with:
           access: public
-          check-version: true
-          greater-version-only: true
+          check-version: false
+          greater-version-only: false
           package: ${{ inputs.plugin-path }}
           token: ${{ secrets.NPM_TOKEN }}
