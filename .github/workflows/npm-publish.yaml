@@ -46,8 +46,6 @@ jobs:
         uses: JS-DevTools/npm-publish@v3
         with:
           access: public
-          check-version: true
-          greater-version-only: true
           package: ${{ inputs.plugin-path }}
           token: ${{ secrets.NPM_TOKEN }}
       - name: Run postpack
