@@ -38,12 +38,18 @@ jobs:
       - name: Run tests
         working-directory: ${{ inputs.plugin-path }}
         run: yarn test
+      - name: Run prepack
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn prepack
       # https://github.com/JS-DevTools/npm-publish
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v3
         with:
           access: public
-          check-version: false
-          greater-version-only: false
+          check-version: true
+          greater-version-only: true
           package: ${{ inputs.plugin-path }}
           token: ${{ secrets.NPM_TOKEN }}
+      - name: Run postpack
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn postpack
