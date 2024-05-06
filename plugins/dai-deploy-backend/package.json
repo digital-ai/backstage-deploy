@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git://github.com/digital-ai/backstage-deploy.git"
   },
-  "homepage": "https://github.com/digital-ai/backstage-deploy#readme",
+  "homepage": "https://digital.ai/",
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
