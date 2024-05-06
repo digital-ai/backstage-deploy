@@ -1,6 +1,6 @@
 {
   "name": "@digital-ai/plugin-dai-deploy-backend",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha-0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -33,7 +33,7 @@
     "@backstage/plugin-auth-node": "^0.4.8",
     "@backstage/plugin-permission-common": "^0.7.12",
     "@backstage/plugin-permission-node": "^0.7.24",
-    "@digital-ai/plugin-dai-deploy-common": "0.1.0",
+    "@digital-ai/plugin-dai-deploy-common": "0.0.1-alpha-0",
     "@types/express": "*",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
