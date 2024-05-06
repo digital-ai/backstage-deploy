@@ -12,6 +12,11 @@
   "backstage": {
     "role": "frontend-plugin"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/digital-ai/backstage-deploy.git"
+  },
+  "homepage": "https://digital.ai/",
   "sideEffects": false,
   "scripts": {
     "start": "backstage-cli package start",

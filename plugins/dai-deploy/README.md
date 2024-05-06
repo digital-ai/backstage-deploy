@@ -1,70 +1,83 @@
 # Digital.ai Deploy Plugin
 
+   - Welcome to the Digital.ai (Dai) Deploy plugin for Backstage!
+   - With Dai Deploy Plugin you can monitor all your active and archived deployments, the status of deployments, and view the task details of various deployments.
+
+This is a combination of 2 plugins - the frontend and the backend.
+
 ## Setup
 
-The following sections will help you get the (Digital.ai) Dai Deploy plugin setup and running.
+The following section helps you add the Digital.ai Deploy frontend plugin.
 
-### Dai Deploy Backend
+### Prerequisites
 
-You need to setup the [Dai Deploy backend plugin](https://github.com/digital-ai/backstage-deploy/tree/main/plugins/dai-deploy-backend) before you move forward with any of these steps if you haven't already
+You need to set up the [Dai Deploy backend plugin](https://www.npmjs.com/package/@digital-ai/plugin-dai-deploy-backend) before you move forward with any of these steps.
 
-### Entity Annotation
+### Installing and Configuring the Frontend Plugin
 
-To be able to use the Dai Deploy plugin you need to add the following annotation to any entities you want to use it with:
+   The frontend plugin needs to be added to your application. To do so:
 
-```yaml
-dai-deploy/ci-id: <ci-name>
+####   1. Run the following command from the Backstage root directory:
+```shell
+yarn --cwd packages/app add @digital-ai/plugin-dai-deploy
 ```
 
-`<ci-name>` will be the name of your Application name in deploy.
+####   2. Add the DaiDeployEntityDeploymentsContent extension to your entity pages:
+```tsx
+// For example in the CI/CD section
+// packages/app/src/components/catalog/EntityPage.tsx
+import {
+  DaiDeployEntityDeploymentsContent
+} from '@digital-ai/plugin-dai-deploy';
 
-Here's what that will look like in action:
+const cicdContent = (
+  <EntitySwitch>
+    // ...
+    <EntitySwitch.Case>
+        <DaiDeployEntityDeploymentsContent />
+    </EntitySwitch.Case>
+    // ...
+  </EntitySwitch>
 
+// For example to create a new section "Deploy" in entity page
+// packages/app/src/components/catalog/EntityPage.tsx
+import {
+  DaiDeployEntityDeploymentsContent
+} from '@digital-ai/plugin-dai-deploy';
+
+const serviceEntityPage = (
+  <EntityLayout>
+// ...
+<EntityLayout.Route path="/deploy" title="Deploy">
+      	<DaiDeployEntityDeploymentsContent />
+               </EntityLayout.Route>
+// ...
+  </EntityLayout>
+
+const websiteEntityPage = (
+  <EntityLayout>
+// ...
+<EntityLayout.Route path="/deploy" title="Deploy">
+      <DaiDeployEntityDeploymentsContent />
+    </EntityLayout.Route>
+// ...
+  </EntityLayout>
+```
+
+####   3. Add an annotation to your catalog-info.yaml files. For example
 ```yaml
-# Example catalog-info.yaml entity definition file
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   # ...
   annotations:
-    dai-deploy/ci-id: 'SatelliteApp'
+     dai-deploy/ci-id: '<ci-name>'
 spec:
   type: service
   # ...
 ```
+Note: ci-name is your application name in Deploy.
 
-### Dai Deploy - Deployment Status Component
 
-To get the Dai Deploy - Deployment Status component working you'll need to do the following two steps:
-
-1. First we need to add the `@digital-ai/plugin-dai-deploy` package to your frontend app:
-
-   ```bash
-   # From your Backstage root directory
-   yarn --cwd packages/app add @digital-ai/plugin-dai-deploy
-   ```
-
-2. Second we need to add the `DaiDeployEntityDeploymentsContent` extension to the entity page in your app. How to do this will depend on which annotation you are using in your entities:
-
-   1. Add the DaiDeployEntityDeploymentsContent in EntityPage:
-
-      ```tsx
-      // In packages/app/src/components/catalog/EntityPage.tsx
-      import {
-        DaiDeployEntityDeploymentsContent
-      } from '@digital-ai/plugin-dai-deploy';
-
-      // For example in the CI/CD section
-      const cicdContent = (
-        <EntitySwitch>
-          // ...
-          <EntitySwitch.Case>
-              <DaiDeployEntityDeploymentsContent />
-          </EntitySwitch.Case>
-          // ...
-        </EntitySwitch>
-      ```
-
-**Notes:**
-
-- The `if` prop is optional on the `EntitySwitch.Case`, you can add it if you want to hide deploy content in cicd.
+## Links
+For more information, see [Overview](https://docs.digital.ai/bundle/devops-deploy-version-v.24.1/page/deploy/concept/xl-deploy-backstage-overview.html) and [Adding Deploy to Your Backstage IDP](https://docs.digital.ai/bundle/devops-deploy-version-v.24.1/page/deploy/concept/xl-deploy-backstage-plugins.html)

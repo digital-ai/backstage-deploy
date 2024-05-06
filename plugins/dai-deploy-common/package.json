@@ -14,6 +14,11 @@
   "backstage": {
     "role": "common-library"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/digital-ai/backstage-deploy.git"
+  },
+  "homepage": "https://digital.ai/",
   "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",

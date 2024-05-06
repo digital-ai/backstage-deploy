@@ -23,7 +23,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           always-auth: true
-          node-version: '18.x'          
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@digital-ai'
       - name: Install dependencies
         working-directory: ${{ inputs.plugin-path }}
         run: yarn install
@@ -36,11 +38,6 @@ jobs:
       - name: Run tests
         working-directory: ${{ inputs.plugin-path }}
         run: yarn test
-      # https://github.com/JS-DevTools/npm-publish
-      - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          access: public
-          check-version: true
-          greater-version-only: true
-          token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to registry
+        working-directory: ${{ inputs.plugin-path }}
+        run: yarn publish --access public
