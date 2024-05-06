@@ -1,7 +1,7 @@
 {
   "name": "@digital-ai/plugin-dai-deploy-common",
   "description": "Common functionalities for the dai-deploy plugin",
-  "version": "0.0.1-alpha-0",
+  "version": "0.0.1-alpha-1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -14,6 +14,11 @@
   "backstage": {
     "role": "common-library"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/digital-ai/backstage-deploy.git"
+  },
+  "homepage": "https://github.com/digital-ai/backstage-deploy#readme",
   "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
