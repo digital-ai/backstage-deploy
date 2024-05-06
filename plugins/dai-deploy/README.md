@@ -11,7 +11,7 @@ The following section helps you add the Digital.ai Deploy frontend plugin.
 
 ### Prerequisites
 
-You need to set up the [Dai Deploy backend plugin](https://github.com/digital-ai/backstage-deploy/tree/main/plugins/dai-deploy-backend) before you move forward with any of these steps.
+You need to set up the [Dai Deploy backend plugin](https://www.npmjs.com/package/@digital-ai/plugin-dai-deploy-backend) before you move forward with any of these steps.
 
 ### Installing and Configuring the Frontend Plugin
 
