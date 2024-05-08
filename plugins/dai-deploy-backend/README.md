@@ -64,3 +64,22 @@ Note: username and password must be set as environment variables.
 
 ## Links
 For more information, see [Overview](https://docs.digital.ai/bundle/devops-deploy-version-v.24.1/page/deploy/concept/xl-deploy-backstage-overview.html) and [Adding Deploy to Your Backstage IDP](https://docs.digital.ai/bundle/devops-deploy-version-v.24.1/page/deploy/concept/xl-deploy-backstage-plugins.html)
+
+
+#### New Backend System
+
+The Dai Deploy backend plugin has support for the [new backend system](https://backstage.io/docs/backend-system/), here's how you can set that up:
+
+In your `packages/backend/src/index.ts` make the following changes:
+
+```diff
+  import { createBackend } from '@backstage/backend-defaults';
+
+  const backend = createBackend();
+
+  // ... other feature additions
+
++ backend.add(import('@digital-ai/plugin-dai-deploy-backend'));
+
+  backend.start();
+```
