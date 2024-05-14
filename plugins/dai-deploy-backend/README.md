@@ -10,7 +10,7 @@ It is a simple plugin that makes API requests to [Digital.ai](https://digital.ai
 
 ####  1.  Run the following command from the Backstage root directory:
 ```shell
-yarn --cwd packages/backend add @digital-ai/plugin-dai-deploy-backend.
+yarn --cwd packages/backend add @digital-ai/plugin-dai-deploy-backend
 ```
 
 #### 2. Create plugin file for deploy backend in the packages/backend/src/plugins/ directory.
