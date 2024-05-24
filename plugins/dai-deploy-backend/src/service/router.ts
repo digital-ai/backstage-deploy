@@ -11,6 +11,7 @@ import {
   daiDeployPermissions,
   daiDeployViewPermission,
 } from '@digital-ai/plugin-dai-deploy-common';
+import {getDecodedQueryVal, getEncodedQueryVal} from '../api/apiConfig';
 import { Config } from '@backstage/config';
 import { DeploymentHistoryStatusApi } from '../api';
 import { Logger } from 'winston';
@@ -19,7 +20,6 @@ import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-
 import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
 import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
-import { getEncodedQueryVal } from '../api/apiConfig';
 import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export interface RouterOptions {
@@ -91,7 +91,7 @@ export async function createRouter(
       }
     }
 
-    const appName = getEncodedQueryVal(req.query.appName?.toString());
+    const appName = getDecodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());
     const order = getEncodedQueryVal(req.query.order?.toString());
@@ -138,7 +138,7 @@ export async function createRouter(
         );
       }
     }
-    const appName = getEncodedQueryVal(req.query.appName?.toString());
+    const appName = getDecodedQueryVal(req.query.appName?.toString());
     const beginDate = getEncodedQueryVal(req.query.beginDate?.toString());
     const endDate = getEncodedQueryVal(req.query.endDate?.toString());
     const order = getEncodedQueryVal(req.query.order?.toString());

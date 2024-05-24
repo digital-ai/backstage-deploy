@@ -25,7 +25,7 @@ export const getCredentials = (config: Config) => {
 export const getDeployApiHost = (config: Config): string => {
   try {
     const validHost = config.getString('daiDeploy.host');
-    return `${validHost}`;
+    return `${removeTrailingSlash(validHost)}`;
   } catch (error: unknown) {
     throw new Error(`Error: ${(error as Error).message}`);
   }
@@ -34,6 +34,12 @@ export const getDeployApiHost = (config: Config): string => {
 export const getEncodedQueryVal = (queryString?: string): string => {
   return encodeURIComponent(
     queryString || queryString === 'undefined' ? queryString : '',
+  );
+};
+
+export const getDecodedQueryVal = (queryString?: string): string => {
+  return decodeURIComponent(
+      queryString || queryString === 'undefined' ? queryString : '',
   );
 };
 
@@ -57,3 +63,7 @@ export const getDeploymentHistoryRedirectUri = (
 ): string => {
   return `${getDeployApiHost(config)}${DEPLOYMENT_HISTORY_TASK_DETAILS_REDIRECT_PATH}${taskId}`;
 };
+
+function removeTrailingSlash(input: string): string {
+  return input.endsWith('/') ? input.slice(0, -1) : input;
+}
