@@ -18,9 +18,7 @@ import { DeploymentHistoryStatusApi } from '../api';
 import { MiddlewareFactory } from "@backstage/backend-defaults/rootHttpRouter";
 import Router from 'express-promise-router';
 import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
-import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
 import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export interface RouterOptions {
