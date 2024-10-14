@@ -24,7 +24,6 @@ export const daiDeployPlugin = createBackendPlugin({
         httpRouter.use(
           await createRouter({
             config,
-            logger: loggerToWinstonLogger(logger),
             logger: logger,
             httpAuth,
             permissions,
