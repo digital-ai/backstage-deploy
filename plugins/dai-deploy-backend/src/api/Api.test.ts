@@ -17,7 +17,7 @@ import {
 import { CurrentDeploymentStatusApi } from './CurrentDeploymentStatusApi';
 import { DeploymentHistoryStatusApi } from './DeploymentHistoryStatusApi';
 import { DeploymentStatusResponse } from '@digital-ai/plugin-dai-deploy-common';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from "@backstage/backend-test-utils";
 
 function configureMockServer(): SetupServerApi {
   const server = setupServer();
@@ -48,7 +48,7 @@ describe('Backend API tests for Current Deployment Status', () => {
   it('Should throw error if config hostname is empty', async () => {
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       configWithEmptyHost,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -70,7 +70,7 @@ describe('Backend API tests for Current Deployment Status', () => {
   it('Should throw error if config username is empty', async () => {
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       configWithEmptyUsername,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -92,7 +92,7 @@ describe('Backend API tests for Current Deployment Status', () => {
   it('Should throw error if config password is empty', async () => {
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       configWithEmptyPassword,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -114,7 +114,7 @@ describe('Backend API tests for Current Deployment Status', () => {
   it('Should get current deployment status from Deploy API', async () => {
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     const deploymentStatusResponse: DeploymentStatusResponse =
@@ -141,7 +141,7 @@ describe('Backend API tests for Current Deployment Status', () => {
 
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -163,7 +163,7 @@ describe('Backend API tests for Current Deployment Status', () => {
 
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -186,7 +186,7 @@ describe('Backend API tests for Current Deployment Status', () => {
 
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -208,7 +208,7 @@ describe('Backend API tests for Current Deployment Status', () => {
 
     const currentDeploymentStatusApi = CurrentDeploymentStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
     await expect(
       async () =>
@@ -232,7 +232,7 @@ describe('Backend API tests for Deployment History Status', () => {
   it('Should throw error if config hostname is empty', async () => {
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       configWithEmptyHost,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -254,7 +254,7 @@ describe('Backend API tests for Deployment History Status', () => {
   it('Should throw error if config username is empty', async () => {
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       configWithEmptyUsername,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -276,7 +276,7 @@ describe('Backend API tests for Deployment History Status', () => {
   it('Should throw error if config password is empty', async () => {
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       configWithEmptyPassword,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -298,7 +298,7 @@ describe('Backend API tests for Deployment History Status', () => {
   it('Should get deployment History from Deploy API', async () => {
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     const deploymentStatusResponse: DeploymentStatusResponse =
@@ -325,7 +325,7 @@ describe('Backend API tests for Deployment History Status', () => {
 
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -347,7 +347,7 @@ describe('Backend API tests for Deployment History Status', () => {
 
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -371,7 +371,7 @@ describe('Backend API tests for Deployment History Status', () => {
 
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
@@ -393,7 +393,7 @@ describe('Backend API tests for Deployment History Status', () => {
 
     const deploymentHistoryStatusApi = DeploymentHistoryStatusApi.fromConfig(
       config,
-      getVoidLogger(),
+      mockServices.logger.mock(),
     );
 
     await expect(
