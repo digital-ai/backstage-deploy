@@ -1,11 +1,11 @@
 import {
-  HttpAuthService, LoggerService,
-  PermissionsService,
-} from '@backstage/backend-plugin-api';
-import {
   CurrentDeploymentStatusApi,
   DeployedApplicationStatusApi,
 } from '../api';
+import {
+  HttpAuthService, LoggerService,
+  PermissionsService,
+} from '@backstage/backend-plugin-api';
 import { InputError, NotAllowedError } from '@backstage/errors';
 import {
   daiDeployPermissions,
