@@ -4,7 +4,6 @@ import {
   createServiceBuilder,
   loadBackendConfig,
 } from '@backstage/backend-common';
-import { HostDiscovery } from '@backstage/backend-defaults/discovery';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Server } from 'http';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
