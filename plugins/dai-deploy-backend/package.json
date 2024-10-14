@@ -59,7 +59,7 @@
     "@backstage/plugin-permission-common": "^0.8.1",
     "@backstage/plugin-permission-node": "^0.8.2",
     "@backstage/backend-test-utils": "^0.5.1",
-    "@digital-ai/plugin-dai-release-common": "0.1.1-alpha.0",
+    "@digital-ai/plugin-dai-deploy-common": "0.1.1-alpha.0",
     "@types/express": "*",
     "express": "^4.19.2",
     "express-promise-router": "^4.1.1",
