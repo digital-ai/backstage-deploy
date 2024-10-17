@@ -4,9 +4,6 @@
 
 ### Library upgrade
 
-- Replaced winston logger with LoggerService
-- Replaced PermissionEvaluator to PermissionService
-- Removed permission support for old backend system
 - Updated dependencies
   - @backstage/cli@^0.28.0
   - husky@^9.1.6
