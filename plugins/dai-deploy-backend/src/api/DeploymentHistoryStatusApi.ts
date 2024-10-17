@@ -11,19 +11,19 @@ import {
   DeploymentStatusResponse,
 } from '@digital-ai/plugin-dai-deploy-common';
 import { Config } from '@backstage/config';
-import { Logger } from 'winston';
+import { RootLoggerService } from "@backstage/backend-plugin-api";
 import { parseErrorResponse } from './responseUtil';
 
 export class DeploymentHistoryStatusApi {
-  private readonly logger: Logger;
+  private readonly logger: RootLoggerService;
   private readonly config: Config;
 
-  private constructor(logger: Logger, config: Config) {
+  private constructor(logger: RootLoggerService, config: Config) {
     this.logger = logger;
     this.config = config;
   }
 
-  static fromConfig(config: Config, logger: Logger) {
+  static fromConfig(config: Config, logger: RootLoggerService) {
     return new DeploymentHistoryStatusApi(logger, config);
   }
 
