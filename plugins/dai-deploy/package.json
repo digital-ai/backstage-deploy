@@ -44,47 +44,49 @@
     "prettier:fix": "prettier --write ."
   },
   "dependencies": {
-    "@backstage/catalog-model": "^1.4.4",
-    "@backstage/core-components": "^0.13.5",
-    "@backstage/core-plugin-api": "^1.6.0",
-    "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-catalog-react": "^1.10.0",
-    "@backstage/plugin-permission-react": "^0.4.20",
-    "@backstage/theme": "^0.4.2",
+    "@backstage/catalog-model": "^1.7.0",
+    "@backstage/core-components": "^0.15.1",
+    "@backstage/core-plugin-api": "^1.10.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/plugin-catalog-react": "^1.14.0",
+    "@backstage/plugin-permission-react": "^0.4.27",
+    "@backstage/theme": "^0.6.0",
     "@digital-ai/plugin-dai-deploy-common": "0.1.2",
-    "@material-ui/core": "^4.12.2",
-    "@material-ui/icons": "^4.9.1",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
     "@mui/material": "^5.15.11",
     "@types/lodash": "^4.14.202",
     "lodash": "^4.17.21",
     "moment": "2.30.1",
-    "react-use": "^17.2.4"
+    "react-use": "^17.5.1"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17.0.0"
+    "react": "^16.13.1 || ^17.0.0 || ^18.0.2",
+    "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.2",
+    "react-router-dom": "6.0.0-beta.0 || ^6.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.13",
-    "@backstage/core-app-api": "^1.10.0",
-    "@backstage/dev-utils": "^1.0.21",
-    "@backstage/test-utils": "^1.4.3",
+    "@backstage/cli": "^0.28.0",
+    "@backstage/core-app-api": "^1.15.1",
+    "@backstage/dev-utils": "^1.1.2",
+    "@backstage/test-utils": "^1.7.0",
     "@spotify/prettier-config": "^15.0.0",
-    "@testing-library/jest-dom": "^5.10.1",
-    "@testing-library/react": "^12.1.3",
-    "@testing-library/user-event": "^14.0.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "msw": "^1.0.0",
-    "prettier": "3.2.5",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.3.0",
-    "typescript": "~5.2.0"
+    "@testing-library/jest-dom": "^6.6.1",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "msw": "^1.3.4",
+    "prettier": "3.3.3",
+    "react": "^16.13.1 || ^17.0.0 || ^18.0.2",
+    "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.2",
+    "react-router-dom": "6.0.0-beta.0 || ^6.3.0",
+    "typescript": "~5.6.3"
   },
   "resolutions": {
-    "@types/react": "^17",
-    "@types/react-dom": "^17"
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
   },
   "files": [
     "dist"
@@ -99,5 +101,6 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(.*))"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
