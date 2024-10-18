@@ -7,7 +7,7 @@
 - Updated dependencies
   - @backstage/cli@^0.28.0
   - husky@^9.1.6
-  - prettier@^15.2.10
+  - prettier@^3.3.3
   - @backstage/plugin-catalog-common@^1.1.0
   - @backstage/plugin-permission-common@^0.8.1
   - @backstage/plugin-permission-node@^0.8.4
