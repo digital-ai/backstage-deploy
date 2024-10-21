@@ -1,7 +1,7 @@
 import {
-  AuthorizeResult,
-  PermissionEvaluator,
-} from '@backstage/plugin-permission-common';
+  HttpAuthService,
+  PermissionsService,
+} from '@backstage/backend-plugin-api';
 import {
   config,
   currentDeploymentBackendApiResponse,
@@ -13,9 +13,10 @@ import {
   error500ResponseHandler,
   mockTestHandlers,
 } from '../mocks/mock.test.handlers';
+import { AuthorizeResult } from '@backstage/plugin-permission-common';
 import { createRouter } from './router';
 import express from 'express';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import request from 'supertest';
 import { setupServer } from 'msw/node';
 
@@ -23,7 +24,7 @@ let app: express.Express;
 const permissionApi = {
   authorize: jest.fn(),
   authorizeConditional: jest.fn(),
-} as unknown as PermissionEvaluator;
+} as unknown as PermissionsService;
 
 function configureMockServer(permission: boolean) {
   const server = setupServer();
@@ -32,14 +33,18 @@ function configureMockServer(permission: boolean) {
     if (permission) {
       const router = await createRouter({
         config,
-        logger: getVoidLogger(),
+        logger: mockServices.logger.mock(),
+        httpAuth: {
+          credentials: jest.fn().mockResolvedValue({}),
+        } as unknown as HttpAuthService,
         permissions: permissionApi,
       });
       app = express().use(router);
     } else {
       const router = await createRouter({
         config,
-        logger: getVoidLogger(),
+        logger: mockServices.logger.mock(),
+        httpAuth: mockServices.httpAuth.mock(),
       });
       app = express().use(router);
     }

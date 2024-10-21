@@ -5,19 +5,19 @@ import {
 } from './apiConfig';
 import { Config } from '@backstage/config';
 import { DeployedApplicationStatus } from '@digital-ai/plugin-dai-deploy-common';
-import { Logger } from 'winston';
+import { RootLoggerService } from "@backstage/backend-plugin-api";
 
 /** @public */
 export class DeployedApplicationStatusApi {
-  private readonly logger: Logger;
+  private readonly logger: RootLoggerService;
   private readonly config: Config;
 
-  private constructor(logger: Logger, config: Config) {
+  private constructor(logger: RootLoggerService, config: Config) {
     this.logger = logger;
     this.config = config;
   }
 
-  static fromConfig(config: Config, logger: Logger) {
+  static fromConfig(config: Config, logger: RootLoggerService) {
     return new DeployedApplicationStatusApi(logger, config);
   }
 
