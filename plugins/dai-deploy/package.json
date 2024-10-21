@@ -11,11 +11,16 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "dai-deploy",
+    "pluginPackages": [
+      "@digital-ai/plugin-dai-deploy"
+    ]
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/digital-ai/backstage-deploy.git"
+    "url": "git://github.com/digital-ai/backstage-deploy.git",
+    "directory": "."
   },
   "bugs": {
     "url": "https://github.com/digital-ai/backstage-deploy/issues"
