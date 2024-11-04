@@ -1,7 +1,7 @@
 {
   "name": "@digital-ai/plugin-dai-deploy-backend",
   "description": "Backend functionalities for the dai-deploy backstage plugin",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "MIT",
