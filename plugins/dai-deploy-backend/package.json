@@ -11,11 +11,16 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "dai-deploy",
+    "pluginPackages": [
+      "@digital-ai/plugin-dai-deploy-backend"
+    ]
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/digital-ai/backstage-deploy.git"
+    "url": "git://github.com/digital-ai/backstage-deploy.git",
+    "directory": "."
   },
   "bugs": {
     "url": "https://github.com/digital-ai/backstage-deploy/issues"
@@ -40,34 +45,37 @@
     "postpack": "backstage-cli package postpack",
     "prepare": "husky",
     "prettier:check": "prettier --check .",
-    "prettier:fix": "prettier --write ."
+    "prettier:fix": "prettier --write .",
+    "fix": "backstage-cli repo fix --publish"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.5",
-    "@backstage/backend-plugin-api": "^0.6.12",
-    "@backstage/catalog-model": "^1.4.4",
-    "@backstage/config": "^1.1.0",
-    "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-auth-node": "^0.4.8",
-    "@backstage/plugin-permission-common": "^0.7.12",
-    "@backstage/plugin-permission-node": "^0.7.24",
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
+    "@backstage/catalog-model": "^1.7.0",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/plugin-auth-node": "^0.5.3",
+    "@backstage/plugin-permission-common": "^0.8.1",
+    "@backstage/plugin-permission-node": "^0.8.4",
+    "@backstage/test-utils": "^1.5.10",
+    "@backstage/backend-test-utils": "^1.0.1",
+    "@backstage/backend-defaults": "^0.5.1",
     "@digital-ai/plugin-dai-deploy-common": "0.1.2",
     "@types/express": "*",
-    "express": "^4.17.1",
-    "express-promise-router": "^4.1.0",
-    "node-fetch": "^2.6.7",
-    "winston": "^3.2.1",
-    "yn": "^4.0.0"
+    "express": "^4.21.1",
+    "express-promise-router": "^4.1.1",
+    "node-fetch": "^3.3.2",
+    "yn": "^5.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.13",
+    "@backstage/cli": "^0.28.0",
     "@spotify/prettier-config": "^15.0.0",
-    "@types/supertest": "^2.0.12",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "msw": "^2.2.1",
-    "prettier": "3.2.5",
-    "supertest": "^6.2.4"
+    "@types/supertest": "^6.0.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "msw": "^2.4.11",
+    "prettier": "3.3.3",
+    "supertest": "^7.0.0"
   },
   "files": [
     "dist"

@@ -3,9 +3,9 @@ import {
   NotAllowedError,
   NotFoundError,
 } from '@backstage/errors';
-import { Logger } from 'winston';
+import { RootLoggerService } from "@backstage/backend-plugin-api";
 
-export async function parseErrorResponse(logger: Logger, response: Response) {
+export async function parseErrorResponse(logger: RootLoggerService, response: Response) {
   logger?.error(
     `Error occurred while accessing deploy: status: ${response.status}, statusText: ${response.statusText} `,
   );

@@ -1,37 +1,37 @@
 import {
-  AuthorizeResult,
-  PermissionEvaluator,
-} from '@backstage/plugin-permission-common';
-import {
   CurrentDeploymentStatusApi,
   DeployedApplicationStatusApi,
 } from '../api';
+import {
+  HttpAuthService, LoggerService,
+  PermissionsService,
+} from '@backstage/backend-plugin-api';
 import { InputError, NotAllowedError } from '@backstage/errors';
 import {
   daiDeployPermissions,
   daiDeployViewPermission,
 } from '@digital-ai/plugin-dai-deploy-common';
 import {getDecodedQueryVal, getEncodedQueryVal} from '../api/apiConfig';
+import { AuthorizeResult } from '@backstage/plugin-permission-common';
 import { Config } from '@backstage/config';
 import { DeploymentHistoryStatusApi } from '../api';
-import { Logger } from 'winston';
+import { MiddlewareFactory } from "@backstage/backend-defaults/rootHttpRouter";
 import Router from 'express-promise-router';
 import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
-import { errorHandler } from '@backstage/backend-common';
 import express from 'express';
-import { getBearerTokenFromAuthorizationHeader } from '@backstage/plugin-auth-node';
 import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export interface RouterOptions {
   config: Config;
-  logger: Logger;
-  permissions?: PermissionEvaluator;
+  logger: LoggerService;
+  permissions?: PermissionsService;
+  httpAuth?: HttpAuthService;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, permissions } = options;
+  const { logger, config, permissions, httpAuth } = options;
   const deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(
     config,
     logger,
@@ -66,9 +66,6 @@ export async function createRouter(
 
   router.get('/deployment-status/:namespace/:kind/:name', async (req, res) => {
     const { namespace, kind, name } = req.params;
-    const token = getBearerTokenFromAuthorizationHeader(
-      req.header('authorization'),
-    );
     const entityRef = stringifyEntityRef({
       kind,
       namespace,
@@ -78,10 +75,10 @@ export async function createRouter(
       throw new InputError('Invalid entityRef, not a string');
     }
 
-    if (permissions) {
+    if (permissions && httpAuth) {
       const decision = await permissions.authorize(
         [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
-        { token },
+        { credentials: await httpAuth.credentials(req) },
       );
       const { result } = decision[0];
       if (result === AuthorizeResult.DENY) {
@@ -115,9 +112,6 @@ export async function createRouter(
 
   router.get('/deployment-history/:namespace/:kind/:name', async (req, res) => {
     const { namespace, kind, name } = req.params;
-    const token = getBearerTokenFromAuthorizationHeader(
-      req.header('authorization'),
-    );
     const entityRef = stringifyEntityRef({
       kind,
       namespace,
@@ -126,10 +120,10 @@ export async function createRouter(
     if (typeof entityRef !== 'string') {
       throw new InputError('Invalid entityRef, not a string');
     }
-    if (permissions) {
+    if (permissions && httpAuth) {
       const decision = await permissions.authorize(
         [{ permission: daiDeployViewPermission, resourceRef: entityRef }],
-        { token },
+        { credentials: await httpAuth.credentials(req) },
       );
       const { result } = decision[0];
       if (result === AuthorizeResult.DENY) {
@@ -160,6 +154,7 @@ export async function createRouter(
     res.status(200).json(deploymentHistoryStatus);
   });
 
-  router.use(errorHandler());
+  const middleware = MiddlewareFactory.create({ logger, config });
+  router.use(middleware.error());
   return router;
 }
