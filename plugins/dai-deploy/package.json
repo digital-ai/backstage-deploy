@@ -56,7 +56,7 @@
     "@backstage/plugin-catalog-react": "^1.15.1",
     "@backstage/plugin-permission-react": "^0.4.30",
     "@backstage/theme": "^0.6.3",
-    "@digital-ai/plugin-dai-deploy-common": "0.1.3",
+    "@digital-ai/plugin-dai-deploy-common": "0.1.4-alpha.0",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
