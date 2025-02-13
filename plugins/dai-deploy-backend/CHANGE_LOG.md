@@ -1,5 +1,29 @@
 # Changelog
 
+## [v0.1.6](https://github.com/digital-ai/backstage-deploy/tree/dai-deploy-backend/v0.1.6) (13/02/2025)
+
+### Library upgrade
+
+- Updated dependencies
+  - @backstage/backend-plugin-api@^1.1.1
+  - @backstage/catalog-model@^1.7.3
+  - @backstage/config@^1.3.2
+  - @backstage/errors@^1.2.7
+  - @backstage/plugin-auth-node@^0.5.6
+  - @backstage/plugin-permission-common@^0.8.4
+  - @backstage/plugin-permission-node@^0.8.7
+  - @backstage/test-utils@^1.7.4
+  - @backstage/backend-test-utils@^1.2.1
+  - @backstage/backend-defaults@^0.7.0
+  - @types/express@^4.17.13
+  - express@^4.19.2
+  - @backstage/cli@^0.29.6
+  - husky@^9.1.7
+  - lint-staged@^15.4.3
+  - msw@^2.7.0
+  - prettier@3.4.2
+
+
 ## [v0.1.5](https://github.com/digital-ai/backstage-deploy/tree/dai-deploy-backend/v0.1.5) (17/10/2024)
 
 ### Library upgrade
