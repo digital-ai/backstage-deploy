@@ -15,6 +15,7 @@
   - @backstage/test-utils@^1.7.4
   - @backstage/backend-test-utils@^1.2.1
   - @backstage/backend-defaults@^0.7.0
+  - @digital-ai/plugin-dai-deploy-common@0.1.4
   - @types/express@^4.17.13
   - express@^4.19.2
   - @backstage/cli@^0.29.6
