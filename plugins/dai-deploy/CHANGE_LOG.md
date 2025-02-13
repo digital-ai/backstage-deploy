@@ -12,6 +12,7 @@
   - @backstage/plugin-catalog-react@^1.15.1
   - @backstage/plugin-permission-react@^0.4.30
   - @backstage/theme@^0.6.3
+  - @digital-ai/plugin-dai-deploy-common@0.1.4
   - @mui/material@^6.4.3
   - @types/lodash@^4.17.15
   - react-use@^17.6.0
@@ -38,8 +39,7 @@
   - @backstage/errors@^1.2.4 
   - @backstage/plugin-catalog-react@^1.14.0 
   - @backstage/plugin-permission-react@^0.4.27 
-  - @backstage/theme@^0.6.0",
-  - @digital-ai/plugin-dai-deploy-common@0.1.4
+  - @backstage/theme@^0.6.0"
   - @material-ui/core@^4.12.4
   - @material-ui/icons@^4.11.3
   - react-use@^17.5.1
