@@ -30,13 +30,14 @@ export async function startStandaloneServer(
     tokenManager,
   });
   const httpAuth = mockServices.httpAuth({pluginId: 'dai-deploy'});
-  
+
   logger.debug('Starting application server...');
   const router = await createRouter({
     config,
     logger,
     httpAuth,
     permissions,
+    database: mockServices.database.mock(),
   });
 
   let service = createServiceBuilder(module)

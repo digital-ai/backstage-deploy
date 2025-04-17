@@ -38,6 +38,7 @@ function configureMockServer(permission: boolean) {
           credentials: jest.fn().mockResolvedValue({}),
         } as unknown as HttpAuthService,
         permissions: permissionApi,
+        database: mockServices.database.mock(),
       });
       app = express().use(router);
     } else {
@@ -45,6 +46,7 @@ function configureMockServer(permission: boolean) {
         config,
         logger: mockServices.logger.mock(),
         httpAuth: mockServices.httpAuth.mock(),
+        database: mockServices.database.mock(),
       });
       app = express().use(router);
     }

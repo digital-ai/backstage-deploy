@@ -3,6 +3,7 @@ import {
   DeployedApplicationStatusApi,
 } from '../api';
 import {
+  DatabaseService,
   HttpAuthService, LoggerService,
   PermissionsService,
 } from '@backstage/backend-plugin-api';
@@ -20,18 +21,21 @@ import Router from 'express-promise-router';
 import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
 import express from 'express';
 import { stringifyEntityRef } from '@backstage/catalog-model';
+import {DeployCommit} from "../db/deploy_commit";
+import yaml from 'yaml';
 
 export interface RouterOptions {
   config: Config;
   logger: LoggerService;
   permissions?: PermissionsService;
   httpAuth?: HttpAuthService;
+  database: DatabaseService;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, permissions, httpAuth } = options;
+  const { logger, config, permissions, httpAuth, database } = options;
   const deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(
     config,
     logger,
@@ -47,6 +51,9 @@ export async function createRouter(
   const permissionIntegrationRouter = createPermissionIntegrationRouter({
     permissions: daiDeployPermissions,
   });
+
+  const db =  await database.getClient();
+  const deployCommit = new DeployCommit(db);
 
   const router = Router();
   router.use(express.json());
@@ -154,7 +161,55 @@ export async function createRouter(
     res.status(200).json(deploymentHistoryStatus);
   });
 
+  /***
+    * GitHub Webhook to trigger deployment in xl-deploy
+    * @param req
+    * @param res
+    */
+  router.post('/webhook', async (req, res) => {
+    const payload = req.body;
+    const repoFullName = payload.repository.full_name;
+    const commitSha = payload.after;
+
+    const changedFiles = [...(payload.head_commit?.modified || [])];
+    if (!changedFiles.includes('dai-deploy.yaml')) {
+      return res.status(200).send('No deploy file changes');
+    }
+
+    const component = await getComponentNameFromRepo(repoFullName,commitSha);
+    const previousSha = await deployCommit.getCommitId(component);
+
+    if (previousSha === commitSha) {
+      return res.status(200).send('No change since last deploy');
+    }
+
+    // Trigger deploy here
+    await deployCommit.setCommitId(component, commitSha);
+
+    // Trigger deployment logic here using xl-cli scaffolder action
+    console.log(`Triggering deployment for ${component} at ${commitSha}`);
+
+    return res.status(200).send(`Triggered deployment for ${component}`);
+  });
+
   const middleware = MiddlewareFactory.create({ logger, config });
   router.use(middleware.error());
   return router;
+}
+
+/**
+ * Fetches the component name from the catalog-info.yaml file in the given repository.
+ * @param repo
+ * @param commitSha
+ */
+async function getComponentNameFromRepo(repo: string, commitSha: string) {
+  const response = await fetch(`https://raw.githubusercontent.com/${repo}/` +
+      `${commitSha}/catalog-info.yaml`);
+
+  if (!response.ok) throw new Error('Failed to fetch catalog-info.yaml');
+
+  const text = await response.text();
+  const parsed = yaml.parse(text);
+
+  return parsed?.metadata?.name;
 }
