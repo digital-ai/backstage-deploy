@@ -38,6 +38,7 @@ export async function startStandaloneServer(
     httpAuth,
     permissions,
     database: mockServices.database.mock(),
+    auth: mockServices.auth.mock(),
   });
 
   let service = createServiceBuilder(module)

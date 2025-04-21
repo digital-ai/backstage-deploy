@@ -3,6 +3,7 @@ import {
   DeployedApplicationStatusApi,
 } from '../api';
 import {
+  AuthService,
   DatabaseService,
   HttpAuthService, LoggerService,
   PermissionsService,
@@ -30,12 +31,13 @@ export interface RouterOptions {
   permissions?: PermissionsService;
   httpAuth?: HttpAuthService;
   database: DatabaseService;
+  auth: AuthService;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, permissions, httpAuth, database } = options;
+  const { logger, config, permissions, httpAuth, database, auth } = options;
   const deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(
     config,
     logger,
@@ -190,6 +192,72 @@ export async function createRouter(
     console.log(`Triggering deployment for ${component} at ${commitSha}`);
 
     return res.status(200).send(`Triggered deployment for ${component}`);
+  });
+
+  router.post('/trigger-deploy', async (req, res) => {
+
+    const { latestSha, componentName, deployAppUrl } = req.body;
+    const previousSha = await deployCommit.getCommitId(componentName);
+    if (previousSha === latestSha) {
+      console.log("skipping deployment, as commitId is same");
+      return res.status(200).send({});
+    }
+    console.log(`deployAppurl: ${deployAppUrl}`)
+    const repoMatch = deployAppUrl.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
+    const [,owner, repo, branch, path] = repoMatch;
+    console.log(`owner ${owner}`)
+    console.log(`repo ${repo}`)
+    console.log(`branch ${branch}`)
+    console.log(`branch ${path}`)
+    /*
+    {"templateRef":"template:default/xl-cli-with-github",
+    "values":{
+    "product":"xl-deploy",
+    "githubHost":"github.com",
+    "githubOrganization":"sishwarya",
+    "repositoryName":"xl-cli-java-quarkus",
+    "filePath":"./dai-deploy-application.yaml"},
+    "secrets":{}}
+     */
+
+    const { token } = await auth.getPluginRequestToken({
+      onBehalfOf: await auth.getOwnServiceCredentials(),
+      targetPluginId: 'scaffolder',
+    });
+
+    // Trigger deploy here
+    console.log("CommitId is different triggering the deployment")
+    await deployCommit.setCommitId(componentName, latestSha);
+
+
+    const values = {
+          "product":"xl-deploy",
+          "githubHost":"github.com",
+          "githubOrganization":owner,
+          "repositoryName":repo,
+          "filePath":path}
+
+    // Trigger deployment logic here using xl-cli scaffolder action
+    console.log(`Triggering deployment for ${componentName} at ${latestSha} with ${deployAppUrl} and values ${JSON.stringify(values)}`);
+    // Trigger a new scaffolder task
+    const scaffolderResponse = await fetch(`http://localhost:7007/api/scaffolder/v2/tasks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        "templateRef": "template:default/xl-cli-with-github",
+        "values": values, // input parameters to the template
+      }),
+    });
+
+    if (!scaffolderResponse.ok) {
+      const errorBody = await scaffolderResponse.text();
+      throw new Error(`Scaffolder failed: ${scaffolderResponse.status} - ${errorBody}`);
+    }
+    const responseBody = await scaffolderResponse.json();
+    return res.status(200).send(responseBody);
   });
 
   const middleware = MiddlewareFactory.create({ logger, config });

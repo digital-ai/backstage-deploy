@@ -39,6 +39,7 @@ function configureMockServer(permission: boolean) {
         } as unknown as HttpAuthService,
         permissions: permissionApi,
         database: mockServices.database.mock(),
+        auth: mockServices.auth.mock(),
       });
       app = express().use(router);
     } else {
@@ -47,6 +48,7 @@ function configureMockServer(permission: boolean) {
         logger: mockServices.logger.mock(),
         httpAuth: mockServices.httpAuth.mock(),
         database: mockServices.database.mock(),
+        auth: mockServices.auth.mock(),
       });
       app = express().use(router);
     }
