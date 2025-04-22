@@ -1,29 +1,24 @@
-import {
-  CurrentDeploymentStatusApi,
-  DeployedApplicationStatusApi,
-} from '../api';
+import {CurrentDeploymentStatusApi, DeployedApplicationStatusApi, DeploymentHistoryStatusApi,} from '../api';
 import {
   AuthService,
   DatabaseService,
-  HttpAuthService, LoggerService,
+  HttpAuthService,
+  LoggerService,
   PermissionsService,
 } from '@backstage/backend-plugin-api';
-import { InputError, NotAllowedError } from '@backstage/errors';
-import {
-  daiDeployPermissions,
-  daiDeployViewPermission,
-} from '@digital-ai/plugin-dai-deploy-common';
+import {InputError, NotAllowedError} from '@backstage/errors';
+import {daiDeployPermissions, daiDeployViewPermission,} from '@digital-ai/plugin-dai-deploy-common';
 import {getDecodedQueryVal, getEncodedQueryVal} from '../api/apiConfig';
-import { AuthorizeResult } from '@backstage/plugin-permission-common';
-import { Config } from '@backstage/config';
-import { DeploymentHistoryStatusApi } from '../api';
-import { MiddlewareFactory } from "@backstage/backend-defaults/rootHttpRouter";
+import {AuthorizeResult} from '@backstage/plugin-permission-common';
+import {Config} from '@backstage/config';
+import {MiddlewareFactory} from "@backstage/backend-defaults/rootHttpRouter";
 import Router from 'express-promise-router';
-import { createPermissionIntegrationRouter } from '@backstage/plugin-permission-node';
+import {createPermissionIntegrationRouter} from '@backstage/plugin-permission-node';
 import express from 'express';
-import { stringifyEntityRef } from '@backstage/catalog-model';
+import {stringifyEntityRef} from '@backstage/catalog-model';
 import {DeployCommit} from "../db/deploy_commit";
 import yaml from 'yaml';
+import {DiscoveryApi} from "@backstage/core-plugin-api";
 
 export interface RouterOptions {
   config: Config;
@@ -32,12 +27,13 @@ export interface RouterOptions {
   httpAuth?: HttpAuthService;
   database: DatabaseService;
   auth: AuthService;
+  discoveryApi: DiscoveryApi;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, permissions, httpAuth, database, auth } = options;
+  const { logger, config, permissions, httpAuth, database, auth, discoveryApi } = options;
   const deployedApplicationStatusApi = DeployedApplicationStatusApi.fromConfig(
     config,
     logger,
@@ -163,11 +159,7 @@ export async function createRouter(
     res.status(200).json(deploymentHistoryStatus);
   });
 
-  /***
-    * GitHub Webhook to trigger deployment in xl-deploy
-    * @param req
-    * @param res
-    */
+
   router.post('/webhook', async (req, res) => {
     const payload = req.body;
     const repoFullName = payload.repository.full_name;
@@ -194,21 +186,24 @@ export async function createRouter(
     return res.status(200).send(`Triggered deployment for ${component}`);
   });
 
-  router.post('/trigger-deploy', async (req, res) => {
-
-    const { latestSha, componentName, deployAppUrl } = req.body;
+  async function isLatestCommitIdDifferent ( latestSha: string, componentName: string) {
     const previousSha = await deployCommit.getCommitId(componentName);
     if (previousSha === latestSha) {
-      console.log("skipping deployment, as commitId is same");
-      return res.status(200).send({});
+      logger.info("skipping deployment, as commitId is same");
+      return false
     }
-    console.log(`deployAppurl: ${deployAppUrl}`)
+    await deployCommit.setCommitId(componentName, latestSha);
+    return true
+  }
+
+  async function triggerScaffolderTask(deployAppUrl: any, componentName: any, latestSha: any) {
+    const templateName = "template:default/xl-cli-with-github"
+    // Trigger deploy here
+    logger.info(`CommitId is different triggering the deployment using ${templateName} tamplate`)
     const repoMatch = deployAppUrl.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
-    const [,owner, repo, branch, path] = repoMatch;
-    console.log(`owner ${owner}`)
-    console.log(`repo ${repo}`)
-    console.log(`branch ${branch}`)
-    console.log(`branch ${path}`)
+    const [, owner, repo, branch, path] = repoMatch;
+    logger.info(`owner: ${owner}, repo: ${repo}, branch: ${branch}, path: ${path}`);
+
     /*
     {"templateRef":"template:default/xl-cli-with-github",
     "values":{
@@ -220,34 +215,33 @@ export async function createRouter(
     "secrets":{}}
      */
 
-    const { token } = await auth.getPluginRequestToken({
+    const {token} = await auth.getPluginRequestToken({
       onBehalfOf: await auth.getOwnServiceCredentials(),
       targetPluginId: 'scaffolder',
     });
 
-    // Trigger deploy here
-    console.log("CommitId is different triggering the deployment")
-    await deployCommit.setCommitId(componentName, latestSha);
-
-
     const values = {
-          "product":"xl-deploy",
-          "githubHost":"github.com",
-          "githubOrganization":owner,
-          "repositoryName":repo,
-          "filePath":path}
+      "product": "xl-deploy",
+      "githubHost": "github.com",
+      "githubOrganization": owner,
+      "repositoryName": repo,
+      "filePath": path
+    }
 
     // Trigger deployment logic here using xl-cli scaffolder action
-    console.log(`Triggering deployment for ${componentName} at ${latestSha} with ${deployAppUrl} and values ${JSON.stringify(values)}`);
+    logger.info(`Triggering deployment for ${componentName} at ${latestSha} with ${deployAppUrl} and values ${JSON.stringify(values)}`);
+    const baseUrl = `${await discoveryApi.getBaseUrl('scaffolder')}/`;
+    const scaffolderTaskPath = `v2/tasks`;
+    const url = new URL(scaffolderTaskPath, baseUrl);
     // Trigger a new scaffolder task
-    const scaffolderResponse = await fetch(`http://localhost:7007/api/scaffolder/v2/tasks`, {
+    const scaffolderResponse = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        "templateRef": "template:default/xl-cli-with-github",
+        "templateRef": templateName,
         "values": values, // input parameters to the template
       }),
     });
@@ -256,7 +250,16 @@ export async function createRouter(
       const errorBody = await scaffolderResponse.text();
       throw new Error(`Scaffolder failed: ${scaffolderResponse.status} - ${errorBody}`);
     }
-    const responseBody = await scaffolderResponse.json();
+    return await scaffolderResponse.json();
+  }
+
+  router.post('/trigger-deploy', async (req, res) => {
+    const { latestSha, componentName, deployAppUrl } = req.body;
+    if (!await isLatestCommitIdDifferent(latestSha, componentName)){
+      return res.status(200).send({});
+    }
+    const responseBody = await triggerScaffolderTask(deployAppUrl, componentName, latestSha);
+    logger.info(responseBody)
     return res.status(200).send(responseBody);
   });
 

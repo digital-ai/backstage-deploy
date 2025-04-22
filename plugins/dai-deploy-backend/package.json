@@ -56,14 +56,15 @@
     "@backstage/backend-test-utils": "^1.2.1",
     "@backstage/catalog-model": "^1.7.3",
     "@backstage/config": "^1.3.2",
+    "@backstage/core-plugin-api": "^1.10.6",
     "@backstage/errors": "^1.2.7",
     "@backstage/plugin-auth-node": "^0.5.6",
     "@backstage/plugin-catalog-backend": "1.30.0",
+    "@backstage/plugin-catalog-common": "^1.1.3",
     "@backstage/plugin-catalog-node": "^1.7.3",
     "@backstage/plugin-permission-common": "^0.8.4",
     "@backstage/plugin-permission-node": "^0.8.7",
     "@backstage/plugin-scaffolder-backend": "1.29.0",
-
     "@backstage/plugin-scaffolder-backend-module-github": "^0.5.5",
     "@backstage/test-utils": "^1.7.4",
     "@digital-ai/plugin-dai-deploy-common": "0.1.4",
@@ -72,6 +73,7 @@
     "express-promise-router": "^4.1.1",
     "knex": "^3.0.0",
     "node-fetch": "^3.3.2",
+    "yaml": "^2.7.1",
     "yn": "^5.0.0"
   },
   "devDependencies": {

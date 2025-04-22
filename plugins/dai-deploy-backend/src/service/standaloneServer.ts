@@ -39,6 +39,7 @@ export async function startStandaloneServer(
     permissions,
     database: mockServices.database.mock(),
     auth: mockServices.auth.mock(),
+    discoveryApi: mockServices.discovery.mock()
   });
 
   let service = createServiceBuilder(module)

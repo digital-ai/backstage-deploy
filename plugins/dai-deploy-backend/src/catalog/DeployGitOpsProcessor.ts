@@ -9,49 +9,37 @@ import {
     parseErrorResponseBody,
     ServiceUnavailableError
 } from "@backstage/errors";
-import {AuthService} from "@backstage/backend-plugin-api";
-
-async function getLatestCommitShaFromGitHub(owner: string, repo: string, path: string,branch: string): Promise<string | undefined> {
-
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?path=${path}&sha=${branch}`;
-    console.log(apiUrl)
-    const response = await fetch(apiUrl, {
-        headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            // Optional: Add Authorization header for higher rate limit
-            'Authorization': `Bearer <github_token>`, // Replace with your GitHub token
-        },
-    });
-
-    if (!response.ok) {
-        console.error('Failed to fetch commits', await response.text());
-        return undefined;
-    }
-
-    const data = await response.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-        return data[0].sha; // Most recent commit SHA
-    }
-
-    return undefined;
-}
+import {AuthService, LoggerService} from "@backstage/backend-plugin-api";
+import {Config} from "@backstage/config";
 
 export class DeployGitOpsProcessor implements CatalogProcessor {
     private readonly discoveryApi: DiscoveryApi;
     private readonly auth: AuthService;
+    private readonly logger: LoggerService;
+    private readonly config: Config
 
     public constructor(options: {
         discoveryApi: DiscoveryApi;
         auth: AuthService;
+        logger: LoggerService
+        config: Config
     }) {
-        console.log("Inside the constructor of DeployGitOpsProcessor");
         this.discoveryApi = options.discoveryApi;
         this.auth = options.auth;
+        this.logger = options.logger
+        this.config = options.config
     }
     getProcessorName(): string {
         return 'DeployGitOpsProcessor';
     }
+
+    getGithubToken = () => {
+        try {
+            return this.config.getConfigArray('integrations.github')[0].getString('token');
+        } catch (error: unknown) {
+            throw new Error(`Error: ${(error as Error).message}`);
+        }
+    };
 
     async preProcessEntity(
         _entity: Entity,
@@ -60,28 +48,29 @@ export class DeployGitOpsProcessor implements CatalogProcessor {
 
         // Log only for kind 'Component' AND location type 'url'
         if (_entity.kind === 'Component' && _location.type === 'url') {
-            console.log('🔍 GitOps Candidate Component Entity:', JSON.stringify(_entity, null, 2));
-            console.log('🌍 Source Location:', JSON.stringify(_location, null, 2));
+            this.logger.debug(`🔍 GitOps Candidate Component Entity: ${JSON.stringify(_entity, null, 2)}`);
+            this.logger.debug(`🌍 Source Location: ${JSON.stringify(_location, null, 2)}`);
 
             const annotations = _entity.metadata?.annotations;
             if (annotations) {
                 const deployYamlUrl = annotations['dai-deploy-yaml/managed-by-location'];
                 if (deployYamlUrl) {
-                    console.log(`Found deploy YAML annotation: ${deployYamlUrl}`);
-                    const [type, value] = deployYamlUrl.split(/:(.+)/);
-                    console.log("Type:", type);   // => 'url'
-                    console.log("Value:", value); // => 'https://github.com
-                    const url = value
-                    const repoMatch = url.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
+                    const [, deployUrl] = deployYamlUrl.split(/:(.+)/);
+                    this.logger.debug(`Found deploy YAML annotation: ${deployUrl}`);// => 'url'
+                    const repoMatch = deployUrl.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
                     if (repoMatch) {
                         const [ ,owner, repo, branch, path] = repoMatch;
-                        const latestSha = await getLatestCommitShaFromGitHub(owner, repo, path,branch);
-
+                        const latestSha = await this.getLatestCommitShaFromGitHub(owner, repo, path,branch);
                         if (latestSha) {
-                            console.log(`🔢 Latest commit SHA for ${path}: ${latestSha}`);
-                            await this.post(`trigger-deploy`, latestSha, _entity.metadata.name, url)
+                            this.logger.debug(`🔢 Latest commit SHA for ${path}: ${latestSha}`);
+                            this.logger.info("Triggering deployment for latest commit SHA using xl-cli scaffolder action");
+                            await this.post(`trigger-deploy`, latestSha, _entity.metadata.name, deployUrl)
                         }
+                    } else {
+                        this.logger.error(`Invalid GitHub URL format: ${deployUrl}`);
                     }
+                } else {
+                    this.logger.debug("No deploy YAML annotation found - skipping GitOps processing");
                 }
             }
         }
@@ -89,12 +78,32 @@ export class DeployGitOpsProcessor implements CatalogProcessor {
         return _entity;
     }
 
+    private async getLatestCommitShaFromGitHub(owner: string, repo: string, path: string, branch: string): Promise<string | undefined> {
+
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?path=${path}&sha=${branch}`;
+        const response = await fetch(apiUrl, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                // Optional: Add Authorization header for higher rate limit
+                'Authorization': `Bearer ${this.getGithubToken()}`, // Replace with your GitHub token
+            },
+        });
+
+        if (!response.ok) {
+            this.logger.error(`Failed to fetch commits, ${await response.text()}`);
+            return undefined;
+        }
+
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+            return data[0].sha; // Most recent commit SHA
+        }
+        return undefined;
+    }
 
     private async post<T>(path: string, latestSha: string, componentName: string, deployAppUrl: string): Promise<T> {
         const baseUrl = `${await this.discoveryApi.getBaseUrl('dai-deploy')}/`;
-        console.log("baseUrl", baseUrl)
         const url = new URL(path, baseUrl);
-        console.log("url", url.toString())
         const { token } = await this.auth.getPluginRequestToken({
             onBehalfOf: await this.auth.getOwnServiceCredentials(),
             targetPluginId: 'dai-deploy',
@@ -124,7 +133,7 @@ export class DeployGitOpsProcessor implements CatalogProcessor {
             } else if (response.status === 404) {
                 throw new NotFoundError(data.error.message);
             } else if (response.status === 500) {
-                throw new ServiceUnavailableError(`Deploy Service Unavailable`);
+                throw new ServiceUnavailableError(`Service Unavailable`);
             }
             throw new Error(
                 `Unexpected error: failed to fetch data, status ${response.status}: ${response.statusText}`,
@@ -145,21 +154,20 @@ export const catalogModuleDaiDeployGitops = createBackendModule({
         env.registerInit({
             deps: {
                 config: coreServices.rootConfig,
+                logger: coreServices.rootLogger,
                 catalog: catalogProcessingExtensionPoint,
                 logger: coreServices.logger,
                 discovery: coreServices.discovery,
                 auth: coreServices.auth,
             },
-            async init({ catalog,logger, discovery, auth }) {               // Check for Azure Blob Storage provider configuration and register it
+            async init({ catalog,logger, discovery, auth,logger, config }) {
                 logger.info('🔧 Registering DeployGitOpsProcessor...');
                 //catalog.addProcessor(new DeployGitOpsProcessor(discovery));
-                catalog.addProcessor(new DeployGitOpsProcessor({ discoveryApi: discovery, auth }));
+                catalog.addProcessor(new DeployGitOpsProcessor({ discoveryApi: discovery, auth, logger, config }));
 
             },
         });
     },
 });
 backend.add(catalogModuleDaiDeployGitops)
-
-
- **/
+**/

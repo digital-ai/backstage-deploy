@@ -21,9 +21,10 @@ export const daiDeployPlugin = createBackendPlugin({
         permissions: coreServices.permissions,
         database: coreServices.database,
         auth: coreServices.auth,
+        discoveryApi: coreServices.discovery,
 
       },
-      async init({ config, logger, httpRouter, httpAuth, permissions, database, auth }) {
+      async init({ config, logger, httpRouter, httpAuth, permissions, database, auth, discoveryApi }) {
         httpRouter.use(
           await createRouter({
             config,
@@ -32,7 +33,7 @@ export const daiDeployPlugin = createBackendPlugin({
             permissions,
             database,
             auth,
-
+            discoveryApi
           }),
         );
         logger.info('✅ DB migrations in daiDeployPlugin.');
